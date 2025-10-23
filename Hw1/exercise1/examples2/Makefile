@@ -1,33 +1,30 @@
 CC = gcc
-ifeq ($(shell sw_vers 2>/dev/null | grep mac | awk '{ print $$2}'),macOS)
-CFLAGS = -g -Wno-deprecated-declarations
-INCFLAGS = -I/usr/X11/include
-LDFLAGS = -framework OpenGL -framework GLUT -framework Cocoa 
-#CFLAGS = -g -DGL_GLEXT_PROTOTYPES -DGL_DO_NOT_WARN_IF_MULTI_GL_VERSION_HEADERS_INCLUDED -DOSX -Wno-deprecated-register -Wno-deprecated-declarations -Wno-shift-op-parentheses -Wno-parentheses-equality
-#INCFLAGS = -I/usr/X11/include
-#LDFLAGS = -framework GLUT -framework OpenGL \
-#		-L"/System/Library/Frameworks/OpenGL.framework/Libraries" \
-#		-lGL -lGLU -lm -lstdc++ 
-else
-CFLAGS = -g -Wall #-DGL_GLEXT_PROTOTYPES 
-INCFLAGS = -I/usr/X11R6/include -I/sw/include \
-		-I/usr/sww/include -I/usr/sww/pkg/Mesa/include
-LDFLAGS = -L/usr/X11R6/lib -L/sw/lib -L/usr/sww/lib \
-		-L/usr/sww/bin -L/usr/sww/pkg/Mesa/lib -lGLEW -lglut -lGLU -lGL -lX11
-endif
+
+# MacOS settings (For reference)
+#ifeq ($(shell sw_vers 2>/dev/null | grep mac | awk '{ print $$2}'),macOS)
+#    CFLAGS = -g -Wno-deprecated-declarations
+#    INCFLAGS = -I/usr/X11/include
+#    LDFLAGS = -framework OpenGL -framework GLUT -framework Cocoa
+#else
+
+CFLAGS = -g -Wall
+INCFLAGS = -I/usr/X11R6/include -I/usr/include
+LDFLAGS = -L/usr/X11R6/lib -lGLEW -lglut -lGLU -lGL -lX11
 RM = /bin/rm -f
-all: lab2_example1 lab2_example2 lab2_example3 
-%: %.cpp
-	$(CC) $(CFLAGS) $(INCFLAGS) -o $@ $< $(LDFLAGS)
-%.o: %.cpp    #Suppress default rule
-	$(CC) $(CFLAGS) $(INCFLAGS) -c $@ $<
 
+SRC = lab2_example1.cpp lab2_example2.cpp lab2_example3.cpp
+OBJS = $(SRC:.cpp=.o)
+EXES = $(SRC:.cpp=.out)
 
-#all: lab2_example1
-#lab2_example1: lab2_example1.o 
-#	$(CC) $(CFLAGS) -o lab2_example1 lab2_example1.o $(INCFLAGS) $(LDFLAGS)
-#lab2_example1.o: lab2_example1.cpp 
-#	$(CC) $(CFLAGS) $(INCFLAGS) -c lab2_example1.cpp 
-clean: 
-	$(RM) *.o lab2_example1 lab2_example2 lab2_example3
- 
+all: $(EXES)
+	@echo "Build complete."
+	@$(RM) $(OBJS)
+
+%.out: %.o
+	$(CC) $(CFLAGS) -o $@ $^ $(INCFLAGS) $(LDFLAGS)
+
+%.o: %.cpp
+	$(CC) $(CFLAGS) $(INCFLAGS) -c $< -o $@
+
+clean:
+	$(RM) $(OBJS) $(EXES)
