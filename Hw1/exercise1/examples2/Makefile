@@ -9,7 +9,7 @@ LDFLAGS = -framework OpenGL -framework GLUT -framework Cocoa
 #		-L"/System/Library/Frameworks/OpenGL.framework/Libraries" \
 #		-lGL -lGLU -lm -lstdc++ 
 else
-CFLAGS = -g #-DGL_GLEXT_PROTOTYPES 
+CFLAGS = -g -Wall #-DGL_GLEXT_PROTOTYPES 
 INCFLAGS = -I/usr/X11R6/include -I/sw/include \
 		-I/usr/sww/include -I/usr/sww/pkg/Mesa/include
 LDFLAGS = -L/usr/X11R6/lib -L/sw/lib -L/usr/sww/lib \
@@ -18,7 +18,7 @@ endif
 RM = /bin/rm -f
 all: lab2_example1 lab2_example2 lab2_example3 
 %: %.cpp
-	$(CC) $(CFLAGS) $(INCFLAGS) $(LDFLAGS) -o $@ $<
+	$(CC) $(CFLAGS) $(INCFLAGS) -o $@ $< $(LDFLAGS)
 %.o: %.cpp    #Suppress default rule
 	$(CC) $(CFLAGS) $(INCFLAGS) -c $@ $<
 
