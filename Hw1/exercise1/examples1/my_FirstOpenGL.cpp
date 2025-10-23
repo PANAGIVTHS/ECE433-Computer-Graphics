@@ -12,7 +12,6 @@
 void init (void)
 {
 glClearColor (1.0, 1.0, 1.0, 0.0); // select clearing (background) color (white backgroud)
-glColor3f(0, 0, 0); // initialize viewing values (black color)
 glPointSize(4); // set point size
 glMatrixMode(GL_PROJECTION); 
 glLoadIdentity(); 
@@ -26,7 +25,8 @@ glClear(GL_COLOR_BUFFER_BIT); //The buffers currently
 //glBegin (GL_POINTS); 
 //glBegin (GL_LINES); 
 //glBegin (GL_LINE_LOOP); 
-//glBegin (GL_POLYGON); 
+//glBegin (GL_POLYGON);
+glColor3f(0, 0, 0);
 glBegin (GL_TRIANGLES); 
 glVertex2i(100,50);
 glVertex2i(100,150);
