@@ -6,6 +6,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+float startPointRGB[3], endPointRGB[3];
+
+typedef enum {
+    RED = 0,
+    GREEN = 1,
+    BLUE = 2
+} RGB;
 
 // Sign function
 int sign(int number) {
@@ -29,15 +36,20 @@ void init() {
 }
 
 void display(int xP0, int yP0, int xP1, int yP1) {
-    int condSlope = 0;
+    float delta[3] = {0};
+    int condSlope = 0, error = 0;
     int leadingAxis = 0, trailingAxis = 0, endPointCoord = 0;
-    int signLeadingAxis = 0, signTrailingAxis = 0, dstLeadingAxis = 0, dstTrailingAxis = 0;
-    int error = 0;
+    int signLeadingAxis = 0, signTrailingAxis = 0,
+        dstLeadingAxis = 0, dstTrailingAxis = 0;
 
+    float rVal = startPointRGB[RED];
+    float gVal = startPointRGB[GREEN];
+    float bVal = startPointRGB[BLUE];
+    
     // Calculate axis distance 
     int dstX = abs(xP1 - xP0);
     int dstY = abs(yP1 - yP0);
-
+    
     // If P0 = P1
     if (!(dstX && dstY)) {
         glBegin(GL_POINTS);
@@ -45,9 +57,14 @@ void display(int xP0, int yP0, int xP1, int yP1) {
         glEnd();
         return;
     }
-
-    int numPixels = max(dx, dy);
+    
+    int numPixels = max(dstX, dstY);
     condSlope = dstX >= dstY;
+
+    //! This can be u_int. Could be faster and more efficient 
+    delta[RED] = (endPointRGB[RED] - startPointRGB[RED]) / numPixels;
+    delta[GREEN] = (endPointRGB[GREEN] - startPointRGB[GREEN]) / numPixels;
+    delta[BLUE] = (endPointRGB[BLUE] - startPointRGB[BLUE]) / numPixels;
 
     // Pick leading and trailing axis
     if (condSlope) {
@@ -96,16 +113,18 @@ void display(int xP0, int yP0, int xP1, int yP1) {
             trailingAxis += signTrailingAxis;
         }
         
-        // Draw pixel at specified point
+        // Draw pixel at specified point and increment deltas
+        glBegin(GL_POINTS); 
+        rVal += delta[RED];
+        gVal += delta[GREEN];
+        bVal += delta[BLUE];
+        glColor3f(rVal, gVal, bVal);
         if (condSlope) {
-            glBegin(GL_POINTS);
             glVertex2i(leadingAxis, trailingAxis);
-            glEnd();
         } else {
-            glBegin(GL_POINTS);
             glVertex2i(trailingAxis, leadingAxis);
-            glEnd();
         }
+        glEnd();
     }
 }
 
@@ -128,7 +147,7 @@ int main(int argc, char** argv) {
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
     
     // set window size
-    glutInitWindowSize(600, 600); 
+    glutInitWindowSize(600, 600);
 
     // set window initial position
     glutInitWindowPosition(10, 10);
