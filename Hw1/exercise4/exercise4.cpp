@@ -7,13 +7,17 @@
 #include <stdlib.h>
 
 
-//Sign function
+// Sign function
 int sign(int number) {
     return (number > 0) - (number < 0);
 }
 
-void init(){
-    
+// Max function
+int max(int num1, int num2) {
+    return num1 > num2 ? num1 : num2;
+}
+
+void init() {
     // background colour white, alpha parameter set to default
     glClearColor(1.0, 1.0, 1.0, 0.0);
 
@@ -22,100 +26,91 @@ void init(){
 	
     // viewing area 
     gluOrtho2D(-300, 300, -300, 300); 
-
 }
 
 void display(int xP0, int yP0, int xP1, int yP1) {
+    int condSlope = 0;
+    int leadingAxis = 0, trailingAxis = 0, endPointCoord = 0;
+    int signLeadingAxis = 0, signTrailingAxis = 0, dstLeadingAxis = 0, dstTrailingAxis = 0;
+    int error = 0;
 
-    int dstX, dstY, numPixels, condSlope;
-    int coord1, coord2, endPointCoord;
-    int signCoord1, signCoord2, dstCoord1, dstCoord2;
-    int error;
-
-    // calculating distance for x 
-    dstX = abs(xP1 - xP0);
-
-    // calculating distance for y
-    dstY = abs(yP1 - yP0);
+    // Calculate axis distance 
+    int dstX = abs(xP1 - xP0);
+    int dstY = abs(yP1 - yP0);
 
     // If P0 = P1
     if (!(dstX && dstY)) {
         glBegin(GL_POINTS);
         glVertex2i(xP0, yP0);
         glEnd();
+        return;
     }
 
-    // FOR INTERPOLATION //
-    // NEEDS TO BE ADRESSED FURTHER//
-    // num_pixels = max(dx, dy); //
-
+    int numPixels = max(dx, dy);
     condSlope = dstX >= dstY;
 
-    // comments need to be added
-    if(condSlope) {
-        coord1 = xP0;
-        coord2 = yP0;
-        
+    // Pick leading and trailing axis
+    if (condSlope) {
+        // Initialise points
+        leadingAxis = xP0;
+        trailingAxis = yP0;
         endPointCoord = xP1;
         
-        signCoord1 = sign(xP1 - xP0);
-        signCoord2 = sign(yP1 - yP0);
+        // Initialise axis variables
+        signLeadingAxis = sign(xP1 - xP0);
+        signTrailingAxis = sign(yP1 - yP0);
+        dstLeadingAxis = dstX;
+        dstTrailingAxis = dstY;
         
-        dstCoord1 = dstX;
-        dstCoord2 = dstY;
-        
+        // Draw starting point
         glBegin(GL_POINTS);
-        glVertex2i(coord1, coord2);
+        glVertex2i(leadingAxis, trailingAxis);
         glEnd();
-    }
-    else {
-        coord1 = yP0;
-        coord2 = xP0;
-        
+    } else {
+        // Initialise points
+        leadingAxis = yP0;
+        trailingAxis = xP0;
         endPointCoord = yP1;
         
-        signCoord1 = sign(yP1 - yP0);
-        signCoord2 = sign(xP1 - xP0);
+        // Initialise axis variables
+        signLeadingAxis = sign(yP1 - yP0);
+        signTrailingAxis = sign(xP1 - xP0);
+        dstLeadingAxis = dstY;
+        dstTrailingAxis = dstX;
         
-        dstCoord1 = dstY;
-        dstCoord2 = dstX;
-        
+        // Draw starting point
         glBegin(GL_POINTS);
-        glVertex2i(coord2, coord1);
+        glVertex2i(trailingAxis, leadingAxis);
         glEnd();
-        
     }
 
-    // calculating the error 
-    error = (2 * dstCoord2) - dstCoord1;
+    // Initialise error variable
+    error = (2 * dstTrailingAxis) - dstLeadingAxis;
 
-    while (coord1 != endPointCoord) {
-        error += 2 * dstCoord2;
-        coord1 += signCoord1;
+    while (leadingAxis != endPointCoord) {
+        error += 2 * dstTrailingAxis;
+        leadingAxis += signLeadingAxis;
     
         if (error >= 0) {
-            error -= 2 *dstCoord1;
-            coord2 += signCoord2;
+            error -= 2 * dstLeadingAxis;
+            trailingAxis += signTrailingAxis;
         }
-    
+        
+        // Draw pixel at specified point
         if (condSlope) {
             glBegin(GL_POINTS);
-            glVertex2i(coord1, coord2);
+            glVertex2i(leadingAxis, trailingAxis);
             glEnd();
-        }
-        else {
+        } else {
             glBegin(GL_POINTS);
-            glVertex2i(coord2, coord1);
+            glVertex2i(trailingAxis, leadingAxis);
             glEnd();
         }
     }
 }
 
-
-
 // function that terminates the program with the press of button Q/q
-void termination (unsigned char key, int x, int y){
-
+void termination (unsigned char key, int x, int y) {
     switch (key) {
         case 'Q':
         case 'q':
@@ -128,7 +123,7 @@ void termination (unsigned char key, int x, int y){
 
 
 int main(int argc, char** argv) {
-    
+
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
     
