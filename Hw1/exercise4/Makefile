@@ -12,7 +12,7 @@ INCFLAGS = -I/usr/X11R6/include -I/usr/include
 LDFLAGS = -L/usr/X11R6/lib -lGLEW -lglut -lGLU -lGL -lX11
 RM = /bin/rm -f
 
-SRC = lab2_example1.cpp lab2_example2.cpp lab2_example3.cpp
+SRC = exercise4.cpp
 OBJS = $(SRC:.cpp=.o)
 EXES = $(SRC:.cpp=.out)
 

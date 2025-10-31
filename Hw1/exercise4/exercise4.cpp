@@ -12,14 +12,20 @@ typedef struct {
 } Point;
 
 Point startPoint, endPoint, curColor;
-int isSecClick = 0;
+int isSecClick = -1;
 
-// Sign function
+void windowToWorldCoord(int *x, int *y) {
+    float halfWidth  = glutGet(GLUT_WINDOW_WIDTH) / 2.0f;
+    float halfHeight = glutGet(GLUT_WINDOW_HEIGHT) / 2.0f;
+
+    *x -= halfWidth;
+    *y = halfHeight - *y;
+}
+
 int sign(int number) {
     return (number > 0) - (number < 0);
 }
 
-// Max function
 int max(int num1, int num2) {
     return num1 > num2 ? num1 : num2;
 }
@@ -34,28 +40,32 @@ void drawPoint(int x, int y) {
 void mouseHandler(int button, int state, int x, int y) {
     if (state != GLUT_DOWN) return; // Ignore mouse release
 
+    int localX = x, localY = y;
+    windowToWorldCoord(&localX, &localY);
+    
     if (button == GLUT_LEFT_BUTTON) {
-        if (isSecClick) {
-            endPoint.x = x;
-            endPoint.y = y;
+        if (isSecClick == 1) {
+            endPoint.x = localX;
+            endPoint.y = localY;
             endPoint.red = curColor.red;
             endPoint.green = curColor.green;
             endPoint.blue = curColor.blue;
+            isSecClick = 0;
+            glutPostRedisplay();
         } else {
-            startPoint.x = x;
-            startPoint.y = y;
-            endPoint.x = x;
-            endPoint.y = y;
+            startPoint.x = localX;
+            startPoint.y = localY;
+            endPoint.x = localX;
+            endPoint.y = localY;
             startPoint.red = curColor.red;
             startPoint.green = curColor.green;
             startPoint.blue = curColor.blue;
+            isSecClick = 1;
         }
-
-        isSecClick = !isSecClick;
     } else {
         glClear(GL_COLOR_BUFFER_BIT);
+        glFlush();
     }
-    glutPostRedisplay();
 }
 
 void init() {
@@ -74,6 +84,9 @@ void init() {
 }
 
 void display(void) {
+    //! Avoid initial call when window is created
+    if (isSecClick == -1) return;
+
     Point delta; //! Dummy point to store delta values
     int condSlope = 0, error = 0;
     int leadingAxis = 0, trailingAxis = 0, endPointCoord = 0;
@@ -134,7 +147,10 @@ void display(void) {
 
     // Initialise error variable
     error = (2 * dstTrailingAxis) - dstLeadingAxis;
-
+    
+    //? Update draw buffer every line instead of pixel
+    //? This is faster and per pixel makes 0 sense
+    glBegin(GL_POINTS); 
     while (leadingAxis != endPointCoord) {
         error += 2 * dstTrailingAxis;
         leadingAxis += signLeadingAxis;
@@ -150,14 +166,15 @@ void display(void) {
         startPoint.blue += delta.blue;
         glColor3f(startPoint.red, startPoint.green, startPoint.blue);
         if (condSlope) {
-            drawPoint(leadingAxis, trailingAxis);
+            glVertex2i(leadingAxis, trailingAxis);
         } else {
-            drawPoint(trailingAxis, leadingAxis);
+            glVertex2i(trailingAxis, leadingAxis);
         }
     }
+    glEnd();
+    glFlush();
 }
 
-// function that terminates the program with the press of button Q/q
 void keyboardHandler(unsigned char key, int x, int y) {
     switch (key) {
         case 'r':
@@ -187,6 +204,8 @@ void keyboardHandler(unsigned char key, int x, int y) {
     }
 }
 
+// TODO Figure out if the color is meant to reset to red every new line
+// TODO or just the first time the program starts??
 int main(int argc, char** argv) {
 
     glutInit(&argc, argv);
@@ -201,6 +220,9 @@ int main(int argc, char** argv) {
     glutMouseFunc(mouseHandler);
     glutDisplayFunc(display);
 
-    init();                                          // additional initializations
+    init();
+    glClear(GL_COLOR_BUFFER_BIT);
+    glFlush();
+
     glutMainLoop();
 }
