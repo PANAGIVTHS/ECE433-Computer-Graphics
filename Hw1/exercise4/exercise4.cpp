@@ -83,7 +83,6 @@ void mouseHandler(int button, int state, int x, int y) {
     } else {
         lineCount = 0;
         newLineIdx = 0;
-        isSecClick = -1;
         glClear(GL_COLOR_BUFFER_BIT);
         glFlush();
     }
