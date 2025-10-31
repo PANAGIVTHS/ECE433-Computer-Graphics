@@ -6,13 +6,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-float startPointRGB[3], endPointRGB[3];
+typedef struct {
+    int x, y;
+    float red, green, blue;
+} Point;
 
-typedef enum {
-    RED = 0,
-    GREEN = 1,
-    BLUE = 2
-} RGB;
+Point startPoint, endPoint, curColor;
+int isSecClick = 0;
 
 // Sign function
 int sign(int number) {
@@ -24,37 +24,72 @@ int max(int num1, int num2) {
     return num1 > num2 ? num1 : num2;
 }
 
+void drawPoint(int x, int y) {
+    glBegin(GL_POINTS);
+    glVertex2i(x, y);
+    glEnd();
+    glFlush();
+}
+
+void mouseHandler(int button, int state, int x, int y) {
+    if (state != GLUT_DOWN) return; // Ignore mouse release
+
+    if (button == GLUT_LEFT_BUTTON) {
+        if (isSecClick) {
+            endPoint.x = x;
+            endPoint.y = y;
+            endPoint.red = curColor.red;
+            endPoint.green = curColor.green;
+            endPoint.blue = curColor.blue;
+        } else {
+            startPoint.x = x;
+            startPoint.y = y;
+            endPoint.x = x;
+            endPoint.y = y;
+            startPoint.red = curColor.red;
+            startPoint.green = curColor.green;
+            startPoint.blue = curColor.blue;
+        }
+
+        isSecClick = !isSecClick;
+    } else {
+        glClear(GL_COLOR_BUFFER_BIT);
+    }
+    glutPostRedisplay();
+}
+
 void init() {
     // background colour white, alpha parameter set to default
     glClearColor(1.0, 1.0, 1.0, 0.0);
 
     glMatrixMode(GL_PROJECTION);    
-	glLoadIdentity();    
+	glLoadIdentity();
+    glPointSize(1.0f);
+    curColor.red = 1.0f;
+    curColor.green = 0.0f;
+    curColor.blue = 0.0f;
 	
     // viewing area 
     gluOrtho2D(-300, 300, -300, 300); 
 }
 
-void display(int xP0, int yP0, int xP1, int yP1) {
-    float delta[3] = {0};
+void display(void) {
+    Point delta; //! Dummy point to store delta values
     int condSlope = 0, error = 0;
     int leadingAxis = 0, trailingAxis = 0, endPointCoord = 0;
     int signLeadingAxis = 0, signTrailingAxis = 0,
         dstLeadingAxis = 0, dstTrailingAxis = 0;
 
-    float rVal = startPointRGB[RED];
-    float gVal = startPointRGB[GREEN];
-    float bVal = startPointRGB[BLUE];
-    
     // Calculate axis distance 
-    int dstX = abs(xP1 - xP0);
-    int dstY = abs(yP1 - yP0);
+    int dstX = abs(endPoint.x - startPoint.x);
+    int dstY = abs(endPoint.y - startPoint.y);
     
-    // If P0 = P1
-    if (!(dstX && dstY)) {
-        glBegin(GL_POINTS);
-        glVertex2i(xP0, yP0);
-        glEnd();
+    // Set default color
+    glColor3f(startPoint.red, startPoint.green, startPoint.blue);
+    
+    // Starting point == End point
+    if (!(dstX || dstY)) {
+        drawPoint(startPoint.x, startPoint.y);
         return;
     }
     
@@ -62,43 +97,39 @@ void display(int xP0, int yP0, int xP1, int yP1) {
     condSlope = dstX >= dstY;
 
     //! This can be u_int. Could be faster and more efficient 
-    delta[RED] = (endPointRGB[RED] - startPointRGB[RED]) / numPixels;
-    delta[GREEN] = (endPointRGB[GREEN] - startPointRGB[GREEN]) / numPixels;
-    delta[BLUE] = (endPointRGB[BLUE] - startPointRGB[BLUE]) / numPixels;
+    delta.red = (endPoint.red - startPoint.red) / numPixels;
+    delta.green = (endPoint.green - startPoint.green) / numPixels;
+    delta.blue = (endPoint.blue - startPoint.blue) / numPixels;
 
     // Pick leading and trailing axis
     if (condSlope) {
         // Initialise points
-        leadingAxis = xP0;
-        trailingAxis = yP0;
-        endPointCoord = xP1;
+        leadingAxis = startPoint.x;
+        trailingAxis = startPoint.y;
+        endPointCoord = endPoint.x;
         
         // Initialise axis variables
-        signLeadingAxis = sign(xP1 - xP0);
-        signTrailingAxis = sign(yP1 - yP0);
+        signLeadingAxis = sign(endPoint.x - startPoint.x);
+        signTrailingAxis = sign(endPoint.y - startPoint.y);
         dstLeadingAxis = dstX;
         dstTrailingAxis = dstY;
         
         // Draw starting point
-        glBegin(GL_POINTS);
-        glVertex2i(leadingAxis, trailingAxis);
-        glEnd();
+        drawPoint(leadingAxis, trailingAxis);
     } else {
         // Initialise points
-        leadingAxis = yP0;
-        trailingAxis = xP0;
-        endPointCoord = yP1;
+        leadingAxis = startPoint.y;
+        trailingAxis = startPoint.x;
+        endPointCoord = endPoint.y;
         
         // Initialise axis variables
-        signLeadingAxis = sign(yP1 - yP0);
-        signTrailingAxis = sign(xP1 - xP0);
+        signLeadingAxis = sign(endPoint.y - startPoint.y);
+        signTrailingAxis = sign(endPoint.x - startPoint.x);
         dstLeadingAxis = dstY;
         dstTrailingAxis = dstX;
         
         // Draw starting point
-        glBegin(GL_POINTS);
-        glVertex2i(trailingAxis, leadingAxis);
-        glEnd();
+        drawPoint(trailingAxis, leadingAxis);
     }
 
     // Initialise error variable
@@ -114,23 +145,39 @@ void display(int xP0, int yP0, int xP1, int yP1) {
         }
         
         // Draw pixel at specified point and increment deltas
-        glBegin(GL_POINTS); 
-        rVal += delta[RED];
-        gVal += delta[GREEN];
-        bVal += delta[BLUE];
-        glColor3f(rVal, gVal, bVal);
+        startPoint.red += delta.red;
+        startPoint.green += delta.green;
+        startPoint.blue += delta.blue;
+        glColor3f(startPoint.red, startPoint.green, startPoint.blue);
         if (condSlope) {
-            glVertex2i(leadingAxis, trailingAxis);
+            drawPoint(leadingAxis, trailingAxis);
         } else {
-            glVertex2i(trailingAxis, leadingAxis);
+            drawPoint(trailingAxis, leadingAxis);
         }
-        glEnd();
     }
 }
 
 // function that terminates the program with the press of button Q/q
-void termination (unsigned char key, int x, int y) {
+void keyboardHandler(unsigned char key, int x, int y) {
     switch (key) {
+        case 'r':
+        case 'R':
+            curColor.red = 1.0f;
+            curColor.green = 0.0f;
+            curColor.blue = 0.0f;
+            break;
+        case 'g':
+        case 'G':
+            curColor.red = 0.0f;
+            curColor.green = 1.0f;
+            curColor.blue = 0.0f;
+            break;
+        case 'b':
+        case 'B':
+            curColor.red = 0.0f;
+            curColor.green = 0.0f;
+            curColor.blue = 1.0f;
+            break;
         case 'Q':
         case 'q':
             exit(0);
@@ -140,21 +187,20 @@ void termination (unsigned char key, int x, int y) {
     }
 }
 
-
 int main(int argc, char** argv) {
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
     
-    // set window size
     glutInitWindowSize(600, 600);
-
-    // set window initial position
     glutInitWindowPosition(10, 10);
-    
-    // create window with the given title
     glutCreateWindow("Team 1 - Assignment 1 - Exercise 4"); 
 
-    glutDisplayFunc();
+    // Set up handlers
+    glutKeyboardFunc(keyboardHandler);
+    glutMouseFunc(mouseHandler);
+    glutDisplayFunc(display);
 
+    init();                                          // additional initializations
+    glutMainLoop();
 }
