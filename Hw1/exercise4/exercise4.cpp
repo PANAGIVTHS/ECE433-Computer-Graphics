@@ -6,13 +6,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define MAX_LINES 1000
+
 typedef struct {
     int x, y;
     float red, green, blue;
 } Point;
 
-Point startPoint, endPoint, curColor;
-int isSecClick = -1;
+typedef struct {
+    Point start;
+    Point end;
+} Line;
+
+Line lines[MAX_LINES];
+Point curColor;
+Line tempLine;
+
+int lineCount = 0, isSecClick = -1, reshapeState = 0;
+int newLineIdx = 0;
 
 void windowToWorldCoord(int *x, int *y) {
     float halfWidth  = glutGet(GLUT_WINDOW_WIDTH) / 2.0f;
@@ -45,24 +56,34 @@ void mouseHandler(int button, int state, int x, int y) {
     
     if (button == GLUT_LEFT_BUTTON) {
         if (isSecClick == 1) {
-            endPoint.x = localX;
-            endPoint.y = localY;
-            endPoint.red = curColor.red;
-            endPoint.green = curColor.green;
-            endPoint.blue = curColor.blue;
+            lines[newLineIdx].start.x = tempLine.start.x;
+            lines[newLineIdx].start.y = tempLine.start.y;
+            lines[newLineIdx].start.red = tempLine.start.red;
+            lines[newLineIdx].start.green = tempLine.start.green;
+            lines[newLineIdx].start.blue = tempLine.start.blue;
+            lines[newLineIdx].end.x = localX;
+            lines[newLineIdx].end.y = localY;
+            lines[newLineIdx].end.red = curColor.red;
+            lines[newLineIdx].end.green = curColor.green;
+            lines[newLineIdx].end.blue = curColor.blue;
             isSecClick = 0;
+            if (lineCount != MAX_LINES) lineCount++;
+            newLineIdx = (newLineIdx + 1) % MAX_LINES;
             glutPostRedisplay();
         } else {
-            startPoint.x = localX;
-            startPoint.y = localY;
-            endPoint.x = localX;
-            endPoint.y = localY;
-            startPoint.red = curColor.red;
-            startPoint.green = curColor.green;
-            startPoint.blue = curColor.blue;
+            //! Incase someone doesnt acutally go through with creating the line
+            //! Dont overwrite previous' lines data when on max capacity
+            tempLine.start.x = localX;
+            tempLine.start.y = localY;
+            tempLine.start.red = curColor.red;
+            tempLine.start.green = curColor.green;
+            tempLine.start.blue = curColor.blue;
             isSecClick = 1;
         }
     } else {
+        lineCount = 0;
+        newLineIdx = 0;
+        isSecClick = -1;
         glClear(GL_COLOR_BUFFER_BIT);
         glFlush();
     }
@@ -83,10 +104,7 @@ void init() {
     gluOrtho2D(-300, 300, -300, 300); 
 }
 
-void display(void) {
-    //! Avoid initial call when window is created
-    if (isSecClick == -1) return;
-
+void drawLine(Point startPoint, Point endPoint) {
     Point delta; //! Dummy point to store delta values
     int condSlope = 0, error = 0;
     int leadingAxis = 0, trailingAxis = 0, endPointCoord = 0;
@@ -172,6 +190,23 @@ void display(void) {
         }
     }
     glEnd();
+}
+
+void display(void) {
+    //! Avoid initial call when window is created
+    if (isSecClick == -1) return;
+    
+    if (reshapeState == 1) {
+        for (int i = 0; i < lineCount; i++) {
+            //! if you want to keep precedence start from 
+            //! newLineIdx and move circularly instead of i
+            drawLine(lines[i].start, lines[i].end);
+        }
+        reshapeState = 0;
+    } else {
+        int curLine = newLineIdx == 0 ? lineCount - 1 : newLineIdx - 1;
+        drawLine(lines[curLine].start, lines[curLine].end);
+    }
     glFlush();
 }
 
@@ -204,6 +239,19 @@ void keyboardHandler(unsigned char key, int x, int y) {
     }
 }
 
+void reshapeHandler(int w, int h) {
+    glViewport(0, 0, w, h);
+    
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(-w / 2, w / 2, -h / 2, h / 2);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glFlush();
+    
+    reshapeState = 1; //! Notify display to redraw ALL lines
+    glutPostRedisplay();
+}
+
 // TODO Figure out if the color is meant to reset to red every new line
 // TODO or just the first time the program starts??
 int main(int argc, char** argv) {
@@ -219,6 +267,7 @@ int main(int argc, char** argv) {
     glutKeyboardFunc(keyboardHandler);
     glutMouseFunc(mouseHandler);
     glutDisplayFunc(display);
+    glutReshapeFunc(reshapeHandler);
 
     init();
     glClear(GL_COLOR_BUFFER_BIT);
