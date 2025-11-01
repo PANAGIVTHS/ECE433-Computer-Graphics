@@ -6,7 +6,7 @@ error = 3 - 2r;
 
 while (x_kentro <= y_kentro) { 
     draw(x_point + x_kentro, y_shmeio + y_kentro);      // (x,y)
-    draw(x_kentro + y_kentro, y_shmeio + x_kentro);     // (y,x) 
+    draw(x_point + y_kentro, y_shmeio + x_kentro);     // (y,x) 
 
     draw(x_shmeio - x_kentro, y_shmeio + y_kentro);     // (-x, y)
     draw(x_shmeio + y_kentro, y_shmeio - x_kentro);     // (y, -x)
