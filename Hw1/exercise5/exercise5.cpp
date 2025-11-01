@@ -5,7 +5,7 @@
 #endif
 #include <stdio.h>
 #include <stdlib.h>
-//#include <math.h>
+#include <math.h>
 
 typedef struct {
     int xCord, yCord;
@@ -37,15 +37,15 @@ void mouseHandler(int button, int state, int x, int y) {
     if (state != GLUT_DOWN) return; // Ignore mouse release
 
     int localX = x, localY = y;
-    WindowToWorldCoord(&localX, &localY);
+    //WindowToWorldCoord(&localX, &localY);
 
     if (button == GLUT_LEFT_BUTTON) {
         if (isSecClick == 1) {
             secondCoord.xRadius = localX;
             secondCoord.yRadius = localY;
             secondCoord.radius = 
-            (toThePower2((abs(secondCoord.xRadius) - abs(firstCoord.xCord))))
-            +(toThePower2((abs(secondCoord.yRadius) - abs(firstCoord.yCord))));   
+            sqrt((toThePower2((abs(secondCoord.xRadius) - abs(firstCoord.xCord))))
+            +(toThePower2((abs(secondCoord.yRadius) - abs(firstCoord.yCord)))));   
             isSecClick = 0;
             glutPostRedisplay();
         } 
