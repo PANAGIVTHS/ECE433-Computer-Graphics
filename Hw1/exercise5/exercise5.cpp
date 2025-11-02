@@ -37,15 +37,15 @@ void mouseHandler(int button, int state, int x, int y) {
     if (state != GLUT_DOWN) return; // Ignore mouse release
 
     int localX = x, localY = y;
-    //WindowToWorldCoord(&localX, &localY);
+    WindowToWorldCoord(&localX, &localY);
 
     if (button == GLUT_LEFT_BUTTON) {
         if (isSecClick == 1) {
             secondCoord.xRadius = localX;
             secondCoord.yRadius = localY;
             secondCoord.radius = 
-            sqrt((toThePower2((abs(secondCoord.xRadius) - abs(firstCoord.xCord))))
-            +(toThePower2((abs(secondCoord.yRadius) - abs(firstCoord.yCord)))));   
+            sqrt((toThePower2(secondCoord.xRadius - firstCoord.xCord))
+            +(toThePower2(secondCoord.yRadius - firstCoord.yCord)));  
             isSecClick = 0;
             glutPostRedisplay();
         } 
@@ -81,9 +81,9 @@ void drawCircle(int x, int y, int radius) {
         glVertex2i(x_point + x_center, y_point - y_center); // (x, -y) point
         glVertex2i(x_point - y_center, y_point + x_center); // (-y, x) point
     
-        x_center += 1;
+        x_center++;
         if (error >= 0) {
-            y_center -= 1;
+            y_center--;
             error -= 4 * y_center;
         }
         error += (4 * x_center) + 2;
