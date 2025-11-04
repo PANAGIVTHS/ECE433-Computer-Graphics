@@ -126,7 +126,7 @@ void drawLine(Line line) {
     delta.blue = (endPoint.rgb.blue - startPoint.rgb.blue) / numPixels;
 
     glBegin(GL_POINTS); 
-
+    glColor3f(startPoint.rgb.red, startPoint.rgb.green, startPoint.rgb.blue);
     // Pick leading and trailing axis
     if (condSlope) {
         // Initialise points
