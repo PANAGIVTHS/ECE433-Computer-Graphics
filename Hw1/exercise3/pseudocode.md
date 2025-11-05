@@ -1,12 +1,12 @@
 x_kentro = 0;
 y_kentro = r;
-x_point = x0;
-y_point = y0;
+x_shmeio = x0;
+y_shmeio = y0;
 error = 3 - 2r;
 
 while (x_kentro <= y_kentro) { 
-    draw(x_point + x_kentro, y_shmeio + y_kentro);      // (x,y)
-    draw(x_point + y_kentro, y_shmeio + x_kentro);     // (y,x) 
+    draw(x_shmeio + x_kentro, y_shmeio + y_kentro);      // (x,y)
+    draw(x_shmeio + y_kentro, y_shmeio + x_kentro);     // (y,x) 
 
     draw(x_shmeio - x_kentro, y_shmeio + y_kentro);     // (-x, y)
     draw(x_shmeio + y_kentro, y_shmeio - x_kentro);     // (y, -x)
