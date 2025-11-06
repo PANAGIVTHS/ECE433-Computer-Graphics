@@ -36,7 +36,6 @@ if (condSlope) {
 error = dcoord2 * 2 - dcoord1;
 
 while (coord1 != endPointCoord) {
-	error += 2 * dcoord2;
 	coord1 += signCoord1;
 
 	// Blepe video abdul gia na doume ti shmainei otan p >= 0
@@ -45,6 +44,8 @@ while (coord1 != endPointCoord) {
 		error -= 2 * dcoord1;
 		coord2 += signCoord2;
 	}
+	error += 2 * dcoord2;
+	
 
 	// Depending on m decide draw
 	condSlope ? draw(coord1, coord2) : draw(coord2, coord1);
