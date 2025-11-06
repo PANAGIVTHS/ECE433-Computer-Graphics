@@ -163,13 +163,13 @@ void drawLine(Line line) {
     //? Update draw buffer every line instead of pixel
     //? This is faster and per pixel makes 0 sense
     while (leadingAxis != endPointCoord) {
-        error += 2 * dstTrailingAxis;
         leadingAxis += signLeadingAxis;
-    
+        
         if (error >= 0) {
             error -= 2 * dstLeadingAxis;
             trailingAxis += signTrailingAxis;
         }
+        error += 2 * dstTrailingAxis;
         
         // Draw pixel at specified point and increment deltas
         startPoint.rgb.red += delta.red;
