@@ -7,7 +7,12 @@
 #include <stdlib.h>
 
 #define MAX_LINES 1000
-#define FP_SCALE 500000
+
+typedef enum {
+    NONE,
+    BRESENHAM,
+    WU
+} AntialiasingMode;
 
 typedef struct {
     float red, green, blue;
@@ -27,6 +32,7 @@ Line lines[MAX_LINES];
 RGB curColor;
 Line tempLine;
 Line *newestLine;
+AntialiasingMode curMode = WU;
 
 int lineCount = 0, isSecClick = -1, reshapeState = 0;
 int newLineIdx = 0;
@@ -97,8 +103,6 @@ void mouseHandler(int button, int state, int x, int y) {
 }
 
 void drawLine(Line line) {
-    // TODO Optimize core block based on the Wu version 
-    // TODO see if its the same or not
     int error = 0;
     int leadingAxis = 0, trailingAxis = 0, endPointCoord = 0;
     int signLeadingAxis = 0, signTrailingAxis = 0,
@@ -128,10 +132,7 @@ void drawLine(Line line) {
         (line.end.rgb.green - line.start.rgb.green) / numPixels,
         (line.end.rgb.blue - line.start.rgb.blue) / numPixels
     };
-
-    glBegin(GL_POINTS); 
-    glColor3f(startPoint.rgb.red, startPoint.rgb.green, startPoint.rgb.blue);
-
+    
     // Pick leading and trailing axis
     if (condSlope) {
         // Initialise points
@@ -155,18 +156,15 @@ void drawLine(Line line) {
         dstTrailingAxis = dstX;        
     }
 
+    glBegin(GL_POINTS);
+
     // Initialise error variable
     error = (2 * dstTrailingAxis) - dstLeadingAxis;
+    RGB color = startPoint.rgb;  // use local color copy
     
     //? Update draw buffer every line instead of pixel
     //? This is faster and per pixel makes 0 sense
-    while (leadingAxis != endPointCoord) {
-        
-        // Draw pixel at specified point and increment deltas
-        startPoint.rgb.red += delta.red;
-        startPoint.rgb.green += delta.green;
-        startPoint.rgb.blue += delta.blue;
-
+    for (int i = 0; i <= numPixels; ++i) {  // loop over exact number of pixels
         glColor3f(startPoint.rgb.red, startPoint.rgb.green, startPoint.rgb.blue);
         if (condSlope) {
             glVertex2i(leadingAxis, trailingAxis);
@@ -180,6 +178,10 @@ void drawLine(Line line) {
             trailingAxis += signTrailingAxis;
         }
         error += 2 * dstTrailingAxis;
+
+        startPoint.rgb.red += delta.red;
+        startPoint.rgb.green += delta.green;
+        startPoint.rgb.blue += delta.blue;
         
     }
     glEnd();
@@ -280,7 +282,10 @@ void redrawAll() {
     for (int i = 0; i < lineCount; i++) {
         //! if you want to keep precedence start from 
         //! newLineIdx and move circularly instead of i
-        drawLine(lines[i]);
+        if (curMode == BRESENHAM || curMode == NONE)
+            drawLine(*newestLine);
+        else
+            drawLineWu(*newestLine);
     }
 }
 
@@ -308,14 +313,31 @@ void display(void) {
         //! Redraw all object relative to new window
         redrawAll();
         reshapeState = 0;
-    } else {
+    } else if (curMode == BRESENHAM || curMode == NONE) {
         drawLine(*newestLine);
+    } else {
+        drawLineWu(*newestLine);
     }
     glFlush();
 }
 
 void keyboardHandler(unsigned char key, int x, int y) {
     switch (key) {
+        case 'a':
+        case 'A':
+            switch (curMode)
+            {
+            case BRESENHAM:
+                curMode = WU;
+                break;
+            case WU:
+                curMode = NONE;
+                break;
+            default:
+                curMode = BRESENHAM;
+                break;
+            }
+            break;
         case 'r':
         case 'R':
             curColor.red = 1.0f;
