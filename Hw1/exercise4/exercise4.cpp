@@ -7,6 +7,7 @@
 #include <stdlib.h>
 
 #define MAX_LINES 1000
+#define FP_SCALE 500000
 
 typedef struct {
     float red, green, blue;
@@ -96,8 +97,9 @@ void mouseHandler(int button, int state, int x, int y) {
 }
 
 void drawLine(Line line) {
-    RGB delta;
-    int condSlope = 0, error = 0;
+    // TODO Optimize core block based on the Wu version 
+    // TODO see if its the same or not
+    int error = 0;
     int leadingAxis = 0, trailingAxis = 0, endPointCoord = 0;
     int signLeadingAxis = 0, signTrailingAxis = 0,
         dstLeadingAxis = 0, dstTrailingAxis = 0;
@@ -118,30 +120,29 @@ void drawLine(Line line) {
         return;
     }
     
+    int condSlope = dstX >= dstY;
     int numPixels = max(dstX, dstY);
-    condSlope = dstX >= dstY;
 
-    delta.red = (endPoint.rgb.red - startPoint.rgb.red) / numPixels;
-    delta.green = (endPoint.rgb.green - startPoint.rgb.green) / numPixels;
-    delta.blue = (endPoint.rgb.blue - startPoint.rgb.blue) / numPixels;
+    RGB delta = {
+        (line.end.rgb.red - line.start.rgb.red) / numPixels,
+        (line.end.rgb.green - line.start.rgb.green) / numPixels,
+        (line.end.rgb.blue - line.start.rgb.blue) / numPixels
+    };
 
     glBegin(GL_POINTS); 
     glColor3f(startPoint.rgb.red, startPoint.rgb.green, startPoint.rgb.blue);
+
     // Pick leading and trailing axis
     if (condSlope) {
         // Initialise points
         leadingAxis = startPoint.x;
         trailingAxis = startPoint.y;
         endPointCoord = endPoint.x;
-        
         // Initialise axis variables
         signLeadingAxis = sign(endPoint.x - startPoint.x);
         signTrailingAxis = sign(endPoint.y - startPoint.y);
         dstLeadingAxis = dstX;
         dstTrailingAxis = dstY;
-        
-        // Draw starting point
-        glVertex2i(leadingAxis, trailingAxis);
     } else {
         // Initialise points
         leadingAxis = startPoint.y;
@@ -151,10 +152,7 @@ void drawLine(Line line) {
         signLeadingAxis = sign(endPoint.y - startPoint.y);
         signTrailingAxis = sign(endPoint.x - startPoint.x);
         dstLeadingAxis = dstY;
-        dstTrailingAxis = dstX;
-        
-        // Draw starting point
-        glVertex2i(trailingAxis, leadingAxis);
+        dstTrailingAxis = dstX;        
     }
 
     // Initialise error variable
@@ -163,25 +161,118 @@ void drawLine(Line line) {
     //? Update draw buffer every line instead of pixel
     //? This is faster and per pixel makes 0 sense
     while (leadingAxis != endPointCoord) {
-        leadingAxis += signLeadingAxis;
-        
-        if (error >= 0) {
-            error -= 2 * dstLeadingAxis;
-            trailingAxis += signTrailingAxis;
-        }
-        error += 2 * dstTrailingAxis;
         
         // Draw pixel at specified point and increment deltas
         startPoint.rgb.red += delta.red;
         startPoint.rgb.green += delta.green;
         startPoint.rgb.blue += delta.blue;
+
         glColor3f(startPoint.rgb.red, startPoint.rgb.green, startPoint.rgb.blue);
         if (condSlope) {
             glVertex2i(leadingAxis, trailingAxis);
         } else {
             glVertex2i(trailingAxis, leadingAxis);
         }
+
+        leadingAxis += signLeadingAxis;
+        if (error >= 0) {
+            error -= 2 * dstLeadingAxis;
+            trailingAxis += signTrailingAxis;
+        }
+        error += 2 * dstTrailingAxis;
+        
     }
+    glEnd();
+}
+
+void drawLineWu(Line line) {
+    int error = 0;
+    int leadingAxis = 0, trailingAxis = 0, endPointCoord = 0;
+    int signLeadingAxis = 0, signTrailingAxis = 0,
+        dstLeadingAxis = 0, dstTrailingAxis = 0;
+    
+    Point endPoint = line.end;
+    Point startPoint = line.start;
+
+    // Calculate axis distance 
+    int dstX = abs(endPoint.x - startPoint.x);
+    int dstY = abs(endPoint.y - startPoint.y);
+    
+    // Set default color
+    glColor3f(startPoint.rgb.red, startPoint.rgb.green, startPoint.rgb.blue);
+    
+    // Starting point == End point
+    if (!(dstX || dstY)) {
+        drawPoint(startPoint.x, startPoint.y);
+        return;
+    }
+    
+    int condSlope = dstX >= dstY;
+    int numPixels = max(dstX, dstY);
+
+    RGB delta = {
+        (line.end.rgb.red - line.start.rgb.red) / numPixels,
+        (line.end.rgb.green - line.start.rgb.green) / numPixels,
+        (line.end.rgb.blue - line.start.rgb.blue) / numPixels
+    };
+    
+    // Pick leading and trailing axis
+    if (condSlope) {
+        // Initialise points
+        leadingAxis = startPoint.x;
+        trailingAxis = startPoint.y;
+        endPointCoord = endPoint.x;
+        // Initialise axis variables
+        signLeadingAxis = sign(endPoint.x - startPoint.x);
+        signTrailingAxis = sign(endPoint.y - startPoint.y);
+        dstLeadingAxis = dstX;
+        dstTrailingAxis = dstY;
+    } else {
+        // Initialise points
+        leadingAxis = startPoint.y;
+        trailingAxis = startPoint.x;
+        endPointCoord = endPoint.y;
+        // Initialise axis variables
+        signLeadingAxis = sign(endPoint.y - startPoint.y);
+        signTrailingAxis = sign(endPoint.x - startPoint.x);
+        dstLeadingAxis = dstY;
+        dstTrailingAxis = dstX;        
+    }
+
+    // Initialise error variable
+    int errorStep = dstTrailingAxis;
+    
+    glBegin(GL_POINTS); 
+
+    RGB color = startPoint.rgb;  // use local color copy
+
+    for (int i = 0; i <= numPixels; ++i) {  // loop over exact number of pixels
+        int intensityMain = dstLeadingAxis - error;
+        int intensityOther = error;
+
+        glColor4f(color.red, color.green, color.blue, (float)intensityMain / dstLeadingAxis);
+        if (condSlope) {
+            glVertex2i(leadingAxis, trailingAxis);
+            glColor4f(color.red, color.green, color.blue, (float)intensityOther / dstLeadingAxis);
+            glVertex2i(leadingAxis, trailingAxis + signTrailingAxis);
+        } else {
+            glVertex2i(trailingAxis, leadingAxis);
+            glColor4f(color.red, color.green, color.blue, (float)intensityOther / dstLeadingAxis);
+            glVertex2i(trailingAxis + signTrailingAxis, leadingAxis);
+        }
+
+        leadingAxis += signLeadingAxis;
+        error += errorStep;
+        if (error >= dstLeadingAxis) {
+            error -= dstLeadingAxis;
+            trailingAxis += signTrailingAxis;
+        }
+
+        color.red += delta.red;
+        color.green += delta.green;
+        color.blue += delta.blue;
+    }
+
     glEnd();
 }
 
@@ -196,7 +287,8 @@ void redrawAll() {
 void init() {
     // background colour white, alpha parameter set to default
     glClearColor(1.0, 1.0, 1.0, 0.0);
-
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glMatrixMode(GL_PROJECTION);    
 	glLoadIdentity();
     glPointSize(1.0f);
