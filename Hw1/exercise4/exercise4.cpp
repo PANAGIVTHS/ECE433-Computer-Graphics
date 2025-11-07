@@ -26,13 +26,14 @@ typedef struct {
 typedef struct {
     Point start;
     Point end;
+    AntialiasingMode mode;
 } Line;
 
 Line lines[MAX_LINES];
+AntialiasingMode curMode = WU;
 RGB curColor;
 Line tempLine;
 Line *newestLine;
-AntialiasingMode curMode = WU;
 
 int lineCount = 0, isSecClick = -1, reshapeState = 0;
 int newLineIdx = 0;
@@ -81,6 +82,7 @@ void mouseHandler(int button, int state, int x, int y) {
             tempLine.end.rgb.red = curColor.red;
             tempLine.end.rgb.green = curColor.green;
             tempLine.end.rgb.blue = curColor.blue;
+            tempLine.mode = curMode;
             isSecClick = 0;
             storeLine(tempLine);
             glutPostRedisplay();
@@ -282,10 +284,11 @@ void redrawAll() {
     for (int i = 0; i < lineCount; i++) {
         //! if you want to keep precedence start from 
         //! newLineIdx and move circularly instead of i
-        if (curMode == BRESENHAM || curMode == NONE)
-            drawLine(*newestLine);
+        Line line = *newestLine;
+        if (line.mode == WU)
+            drawLineWu(line);
         else
-            drawLineWu(*newestLine);
+            drawLine(line);
     }
 }
 
@@ -313,10 +316,12 @@ void display(void) {
         //! Redraw all object relative to new window
         redrawAll();
         reshapeState = 0;
-    } else if (curMode == BRESENHAM || curMode == NONE) {
-        drawLine(*newestLine);
     } else {
-        drawLineWu(*newestLine);
+        Line line = *newestLine;
+        if (line.mode == WU)
+            drawLineWu(line);
+        else
+            drawLine(line);
     }
     glFlush();
 }
