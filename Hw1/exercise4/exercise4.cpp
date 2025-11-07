@@ -5,6 +5,7 @@
 #endif
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 #define MAX_LINES 1000
 
@@ -30,7 +31,7 @@ typedef struct {
 } Line;
 
 Line lines[MAX_LINES];
-AntialiasingMode curMode = WU;
+AntialiasingMode curMode = NONE;
 RGB curColor;
 Line tempLine;
 Line *newestLine;
@@ -159,19 +160,38 @@ void drawLine(Line line) {
     }
 
     glBegin(GL_POINTS);
+    RGB color = startPoint.rgb;  // use local color copy
 
     // Initialise error variable
     error = (2 * dstTrailingAxis) - dstLeadingAxis;
-    RGB color = startPoint.rgb;  // use local color copy
     
     //? Update draw buffer every line instead of pixel
     //? This is faster and per pixel makes 0 sense
     for (int i = 0; i <= numPixels; ++i) {  // loop over exact number of pixels
-        glColor3f(startPoint.rgb.red, startPoint.rgb.green, startPoint.rgb.blue);
-        if (condSlope) {
+        // Compute fractional coverage from error
+        float t = fabs((float)error) / (2.0f * (float)dstLeadingAxis);
+
+        // Main pixel brightness
+        float I1 = 1.0f - t;
+        // Adjacent pixel brightness
+        float I2 = t;
+
+        // Draw main pixel
+        glColor4f(startPoint.rgb.red, startPoint.rgb.green, startPoint.rgb.blue, line.mode == BRESENHAM ? I1 : 1);
+        
+        if (condSlope)
             glVertex2i(leadingAxis, trailingAxis);
-        } else {
+        else
             glVertex2i(trailingAxis, leadingAxis);
+
+        if (line.mode == BRESENHAM) {
+            // Draw neighbor pixel (one step toward the slope direction)
+            glColor4f(startPoint.rgb.red, startPoint.rgb.green, startPoint.rgb.blue, I2);
+
+            if (condSlope)
+                glVertex2i(leadingAxis, trailingAxis + signTrailingAxis);
+            else
+                glVertex2i(trailingAxis + signTrailingAxis, leadingAxis);
         }
 
         leadingAxis += signLeadingAxis;
