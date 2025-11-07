@@ -1,30 +1,26 @@
 CC = gcc
-
-# MacOS settings (For reference)
-#ifeq ($(shell sw_vers 2>/dev/null | grep mac | awk '{ print $$2}'),macOS)
-#    CFLAGS = -g -Wno-deprecated-declarations
-#    INCFLAGS = -I/usr/X11/include
-#    LDFLAGS = -framework OpenGL -framework GLUT -framework Cocoa
-#else
-
-CFLAGS = -g -Wall
-INCFLAGS = -I/usr/X11R6/include -I/usr/include
-LDFLAGS = -L/usr/X11R6/lib -lGLEW -lglut -lGLU -lGL -lX11
+ifeq ($(shell sw_vers 2>/dev/null | grep mac | awk '{ print $$2}'),macOS)
+CFLAGS = -g -Wno-deprecated-declarations
+INCFLAGS = -I/usr/X11/include
+LDFLAGS = -framework OpenGL -framework GLUT -framework Cocoa 
+#CFLAGS = -g -DGL_GLEXT_PROTOTYPES -DGL_DO_NOT_WARN_IF_MULTI_GL_VERSION_HEADERS_INCLUDED -DOSX -Wno-deprecated-register -Wno-deprecated-declarations -Wno-shift-op-parentheses -Wno-parentheses-equality
+#INCFLAGS = -I/usr/X11/include
+#LDFLAGS = -framework GLUT -framework OpenGL \
+#		-L"/System/Library/Frameworks/OpenGL.framework/Libraries" \
+#		-lGL -lGLU -lm -lstdc++ 
+else
+CFLAGS = -g #-DGL_GLEXT_PROTOTYPES 
+INCFLAGS = -I/usr/X11R6/include -I/sw/include \
+		-I/usr/sww/include -I/usr/sww/pkg/Mesa/include
+LDFLAGS = -L/usr/X11R6/lib -L/sw/lib -L/usr/sww/lib \
+		-L/usr/sww/bin -L/usr/sww/pkg/Mesa/lib -lGLEW -lglut -lGLU -lGL -lX11
+endif
 RM = /bin/rm -f
-
-SRC = exercise4.cpp
-OBJS = $(SRC:.cpp=.o)
-EXES = $(SRC:.cpp=.out)
-
-all: $(EXES)
-	@echo "Build complete."
-	@$(RM) $(OBJS)
-
-%.out: %.o
-	$(CC) $(CFLAGS) -o $@ $^ $(INCFLAGS) $(LDFLAGS)
-
-%.o: %.cpp
-	$(CC) $(CFLAGS) $(INCFLAGS) -c $< -o $@
-
-clean:
-	$(RM) $(OBJS) $(EXES)
+all: exercise4
+exercise4: exercise4.o 
+	$(CC) $(CFLAGS) -o exercise4 exercise4.o $(INCFLAGS) $(LDFLAGS)
+exercise4.o: exercise4.cpp 
+	$(CC) $(CFLAGS) $(INCFLAGS) -c exercise4.cpp 
+clean: 
+	$(RM) *.o exercise4
+ 
