@@ -12,6 +12,12 @@
 #define MAKE_OFST_POINT(base, dx, dy, col) ((Point){ (base).x + (dx), (base).y + (dy), (col) })
 
 typedef enum {
+    NONE,
+    BRESENHAM,
+    WU
+} AntialiasingMode;
+
+typedef enum {
     OBJ_POINT,
     OBJ_LINE,
     OBJ_CIRCLE,
@@ -30,6 +36,7 @@ typedef struct {
 typedef struct {
     Point start;
     Point end;
+    AntialiasingMode mode;
 } Line;
 
 typedef struct {
@@ -58,6 +65,7 @@ typedef struct {
 Object objects[MAX_OBJECTS];
 
 RGB curColor;
+AntialiasingMode curMode = NONE;
 Object *curObject;
 ObjectType typeSelector = OBJ_CIRCLE;
 Point firstMousePoint, secondMousePoint; 
@@ -146,7 +154,7 @@ void drawLine(Line line) {
         signLeadingAxis = sign(endPoint.y - startPoint.y);
         signTrailingAxis = sign(endPoint.x - startPoint.x);
         dstLeadingAxis = dstY;
-        dstTrailingAxis = dstX;        
+        dstTrailingAxis = dstX;  
     }
 
     glBegin(GL_POINTS);
@@ -177,6 +185,97 @@ void drawLine(Line line) {
         startPoint.rgb.blue += delta.blue;
         
     }
+    glEnd();
+}
+
+void drawLineWu(Line line) {
+    int error = 0;
+    int leadingAxis = 0, trailingAxis = 0, endPointCoord = 0;
+    int signLeadingAxis = 0, signTrailingAxis = 0,
+        dstLeadingAxis = 0, dstTrailingAxis = 0;
+    
+    Point endPoint = line.end;
+    Point startPoint = line.start;
+
+    // Calculate axis distance 
+    int dstX = abs(endPoint.x - startPoint.x);
+    int dstY = abs(endPoint.y - startPoint.y);
+    
+    // Set default color
+    glColor3f(startPoint.rgb.red, startPoint.rgb.green, startPoint.rgb.blue);
+    
+    // Starting point == End point
+    if (!(dstX || dstY)) {
+        drawPoint(startPoint);
+        return;
+    }
+    
+    int condSlope = dstX >= dstY;
+    int numPixels = max(dstX, dstY);
+
+    RGB delta = {
+        (line.end.rgb.red - line.start.rgb.red) / numPixels,
+        (line.end.rgb.green - line.start.rgb.green) / numPixels,
+        (line.end.rgb.blue - line.start.rgb.blue) / numPixels
+    };
+    
+    // Pick leading and trailing axis
+    if (condSlope) {
+        // Initialise points
+        leadingAxis = startPoint.x;
+        trailingAxis = startPoint.y;
+        endPointCoord = endPoint.x;
+        // Initialise axis variables
+        signLeadingAxis = sign(endPoint.x - startPoint.x);
+        signTrailingAxis = sign(endPoint.y - startPoint.y);
+        dstLeadingAxis = dstX;
+        dstTrailingAxis = dstY;
+    } else {
+        // Initialise points
+        leadingAxis = startPoint.y;
+        trailingAxis = startPoint.x;
+        endPointCoord = endPoint.y;
+        // Initialise axis variables
+        signLeadingAxis = sign(endPoint.y - startPoint.y);
+        signTrailingAxis = sign(endPoint.x - startPoint.x);
+        dstLeadingAxis = dstY;
+        dstTrailingAxis = dstX;        
+    }
+
+    // Initialise error variable
+    int errorStep = dstTrailingAxis;
+    
+    glBegin(GL_POINTS); 
+
+    RGB color = startPoint.rgb;  // use local color copy
+
+    for (int i = 0; i <= numPixels; ++i) {  // loop over exact number of pixels
+        int intensityMain = dstLeadingAxis - error;
+        int intensityOther = error;
+
+        glColor4f(color.red, color.green, color.blue, (float)intensityMain / dstLeadingAxis);
+        if (condSlope) {
+            glVertex2i(leadingAxis, trailingAxis);
+            glColor4f(color.red, color.green, color.blue, (float)intensityOther / dstLeadingAxis);
+            glVertex2i(leadingAxis, trailingAxis + signTrailingAxis);
+        } else {
+            glVertex2i(trailingAxis, leadingAxis);
+            glColor4f(color.red, color.green, color.blue, (float)intensityOther / dstLeadingAxis);
+            glVertex2i(trailingAxis + signTrailingAxis, leadingAxis);
+        }
+
+        leadingAxis += signLeadingAxis;
+        error += errorStep;
+        if (error >= dstLeadingAxis) {
+            error -= dstLeadingAxis;
+            trailingAxis += signTrailingAxis;
+        }
+
+        color.red += delta.red;
+        color.green += delta.green;
+        color.blue += delta.blue;
+    }
+
     glEnd();
 }
 
@@ -281,6 +380,7 @@ Object newObj(ObjectType type) {
         case OBJ_LINE: {
             object.data.line.start = firstMousePoint;
             object.data.line.end = secondMousePoint;
+            object.data.line.mode = curMode;
             break;
         }
         case OBJ_CIRCLE: {
@@ -317,7 +417,10 @@ void drawObject(Object object) {
             break;
         }
         case OBJ_LINE: {
-            drawLine(object.data.line);
+            if (object.data.line.mode != WU)
+                drawLine(object.data.line);
+            else
+                drawLineWu(object.data.line);
             break;
         }
         case OBJ_CIRCLE: {
@@ -397,6 +500,21 @@ void reshapeHandler(int w, int h) {
 
 void keyboardHandler(unsigned char key, int x, int y) {
     switch (key) {
+        case 'a':
+        case 'A':
+            switch (curMode)
+            {
+            case BRESENHAM:
+                curMode = WU;
+                break;
+            case WU:
+                curMode = NONE;
+                break;
+            default:
+                curMode = BRESENHAM;
+                break;
+            }
+            break;
         case 'p':
         case 'P':
             typeSelector = OBJ_POINT;
@@ -447,6 +565,8 @@ void init() {
     curColor.green = 0.0f;
     curColor.blue = 0.0f;
     
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glColor3f(1.0, 0.0, 0.0);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
