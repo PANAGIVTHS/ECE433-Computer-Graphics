@@ -110,6 +110,7 @@ void drawLine(Line line) {
     int leadingAxis = 0, trailingAxis = 0, endPointCoord = 0;
     int signLeadingAxis = 0, signTrailingAxis = 0,
         dstLeadingAxis = 0, dstTrailingAxis = 0;
+    float alpha, mainPixel, secPixel;
     
     Point endPoint = line.end;
     Point startPoint = line.start;
@@ -128,12 +129,12 @@ void drawLine(Line line) {
     }
     
     int condSlope = dstX >= dstY;
-    int numPixels = max(dstX, dstY);
+    int lastPixelIndex = max(dstX, dstY);
 
     RGB delta = {
-        (line.end.rgb.red - line.start.rgb.red) / numPixels,
-        (line.end.rgb.green - line.start.rgb.green) / numPixels,
-        (line.end.rgb.blue - line.start.rgb.blue) / numPixels
+        (line.end.rgb.red - line.start.rgb.red) / lastPixelIndex,
+        (line.end.rgb.green - line.start.rgb.green) / lastPixelIndex,
+        (line.end.rgb.blue - line.start.rgb.blue) / lastPixelIndex
     };
     
     // Pick leading and trailing axis
@@ -167,17 +168,14 @@ void drawLine(Line line) {
     
     //? Update draw buffer every line instead of pixel
     //? This is faster and per pixel makes 0 sense
-    for (int i = 0; i <= numPixels; ++i) {  // loop over exact number of pixels
+    for (int i = 0; i <= lastPixelIndex; ++i) {  // loop over exact number of pixels
         // Compute fractional coverage from error
-        float t = fabs((float)error) / (2.0f * (float)dstLeadingAxis);
-
-        // Main pixel brightness
-        float I1 = 1.0f - t;
-        // Adjacent pixel brightness
-        float I2 = t;
+        alpha = fabs((float)error) / (2.0f * (float)dstLeadingAxis);
+        mainPixel = alpha > 0.5 ? alpha : 1 - alpha;
+        secPixel = 1 - mainPixel;
 
         // Draw main pixel
-        glColor4f(startPoint.rgb.red, startPoint.rgb.green, startPoint.rgb.blue, line.mode == BRESENHAM ? I1 : 1);
+        glColor4f(startPoint.rgb.red, startPoint.rgb.green, startPoint.rgb.blue, line.mode == BRESENHAM ? mainPixel : 1);
         
         if (condSlope)
             glVertex2i(leadingAxis, trailingAxis);
@@ -186,7 +184,7 @@ void drawLine(Line line) {
 
         if (line.mode == BRESENHAM) {
             // Draw neighbor pixel (one step toward the slope direction)
-            glColor4f(startPoint.rgb.red, startPoint.rgb.green, startPoint.rgb.blue, I2);
+            glColor4f(startPoint.rgb.red, startPoint.rgb.green, startPoint.rgb.blue, secPixel);
 
             if (condSlope)
                 glVertex2i(leadingAxis, trailingAxis + signTrailingAxis);
@@ -330,8 +328,18 @@ void init() {
 
 void display(void) {
     //! Avoid initial call when window is created
-    if (isSecClick == -1) return;
-    
+    if (isSecClick == -1) {
+        Line line;
+        line.start.x = 1;
+        line.start.y = 2;
+        line.end.x = 9;
+        line.end.y = 4;
+        line.mode = BRESENHAM;
+        drawLine(line);
+        glFlush();
+        return;
+    }
+
     if (reshapeState == 1) {
         //! Redraw all object relative to new window
         redrawAll();
