@@ -328,17 +328,8 @@ void init() {
 
 void display(void) {
     //! Avoid initial call when window is created
-    if (isSecClick == -1) {
-        Line line;
-        line.start.x = 1;
-        line.start.y = 2;
-        line.end.x = 9;
-        line.end.y = 4;
-        line.mode = BRESENHAM;
-        drawLine(line);
-        glFlush();
-        return;
-    }
+    if (isSecClick == -1) return;
+
 
     if (reshapeState == 1) {
         //! Redraw all object relative to new window
