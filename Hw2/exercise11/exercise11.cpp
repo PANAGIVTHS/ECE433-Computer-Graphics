@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "polygon.h"
 
 void display();
 void mouseHandler(int button, int state, int x, int y);
@@ -13,95 +14,6 @@ void keyboardHandler(unsigned char key, int x, int y);
 void windowToWorldCoord(int *x, int *y);
 void cleanUp();
 
-typedef struct {
-    float red, green, blue;
-} RGB;
-
-typedef struct {
-    int x, y;
-    RGB rgb;
-} Point;
-
-class Polygon {
-    private:
-        static Polygon **polys;
-        static unsigned int totalPolys;
-        static bool selectingPolygon;
-
-        Point *vertices;
-        unsigned int totalVertices;
-
-        static Polygon * addPolygon() {
-            selectingPolygon = true;
-            polys = (Polygon **) realloc(polys, (++totalPolys) * sizeof(Polygon *));
-            Polygon *newPolygon = (Polygon *) malloc(sizeof(Polygon));
-            *newPolygon = Polygon();
-            return polys[totalPolys - 1] = newPolygon;
-        }
-
-    public:
-        Polygon() {
-            vertices = NULL;
-            totalVertices = 0;
-        }
-
-        ~Polygon() {
-            free(vertices);
-        }
-
-        void addVertex(Point point) {
-            vertices = (Point *) realloc(vertices, (totalVertices + 1) * sizeof(Point)); //FIX THIS
-            vertices[totalVertices++] = point;
-        }
-
-        void draw() {
-            if (totalVertices <= 1) return;
-
-            Point first = selectingPolygon ? vertices[totalVertices - 2] : vertices[totalVertices - 1];
-            RGB firstColor = first.rgb;
-            Point second = selectingPolygon ? vertices[totalVertices - 1] : vertices[0];
-            RGB secondColor = second.rgb;
-            glBegin(GL_LINES);
-            glColor3f(firstColor.red, firstColor.green, firstColor.blue);
-            glVertex2i(first.x, first.y);
-            glColor3f(secondColor.red, secondColor.green, secondColor.blue);
-            glVertex2i(second.x, second.y);
-            glEnd();
-        }
-
-        static void init() {
-            polys = (Polygon **) malloc(sizeof(Polygon *));
-            totalPolys = 0;
-            selectingPolygon = false;
-        }
-
-        static void destroy() {
-            for (int i = 0; i < totalPolys; i++) {
-                Polygon *poly = polys[i];
-                poly->~Polygon();
-                free(poly);
-            }
-            free(polys);
-        }
-
-        static Polygon * getCurrent() {
-            return totalPolys != 0 ? polys[totalPolys - 1] : NULL;
-        }
-
-        static Polygon * getCurrentOrCreate() {
-            return selectingPolygon ? polys[totalPolys - 1] : addPolygon();
-        }
-
-        static bool completeCurrent() {
-            bool oldVal = selectingPolygon;
-            selectingPolygon = false;
-            return oldVal;
-        }
-};
-
-Polygon **Polygon::polys = NULL;
-unsigned int Polygon::totalPolys = 0;
-bool Polygon::selectingPolygon = false;
 RGB curColor = {.red = 1, .green = 0, .blue = 0};
 
 void init() {
@@ -156,13 +68,13 @@ void mouseHandler(int button, int state, int x, int y) {
 
     int localX = x, localY = y;
     windowToWorldCoord(&localX, &localY);
+    Point vertex = {.x = localX, .y = localY, .rgb = curColor};
 
     if (button == GLUT_LEFT_BUTTON) {
-        Point vertex = {.x = localX, .y = localY, .rgb = curColor};
         Polygon *poly = Polygon::getCurrentOrCreate();
         poly->addVertex(vertex);
         glutPostRedisplay();
-    } else if (button == GLUT_RIGHT_BUTTON && Polygon::completeCurrent()) {
+    } else if (button == GLUT_RIGHT_BUTTON && Polygon::completeCurrent(vertex)) {
         glutPostRedisplay();
     } else if (button == GLUT_RIGHT_BUTTON) {
         glClear(GL_COLOR_BUFFER_BIT);
