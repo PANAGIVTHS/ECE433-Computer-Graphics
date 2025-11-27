@@ -25,26 +25,48 @@ typedef struct {
 class Polygon {
     private:
         static Polygon **polys;
-        static int totalPolys;
+        static unsigned int totalPolys;
         static bool selectingPolygon;
 
-        Point *vertices = NULL;
-        int totalVertices = 0;
+        Point *vertices;
+        unsigned int totalVertices;
 
         static Polygon * addPolygon() {
+            selectingPolygon = true;
             polys = (Polygon **) realloc(polys, (++totalPolys) * sizeof(Polygon *));
             Polygon *newPolygon = (Polygon *) malloc(sizeof(Polygon));
-            polys[totalPolys - 1] = newPolygon;
+            *newPolygon = Polygon();
+            return polys[totalPolys - 1] = newPolygon;
         }
 
     public:
+        Polygon() {
+            vertices = NULL;
+            totalVertices = 0;
+        }
+
         ~Polygon() {
             free(vertices);
         }
 
         void addVertex(Point point) {
-            vertices = (Point *) realloc(vertices, (++totalVertices) * sizeof(Point));
-            vertices[totalVertices - 1] = point;
+            vertices = (Point *) realloc(vertices, (totalVertices + 1) * sizeof(Point)); //FIX THIS
+            vertices[totalVertices++] = point;
+        }
+
+        void draw() {
+            if (totalVertices <= 1) return;
+
+            Point first = selectingPolygon ? vertices[totalVertices - 2] : vertices[totalVertices - 1];
+            RGB firstColor = first.rgb;
+            Point second = selectingPolygon ? vertices[totalVertices - 1] : vertices[0];
+            RGB secondColor = second.rgb;
+            glBegin(GL_LINES);
+            glColor3f(firstColor.red, firstColor.green, firstColor.blue);
+            glVertex2i(first.x, first.y);
+            glColor3f(secondColor.red, secondColor.green, secondColor.blue);
+            glVertex2i(second.x, second.y);
+            glEnd();
         }
 
         static void init() {
@@ -63,7 +85,7 @@ class Polygon {
         }
 
         static Polygon * getCurrent() {
-            return selectingPolygon ? polys[totalPolys - 1] : NULL;
+            return totalPolys != 0 ? polys[totalPolys - 1] : NULL;
         }
 
         static Polygon * getCurrentOrCreate() {
@@ -77,6 +99,9 @@ class Polygon {
         }
 };
 
+Polygon **Polygon::polys = NULL;
+unsigned int Polygon::totalPolys = 0;
+bool Polygon::selectingPolygon = false;
 RGB curColor = {.red = 1, .green = 0, .blue = 0};
 
 void init() {
@@ -118,7 +143,12 @@ int main(int argc, char** argv) {
 }
 
 void display() {
+    Polygon *poly = Polygon::getCurrent();
+    if (poly == NULL) return;
 
+    poly->draw();
+
+    glFlush();
 }
 
 void mouseHandler(int button, int state, int x, int y) {
@@ -131,7 +161,10 @@ void mouseHandler(int button, int state, int x, int y) {
         Point vertex = {.x = localX, .y = localY, .rgb = curColor};
         Polygon *poly = Polygon::getCurrentOrCreate();
         poly->addVertex(vertex);
-    } else if (button == GLUT_RIGHT_BUTTON && !Polygon::completeCurrent()) {
+        glutPostRedisplay();
+    } else if (button == GLUT_RIGHT_BUTTON && Polygon::completeCurrent()) {
+        glutPostRedisplay();
+    } else if (button == GLUT_RIGHT_BUTTON) {
         glClear(GL_COLOR_BUFFER_BIT);
         glFlush();
     }
