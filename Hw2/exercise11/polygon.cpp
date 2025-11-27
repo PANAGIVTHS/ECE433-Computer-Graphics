@@ -25,7 +25,7 @@ Polygon::~Polygon() {
 // Public instance methods
 // -----------------------------------
 void Polygon::addVertex(Point point) {
-    vertices = (Point *) realloc(vertices, (totalVertices + 1) * sizeof(Point)); //FIX THIS
+    vertices = (Point *) realloc(vertices, (totalVertices + 1) * sizeof(Point));
     vertices[totalVertices++] = point;
 }
 
@@ -62,11 +62,11 @@ void Polygon::destroy() {
     free(polys);
 }
 
-Polygon * Polygon::getCurrent() {
+Polygon *Polygon::getCurrent() {
     return totalPolys != 0 ? polys[totalPolys - 1] : NULL;
 }
 
-Polygon * Polygon::getCurrentOrCreate() {
+Polygon *Polygon::getCurrentOrCreate() {
     return selectingPolygon ? polys[totalPolys - 1] : addPolygon();
 }
 
@@ -84,7 +84,7 @@ bool Polygon::completeCurrent(Point vertex) {
 // ----------------------------------- 
 // Private static methods
 // -----------------------------------
-Polygon * Polygon::addPolygon() {
+Polygon *Polygon::addPolygon() {
     selectingPolygon = true;
     polys = (Polygon **) realloc(polys, (++totalPolys) * sizeof(Polygon *));
     Polygon *newPolygon = (Polygon *) malloc(sizeof(Polygon));

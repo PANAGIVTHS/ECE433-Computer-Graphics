@@ -22,7 +22,7 @@ private:
     unsigned int totalVertices;
 
     // Helper to add a new polygon to the static list
-    static Polygon * addPolygon();
+    static Polygon *addPolygon();
 
 public:
     Polygon();
@@ -34,8 +34,8 @@ public:
     // Static management functions
     static void init();
     static void destroy();
-    static Polygon * getCurrent();
-    static Polygon * getCurrentOrCreate();
+    static Polygon *getCurrent();
+    static Polygon *getCurrentOrCreate();
     static bool completeCurrent(Point vertex);
 };
 
