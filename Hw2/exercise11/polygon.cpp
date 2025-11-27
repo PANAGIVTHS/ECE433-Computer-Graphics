@@ -71,6 +71,11 @@ Polygon * Polygon::getCurrentOrCreate() {
 }
 
 bool Polygon::completeCurrent(Point vertex) {
+    if (selectingPolygon) {
+        Polygon *cur = polys[totalPolys - 1];
+        cur->addVertex(vertex);
+        cur->draw();
+    }
     bool oldVal = selectingPolygon;
     selectingPolygon = false;
     return oldVal;
