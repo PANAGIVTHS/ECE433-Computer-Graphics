@@ -17,9 +17,11 @@ LDFLAGS = -L/usr/X11R6/lib -L/sw/lib -L/usr/sww/lib \
 endif
 RM = /bin/rm -f
 all: exercise12
-exercise12: exercise12.o 
-	$(CC) $(CFLAGS) -o exercise12 exercise12.o $(INCFLAGS) $(LDFLAGS)
+exercise12: exercise12.o polygon.o
+	$(CC) $(CFLAGS) -o exercise12 exercise12.o polygon.o $(INCFLAGS) $(LDFLAGS)
 exercise12.o: exercise12.cpp 
 	$(CC) $(CFLAGS) $(INCFLAGS) -c exercise12.cpp 
+polygon.o: polygon.cpp polygon.h 
+	$(CC) $(CFLAGS) $(INCFLAGS) -c polygon.cpp 
 clean: 
 	$(RM) *.o exercise12

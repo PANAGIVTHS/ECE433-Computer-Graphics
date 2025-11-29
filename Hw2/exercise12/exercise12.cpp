@@ -6,23 +6,31 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "polygon.h"
 
-
-typedef struct {
-    int x, y;
-} Point;
+typedef enum {
+    CLIPPING_WINDOW,
+    POLYGON_DRAWING
+} State;
 
 typedef struct {
     Point start, end;
 } clippingWindow;
 
 clippingWindow window;
+State curState = POLYGON_DRAWING;
 
-// a flag that when is 1 it means that we draw a polygon
-int polygon_draw = 0;
+/*
+a flag that when it's 1 it means that we draw a polygon
+int polygonChosen = 0;
+a flag that when it's 1 it means that we draw the clipping window
 int clippingChosen = 0;
+*/
 
 void init() {
+    //initialize polygon array
+    Polygon::init();
+    
     //backround colour dark grey, alpha parameter set to default
     glClearColor(0.2, 0.2, 0.2, 0.0);
 
@@ -54,9 +62,18 @@ void windowToWorldCoord(int *x, int *y) {
 
 
 void mouseHandler(int button, int state, int x, int y) {
+    if (state != GLUT_DOWN) return;
+    
     int localX = x, localY = y;
+    
+    // checking if we are in the state that we draw the polygons
+    if (curState == POLYGON_DRAWING) {
+        if (button = GLUT_LEFT_BUTTON) {
 
-    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+        }
+    }
+
+    if (button == GLUT_LEFT_BUTTON && ) {
         windowToWorldCoord(&localX, &localY);
         window.start.x = localX;
         window.start.y = localY;
@@ -80,25 +97,35 @@ void mouseMove(int x, int y) {
 
 
 void keyboardHandler(unsigned char key, int x, int y) {
-    switch (key)
-    {
-    case 'GLUT_KEY_F1':
-        break;
-    case 'r':
-    case 'R':
-        //edw kaleitai mallon gia to cliping
-        break;    
-    case 'c':
-    case 'C':
-        glClear(GL_COLOR_BUFFER_BIT);
-        glFlush();
-        break;
-    case 'q':
-    case 'Q':
-        exit(0);
-        break;
-    default:
-        break;
+    switch (key) {
+        case 'f':
+            switch (curState) { 
+                case POLYGON_DRAWING:
+                    curState = CLIPPING_WINDOW;
+                    break;
+                case CLIPPING_WINDOW:
+                    curState = POLYGON_DRAWING;
+                    break;
+                default:
+                    curState = POLYGON_DRAWING;
+                    break;
+                }
+            break;
+        case 'r':
+        case 'R':
+            //edw kaleitai to cliping
+            break;    
+        case 'c':
+        case 'C':
+            glClear(GL_COLOR_BUFFER_BIT);
+            glFlush();
+            break;
+        case 'q':
+        case 'Q':
+            exit(0);
+            break;
+        default:
+            break;
     }
 }
 
@@ -108,10 +135,18 @@ void display(){
 	if (clippingChosen == 1) {
 		glRecti(window.start.x, window.start.y, window.end.x, window.end.y);
     }
+    else if(polygonChosen == 1) {
+        Polygon *poly = Polygon::getCurrent();
+        if (poly == NULL) return;
+        
+        poly->draw();
+    }
     glFlush();
 }
 
-
+void cleanUp() {
+    Polygon::destroy();
+}
 
 int main(int argc, char** argv) {
 
