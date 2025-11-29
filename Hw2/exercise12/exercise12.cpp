@@ -72,7 +72,7 @@ void mouseHandler(int button, int state, int x, int y) {
         
         Point vertex = {.x = localX, .y = localY};
         
-        if (button = GLUT_LEFT_BUTTON) {
+        if (button == GLUT_LEFT_BUTTON) {
             Polygon *poly = Polygon::getCurrentOrCreate();
             poly->addVertex(vertex);
             glutPostRedisplay();
@@ -103,21 +103,21 @@ void mouseMove(int x, int y) {
     }
 }
 
+void specialKeyHandler(int key, int x, int y) {
+    switch (key) {
+    case GLUT_KEY_F1:
+        if (curState == POLYGON_DRAWING) {
+            curState = CLIPPING_WINDOW;
+        }
+        else {
+            curState = POLYGON_DRAWING;
+        }
+        break;
+    }
+}
+
 void keyboardHandler(unsigned char key, int x, int y) {
     switch (key) {
-        case GLUT_KEY_F1:
-            switch (curState) { 
-                case POLYGON_DRAWING:
-                    curState = CLIPPING_WINDOW;
-                    break;
-                case CLIPPING_WINDOW:
-                    curState = POLYGON_DRAWING;
-                    break;
-                default:
-                    curState = POLYGON_DRAWING;
-                    break;
-                }
-            break;
         case 'r':
         case 'R':
             //edw kaleitai to cliping
@@ -168,6 +168,7 @@ int main(int argc, char** argv) {
     glutKeyboardFunc(keyboardHandler);
     glutMouseFunc(mouseHandler);
     glutMotionFunc(mouseMove);
+    glutSpecialFunc(specialKeyHandler);
 
     init();
     glClear(GL_COLOR_BUFFER_BIT);
