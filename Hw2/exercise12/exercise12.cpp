@@ -65,40 +65,47 @@ void mouseHandler(int button, int state, int x, int y) {
     if (state != GLUT_DOWN) return;
     
     int localX = x, localY = y;
-    
+    windowToWorldCoord(&localX, &localY);
+            
     // checking if we are in the state that we draw the polygons
     if (curState == POLYGON_DRAWING) {
+        
+        Point vertex = {.x = localX, .y = localY};
+        
         if (button = GLUT_LEFT_BUTTON) {
-
+            Polygon *poly = Polygon::getCurrentOrCreate();
+            poly->addVertex(vertex);
+            glutPostRedisplay();
+        }
+        else if (button == GLUT_RIGHT_BUTTON && Polygon::completeCurrent(vertex)) {
+            glutPostRedisplay();
+        }    
+        /*ETSI OPWS DIABAZW THN EKFWNHSH DEN EXW KATALABEI AN LEEI GIA KAPOIO
+        CLEAR TIS OTHONIS ME TO RIGHT BUTTON, ISWS AYTO XREIASTEI GIA TO CLIPPING WINDOW IDK*/
+    }
+    else if (curState == CLIPPING_WINDOW) {
+        if (button == GLUT_LEFT_BUTTON) {
+            window.start.x = localX;
+            window.start.y = localY;
+            drawPoint(window.start.x, window.start.y);
         }
     }
-
-    if (button == GLUT_LEFT_BUTTON && ) {
-        windowToWorldCoord(&localX, &localY);
-        window.start.x = localX;
-        window.start.y = localY;
-        drawPoint(window.start.x, window.start.y);
-    }
-    /*else {
-        
-    }
-    */
     glFlush();
 }
 
 void mouseMove(int x, int y) {
     int localX = x, localY = y;
     windowToWorldCoord(&localX, &localY);
-    window.end.x = localX;
-    window.end.y = localY;
-    clippingChosen = 1;    
-    glutPostRedisplay();
+    if (curState == CLIPPING_WINDOW) {
+        window.end.x = localX;
+        window.end.y = localY;
+        glutPostRedisplay();
+    }
 }
-
 
 void keyboardHandler(unsigned char key, int x, int y) {
     switch (key) {
-        case 'f':
+        case GLUT_KEY_F1:
             switch (curState) { 
                 case POLYGON_DRAWING:
                     curState = CLIPPING_WINDOW;
@@ -132,10 +139,10 @@ void keyboardHandler(unsigned char key, int x, int y) {
 void display(){
 	glClear(GL_COLOR_BUFFER_BIT);	//The buffers currently enabled for color writing
 	glColor3f(1.0, 1.0, 1.0); 
-	if (clippingChosen == 1) {
+	if (curState == CLIPPING_WINDOW) {
 		glRecti(window.start.x, window.start.y, window.end.x, window.end.y);
     }
-    else if(polygonChosen == 1) {
+    else if(curState == POLYGON_DRAWING) {
         Polygon *poly = Polygon::getCurrent();
         if (poly == NULL) return;
         
