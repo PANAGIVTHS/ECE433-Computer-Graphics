@@ -32,7 +32,7 @@ void init() {
     Polygon::init();
     
     //backround colour dark grey, alpha parameter set to default
-    glClearColor(0.2, 0.2, 0.2, 0.0);
+    glClearColor(0.4, 0.4, 0.4, 0.0);
 
     //glEnable(GL_BLEND);
     //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -137,7 +137,6 @@ void keyboardHandler(unsigned char key, int x, int y) {
 }
 
 void display(){
-	glClear(GL_COLOR_BUFFER_BIT);	//The buffers currently enabled for color writing
 	glColor3f(1.0, 1.0, 1.0); 
 	if (curState == CLIPPING_WINDOW) {
 		glRecti(window.start.x, window.start.y, window.end.x, window.end.y);
