@@ -1,5 +1,6 @@
 #include "polygon.h"
 #include <stdlib.h>
+#include <vector> 
 #include <GL/glut.h>
 
 // ----------------------------------- 
@@ -15,6 +16,7 @@ bool Polygon::selectingPolygon = false;
 Polygon::Polygon() {
     vertices = NULL;
     totalVertices = 0;
+    isFirstVertex = false;
 }
 
 Polygon::~Polygon() {
@@ -25,8 +27,61 @@ Polygon::~Polygon() {
 // Public instance methods
 // -----------------------------------
 void Polygon::addVertex(Point point) {
+    if (isFirstVertex) {
+        totalMaxY = point.y;
+        totalMinY = point.x;
+        isFirstVertex = false;
+    }
+
+    totalMaxY = (point.y > totalMaxY) ? point.y : totalMaxY;
+    totalMinY = (point.y < totalMinY) ? point.y : totalMinY;
+
     vertices = (Point *) realloc(vertices, (totalVertices + 1) * sizeof(Point));
     vertices[totalVertices++] = point;
+}
+
+int getMinY() const {
+    return(totalMinY);
+}
+
+int getMaxY() const {
+    return(totalMaxY);
+}
+
+std::vector<Edge> Polygon::getEdges() const {
+    std::vector<Edge> edgesVec;
+    edgesVec.reserve(totalVertices);
+
+    for (unsigned int i = 0; i < totalVertices; ++i) {
+        unsigned int j = (i + 1) % totalVertices;
+        edgesVec.push_back({vertices[i], vertices[j]});
+    }
+    return edgesVec;
+}
+
+std::vector<Edge> Polygon::getEdgesCrossing(int y) const {
+    std::vector<Edge> edgeVecCross;
+    
+    if (y < totalMinY || y > totalMaxY) {
+        return edgeVecCross;
+    }
+
+    std::vector<Edge> edgesVec = getEdges();
+    edgeVecCross.reserve(edgesVec.size());
+
+    for (const Edge& curEdge : edgesVec) {
+        int minY = curEdge.getMinY();
+        int maxY = curEdge.getMaxY();
+
+        //* Skip horizontal and if non crossing edges
+        if (maxY < y || minY > y || (maxY - minY == 0)) 
+            continue;
+
+        edgeVecCross.push_back(curEdge);
+
+    }
+
+    return edgeVecCross;
 }
 
 void Polygon::draw() {
