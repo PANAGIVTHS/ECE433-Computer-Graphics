@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <stdbool.h>
 #include "polygon.h"
 
 typedef enum {
@@ -17,15 +18,192 @@ typedef struct {
     Point start, end;
 } clippingWindow;
 
+typedef enum {
+    LEFT,
+    RIGHT, 
+    BOTTOM, 
+    TOP
+} Boundary;
+
+typedef struct {
+    Point PointInside;
+    Point intersection;
+} clippedLine;
+
+
 clippingWindow window;
+Boundary Bounds = LEFT;
 State curState = POLYGON_DRAWING;
 
-/*
-a flag that when it's 1 it means that we draw a polygon
-int polygonChosen = 0;
-a flag that when it's 1 it means that we draw the clipping window
-int clippingChosen = 0;
-*/
+
+int max(int num1, int num2) {
+    return num1 > num2 ? num1 : num2;
+}
+
+int min(int num1, int num2) {
+    return num1 < num2 ? num1 : num2;
+}
+
+void drawPoint(int x, int y) {
+    glColor3f(1.0, 0.0, 0.0);
+    glPointSize(1.0f);
+    glBegin(GL_POINT);
+        glVertex2i(x, y);
+    glEnd();
+    glFlush();
+}
+
+//pote tha allazei to bounds epishs 
+bool IsInside(Point *vertex, clippingWindow window, Boundary Bounds){
+    switch (Bounds){
+        case LEFT:
+            if (vertex->x < min(window.start.x, window.end.x)) {
+                vertex->inside = false;
+                return vertex;
+            }
+            else {
+                vertex->inside = true;
+                return vertex;
+            }
+            break;
+        case RIGHT:
+            if (vertex->x > max(window.start.x, window.end.x)) {
+                vertex->inside = false;
+                return vertex;
+            }
+            else {
+                vertex->inside = true;
+                return vertex;
+            }
+            break;
+        case BOTTOM:
+            if (vertex->y < min(window.start.y, window.end.y)) {
+                vertex->inside = false;
+                return vertex;
+            }
+            else {
+                vertex->inside = true;
+                return vertex;
+            }
+            break;
+        case TOP:
+            if (vertex->y > max(window.start.y, window.end.y)) {
+                vertex->inside = false;
+            }
+            else {
+                vertex->inside = true;
+                return vertex;
+            }
+            break;
+        default:
+            break;
+    }
+}
+
+clippedLine cliping(Point vertex1, Point vertex2, clippingWindow Window, Boundary Bounds) {
+
+    clippedLine line;
+    float slope = 0.0;
+
+    if (vertex1.x == vertex2.x) return;
+    else {
+        slope = ((vertex2.y) - (vertex1.y))/((vertex2.x) - (vertex1.x));
+    }
+
+    //both are outside
+    if (!vertex1.inside && !vertex2.inside) {
+        return;
+    }
+    // both are inside 
+    // chopped
+    else if(vertex1.inside && vertex2.inside) {
+        line.PointInside = vertex2;
+        return line;
+    }
+    // vertex1 inside, vertex2 outside
+    else if (vertex1.inside && !vertex2.inside) {
+        switch (Bounds)
+        {
+        case LEFT:
+            line.intersection.x = min(window.start.x, window.start.y);
+            line.intersection.y = vertex1.y + (slope * (line.intersection.x - vertex1.x));
+            return line;
+            break;
+        
+        case RIGHT:
+            line.intersection.x = max(window.start.x, window.start.y);
+            line.intersection.y = vertex1.y + (slope * (line.intersection.x - vertex1.x));
+            return line;
+            break;
+        
+        case BOTTOM: 
+            line.intersection.y = min(window.start.y, window.end.y);
+            line.intersection.x = vertex1.x + ((line.intersection.y - vertex1.y) / slope);
+            return line;
+            break;
+        
+        case TOP: 
+            line.intersection.y = max(window.start.y, window.end.y);
+            line.intersection.x = vertex1.x + ((line.intersection.y - vertex1.y) / slope);
+            return line;
+            break;
+            
+        default:
+            break;
+        }
+    }
+    //vertex1 outside, vertex2 inside 
+    else {
+        line.PointInside = vertex2;
+        switch (Bounds)
+        {
+        case LEFT:
+            line.intersection.x = min(window.start.x, window.start.y);
+            line.intersection.y = vertex1.y + (slope * (line.x - vertex1.x));
+            return line;
+            break;
+        
+        case RIGHT:
+            line.intersection.x = max(window.start.x, window.start.y);
+            line.intersection.y = vertex1.y + (slope * (line.intersection.x - vertex1.x));
+            return line;
+            break;
+        
+        case BOTTOM: 
+            line.intersection.y = min(window.start.y, window.end.y);
+            line.intersection.x = vertex1.x + ((line.intersection.y - vertex1.y) / slope);
+            return line;
+            break;
+        
+        case TOP: 
+            line.intersection.y = max(window.start.y, window.end.y);
+            line.intersection.x = vertex1.x + ((line.intersection.y - vertex1.y) / slope);
+            return line;
+            break;
+            
+        default:
+            break;
+        }
+    }
+}
+
+void changingBorder(int flag, Boundary Bounds) {
+    switch (flag){
+        switch (Bounds){
+            case LEFT:
+                Bounds = RIGHT;
+                break;
+            case RIGHT:
+                Bounds = BOTTOM;
+            case BOTTOM:
+                Bounds = TOP;
+            default:
+                break;
+        }
+    }
+}
+
+
 
 void init() {
     //initialize polygon array
@@ -41,15 +219,6 @@ void init() {
     glPointSize(1.0f);
 
     gluOrtho2D(-300, 300, -300, 300);
-}
-
-void drawPoint(int x, int y) {
-    glColor3f(1.0, 0.0, 0.0);
-    glPointSize(1.0f);
-    glBegin(GL_POINT);
-        glVertex2i(x, y);
-    glEnd();
-    glFlush();
 }
 
 void windowToWorldCoord(int *x, int *y) {
@@ -103,6 +272,7 @@ void mouseMove(int x, int y) {
     }
 }
 
+// needs x,y inputs, aside from the fact that they are not used
 void specialKeyHandler(int key, int x, int y) {
     switch (key) {
     case GLUT_KEY_F1:
