@@ -1,5 +1,7 @@
 #ifndef POLYGON_H
 #define POLYGON_H
+#include <vector>
+#include <cmath>
 
 typedef struct {
     float red, green, blue;
@@ -8,11 +10,12 @@ typedef struct {
 typedef struct {
     int x, y;
     RGB rgb;
-} Point;
+    //TODO something about points being floats i dont remember think
+} Point; 
 
 typedef struct {
     Point start, end;
-
+    //TODO add color information for interp (delta value)
     //TODO Katw ta xeria sou Jason START
     inline int getMinX() const {
         return (start.x < end.x ? start.x : end.x);
@@ -29,6 +32,9 @@ typedef struct {
     //TODO Katw ta xeria sou Jason END
 } Edge;
 
+//TODO maybe continue in a version where table
+// isnt done with scanline and keep this one for show
+// will be easier when modifying vertices for ex12
 class Polygon {
 private:
     // Static members to manage the global list of polygons
@@ -39,9 +45,11 @@ private:
     // Instance members
     Point *vertices;
     unsigned int totalVertices;
-    int totalMaxY;
-    int totalMinY;
+    int totalMaxY, totalMinY;
     bool isFirstVertex;
+    std::vector<std::vector<Edge>> activeEdgeTable;
+
+    void fillLine(int y);
 
     // Helper to add a new polygon to the static list
     static Polygon *addPolygon();
@@ -50,7 +58,8 @@ public:
     Polygon();
     ~Polygon();
 
-    void addVertex(Point point);
+    void addVertex(Point point); //TODO shouldnt add if already exists
+    void fill(); 
     void draw();
     int getMinY() const;
     int getMaxY() const;
