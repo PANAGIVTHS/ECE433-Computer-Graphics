@@ -9,22 +9,19 @@ LDFLAGS = -framework OpenGL -framework GLUT -framework Cocoa
 #		-L"/System/Library/Frameworks/OpenGL.framework/Libraries" \
 #		-lGL -lGLU -lm -lstdc++ 
 else
-CFLAGS = -Wall -g #-DGL_GLEXT_PROTOTYPES 
+CFLAGS = -g #-DGL_GLEXT_PROTOTYPES 
 INCFLAGS = -I/usr/X11R6/include -I/sw/include \
 		-I/usr/sww/include -I/usr/sww/pkg/Mesa/include
 LDFLAGS = -L/usr/X11R6/lib -L/sw/lib -L/usr/sww/lib \
-		-L/usr/sww/bin -L/usr/sww/pkg/Mesa/lib -lGLEW -lglut -lGLU -lGL -lX11 -lm -lstdc++
+		-L/usr/sww/bin -L/usr/sww/pkg/Mesa/lib -lGLEW -lglut -lGLU -lGL -lX11 -lm
 endif
 RM = /bin/rm -f
 all: exercise12
-exercise12: exercise12.o polygon.o edge.o
-	$(CC) $(CFLAGS) -o exercise12 exercise12.o polygon.o edge.o $(INCFLAGS) $(LDFLAGS)
+exercise12: exercise12.o polygon.o
+	$(CC) $(CFLAGS) -o exercise12 exercise12.o polygon.o $(INCFLAGS) $(LDFLAGS)
 exercise12.o: exercise12.cpp 
-	$(CC) $(CFLAGS) $(INCFLAGS) -c exercise12.cpp
-polygon.o: polygon.cpp polygon.h
-	$(CC) $(CFLAGS) $(INCFLAGS) -c polygon.cpp
-edge.o: edge.cpp edge.h
-	$(CC) $(CFLAGS) $(INCFLAGS) -c edge.cpp
+	$(CC) $(CFLAGS) $(INCFLAGS) -c exercise12.cpp 
+polygon.o: polygon.cpp polygon.h 
+	$(CC) $(CFLAGS) $(INCFLAGS) -c polygon.cpp 
 clean: 
 	$(RM) *.o exercise12
- 
