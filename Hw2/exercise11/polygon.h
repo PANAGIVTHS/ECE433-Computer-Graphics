@@ -22,7 +22,7 @@ private:
     void fillLine(int y);
     vector<Edge> getEdges();
     void initActiveEdgeTable();
-    
+
     // Helper to add a new polygon to the static list
     static Polygon *addPolygon();
 

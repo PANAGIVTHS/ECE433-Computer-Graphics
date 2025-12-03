@@ -6,11 +6,14 @@ Edge::Edge(Point start, Point end) {
     this->minY = start.y < end.y ? start.y : end.y;
     this->maxY = start.y > end.y ? start.y : end.y;
     this->currentX = start.y < end.y ? start.x : end.x;
-    this->currentColor = start.rgb;
+    this->currentColor = start.y < end.y ? start.rgb : end.rgb;
+    RGB endColor = start.y < end.y ? end.rgb : start.rgb;
     this->xIncrement = (end.y - start.y) == 0 ? 0 : (float) (end.x - start.x) / (end.y - start.y);
-    this->rIncrement = 0;
-    this->gIncrement = 0;
-    this->bIncrement = 0;
+
+    int colorHeight = maxY - minY;
+    this->rIncrement = colorHeight == 0 ? 0 : (float) (endColor.red - currentColor.red) / colorHeight;
+    this->gIncrement = colorHeight == 0 ? 0 : (float) (endColor.green - currentColor.green) / colorHeight;
+    this->bIncrement = colorHeight == 0 ? 0 : (float) (endColor.blue - currentColor.blue) / colorHeight;
 }
 
 Point Edge::getStart() const {
@@ -45,10 +48,4 @@ void Edge::incrementColor() {
     this->currentColor.red += this->rIncrement;
     this->currentColor.green += this->gIncrement;
     this->currentColor.blue += this->bIncrement;
-}
-
-void Edge::setHeight(int height) {
-    this->rIncrement = (float) (end.rgb.red - start.rgb.red) / height;
-    this->gIncrement = (float) (end.rgb.green - start.rgb.green) / height;
-    this->bIncrement = (float) (end.rgb.blue - start.rgb.blue) / height;
 }

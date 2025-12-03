@@ -66,7 +66,6 @@ void Polygon::initActiveEdgeTable() {
     for (Edge& curEdge : edgesVec) {
         int minY = curEdge.getMinY();
         int maxY = curEdge.getMaxY();
-        curEdge.setHeight(numOfScanlines);
 
         //* Skip horizontal and if non crossing edges
         if (maxY - minY == 0)

@@ -21,7 +21,6 @@ public:
     RGB getCurrentColor() const;
     void incrementX();
     void incrementColor();
-    void setHeight(int height);
 };
 
 #endif
