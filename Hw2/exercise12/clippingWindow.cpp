@@ -5,6 +5,14 @@ ClippingWindow::ClippingWindow(Point start, Point end) {
     this->end = end;
 }
 
+void ClippingWindow::setEnd(Point end) {
+    this->end = end;
+}
+
+void ClippingWindow::draw() const {
+    glRecti(start.x, start.y, end.x, end.y);
+}
+
 int ClippingWindow::getMinY() const {
     return start.y < end.y ? start.y : end.y;
 }
@@ -48,38 +56,54 @@ EdgeState ClippingWindow::getState(WindowEdge boundary, Edge edge) {
 }
 
 PointFloat ClippingWindow::intersectEdge(WindowEdge boundary, Edge edge) {
-    Point intersectPoint;
+    PointFloat intersectPoint;
     intersectPoint.rgb = edge.getCurrentColor(); // TODO: increment color
-    start = edge.getStart();
-    end = edge.getEnd();
-    float slope;
 
-    if (start.x != end.x) {
-        slope = (float) (end.y - start.y) / (float) (end.x - start.x);
+    Point start = edge.getStart();
+    Point end = edge.getEnd();
+
+    float slope = 0.0f;
+    bool vertical = (start.x == end.x);
+
+    if (!vertical) {
+        slope = (float)(end.y - start.y) / (float)(end.x - start.x);
     }
 
-    switch(boundary) {
+    switch (boundary) {
         case LEFT: {
-            intersectPoint.x = (float) getMinX();
-            intersectPoint.y = (float) start.y + (slope * (intersectPoint.x - (float) start.x));
+            intersectPoint.x = (float)getMinX();
+            intersectPoint.y = vertical
+                ? (float)start.y
+                : (float)start.y + slope * (intersectPoint.x - (float)start.x);
             break;
         }
         case RIGHT: {
-            intersectPoint.x = (float) getMaxX();
-            intersectPoint.y = (float) start.y + (slope *(intersectPoint.x - (float) start.x));
+            intersectPoint.x = (float)getMaxX();
+            intersectPoint.y = vertical
+                ? (float)start.y
+                : (float)start.y + slope * (intersectPoint.x - (float)start.x);
             break;
         }
         case BOT: {
-            intersectPoint.y = (float) getMinY();
-            intersectPoint.x = (float) start.x + ((intersectPoint.y - (float) start.y) / slope);
+            intersectPoint.y = (float)getMinY();
+            intersectPoint.x = (slope == 0.0f)
+                ? (float)start.x
+                : (float)start.x + ((intersectPoint.y - (float)start.y) / slope);
             break;
         }
         case TOP: {
-            intersectPoint.y = (float) getMaxY();
-            intersectPoint.x = (float) start.x + ((intersectPoint.y - (float) start.y) / slope);
+            intersectPoint.y = (float)getMaxY();
+            intersectPoint.x = (slope == 0.0f)
+                ? (float)start.x
+                : (float)start.x + ((intersectPoint.y - (float)start.y) / slope);
             break;
         }
     }
 
     return intersectPoint;
+}
+
+void ClippingWindow::ClipSelection() {
+    // for all polygons
+    PointFloat oldPoints = toFloat();
 }
