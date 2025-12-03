@@ -159,7 +159,7 @@ clippedLine cliping(Point vertex1, Point vertex2, clippingWindow Window, Boundar
         {
         case LEFT:
             line.intersection.x = min(window.start.x, window.start.y);
-            line.intersection.y = vertex1.y + (slope * (line.x - vertex1.x));
+            line.intersection.y = vertex1.y + (slope * (line.intersection.x - vertex1.x));
             return line;
             break;
         
