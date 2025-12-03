@@ -17,9 +17,6 @@ void cleanUp();
 RGB curColor = {.red = 1, .green = 0, .blue = 0};
 
 void init() {
-    // initialize polygon array
-    Polygon::init();
-
     // backround colour black, alpha parameter set to default
     glClearColor(1.0, 1.0, 1.0, 0.0);
     
@@ -55,6 +52,7 @@ int main(int argc, char** argv) {
 }
 
 void display() {
+    glClear(GL_COLOR_BUFFER_BIT);
     if (Polygon::getTotalPolygons() == 0) { 
         // // 1. TOP VERTEX (Red)
         // // Window Coord: (250, 150) -> World Coord: (0, 100)
@@ -74,11 +72,15 @@ void display() {
         // // Set your color to BLUE here
         // mouseHandler(GLUT_RIGHT_BUTTON, GLUT_DOWN, 350, 350);
 
+        glFlush();
         return;
     }
 
-    Polygon *poly = Polygon::getCurrent();
-    poly->drawLastVertex();
+    for (int i = 0; i < Polygon::getTotalPolygons(); i++) {
+        Polygon& p = Polygon::getPolygon(i);
+
+        p.draw();
+    }
 
     glFlush();
 }
@@ -93,11 +95,15 @@ void mouseHandler(int button, int state, int x, int y) {
     if (button == GLUT_LEFT_BUTTON) {
         Polygon *poly = Polygon::getCurrentOrCreate();
         poly->addVertex(vertex);
-        glutPostRedisplay();
-    } else if (button == GLUT_RIGHT_BUTTON && !Polygon::completeCurrent(vertex)) {
-        glClear(GL_COLOR_BUFFER_BIT);
-        glFlush();
+    } else if (button == GLUT_RIGHT_BUTTON) {
+        Polygon *poly = Polygon::getCurrent();
+        if (poly != NULL)
+            poly->addLastVertex(vertex);
+        else
+            Polygon::clear();
     }
+
+    glutPostRedisplay();
 }
 
 void keyboardHandler(unsigned char key, int x, int y) {
@@ -140,7 +146,6 @@ void keyboardHandler(unsigned char key, int x, int y) {
             break;
         case 'Q':
         case 'q':
-            cleanUp();
             exit(0);
             break;
         default:
@@ -154,8 +159,4 @@ void windowToWorldCoord(int *x, int *y) {
 
     *x -= halfWidth;
     *y = halfHeight - *y;
-}
-
-void cleanUp() {
-    Polygon::destroy();
 }

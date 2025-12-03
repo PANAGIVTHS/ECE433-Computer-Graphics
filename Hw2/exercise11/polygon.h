@@ -11,9 +11,9 @@ class Polygon {
 private:
     // Static members to manage the global list of polygons
     static vector<Polygon> polys;
-    static bool selectingPolygon;
 
     // Instance members
+    bool complete;
     int totalMaxY, totalMinY;
     vector<Point> vertices;
     vector<vector<Edge>> activeEdgeTable;
@@ -22,24 +22,26 @@ private:
     void fillLine(int y);
     vector<Edge> getEdges();
     void initActiveEdgeTable();
+    void drawVertices();
+    void fill();
 
     // Helper to add a new polygon to the static list
     static Polygon *addPolygon();
 
 public:
-    void addVertex(Point point); //TODO shouldnt add if already exists
-    void fill(); 
-    void drawLastVertex();
+    Polygon();
+    void addVertex(Point point);
+    void addLastVertex(Point point);
+    void draw();
     int getMinY() const;
     int getMaxY() const;
     
     // Static management functions
-    static void init();
-    static void destroy();
+    static void clear();
+    static Polygon& getPolygon(int i);
     static int getTotalPolygons();
     static Polygon *getCurrent();
     static Polygon *getCurrentOrCreate();
-    static bool completeCurrent(Point vertex);
 };
 
 #endif
