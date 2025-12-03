@@ -23,7 +23,8 @@ void windowToWorldCoord(int *x, int *y);
 
 RGB curColor = {.red = 1, .green = 0, .blue = 1};
 SelectingState curState = POLYGON_DRAWING;
-ClippingWindow window = ClippingWindow();
+ClippingWindow window;
+bool windowReady = false;
 
 void init() {
     //backround colour dark grey, alpha parameter set to default
@@ -66,8 +67,8 @@ void display() {
 
     // Draw clipping window
 	glColor3f(1.0, 1.0, 1.0);
-    if (window.isReady())
-        glRecti(window.getStartPoint().x, window.getStartPoint().y, window.getEndPoint().x, window.getEndPoint().y);
+    if (windowReady)
+        window.draw();
 
     for (int i = 0; i < Polygon::getTotalPolygons(); i++) {
         Polygon& p = Polygon::getPolygon(i);
@@ -95,7 +96,8 @@ void mouseHandler(int button, int state, int x, int y) {
     Point vertex = {.x = localX, .y = localY, .rgb = curColor};
 
     if (curState == CLIPPING_WINDOW) {
-        window.setPoints(vertex, vertex);
+        window = ClippingWindow(vertex, vertex);
+        windowReady = true;
         glutPostRedisplay();
         return;
     }
@@ -131,7 +133,7 @@ void keyboardHandler(unsigned char key, int x, int y) {
             break;    
         case 'c':
         case 'C':
-            window = ClippingWindow();
+            windowReady = false;
             Polygon::clear();
             glutPostRedisplay();
             break;
