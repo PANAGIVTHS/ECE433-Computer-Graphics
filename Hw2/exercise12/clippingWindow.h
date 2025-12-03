@@ -8,9 +8,14 @@
 class ClippingWindow {
 private:
     Point start, end;
+    int getMaxX() const;
+    int getMaxY() const;
+    int getMinX() const;
+    int getMinY() const;
+    PointFloat ClippingWindow::intersectEdge(WindowEdge boundary, Edge edge);
 public:
     ClippingWindow(Point start, Point end);
-    static EdgeState getState(WindowEdge boundary, Edge edge);
+    EdgeState getState(WindowEdge boundary, Edge edge);
 };
 
 #endif

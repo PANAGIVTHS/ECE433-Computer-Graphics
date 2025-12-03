@@ -5,6 +5,22 @@ ClippingWindow::ClippingWindow(Point start, Point end) {
     this->end = end;
 }
 
+int ClippingWindow::getMinY() const {
+    return start.y < end.y ? start.y : end.y;
+}
+
+int ClippingWindow::getMaxY() const {
+    return start.y > end.y ? start.y : end.y;
+}
+
+int ClippingWindow::getMinX() const {
+    return start.x < end.x ? start.x : end.x;
+}
+
+int ClippingWindow::getMaxX() const {
+    return start.x > end.x ? start.x : end.x;
+}
+
 EdgeState ClippingWindow::getState(WindowEdge boundary, Edge edge) {
     auto classifyState = [](bool s_in, bool e_in) {
         return s_in ? (e_in ? IN_IN : IN_OUT)
@@ -13,20 +29,57 @@ EdgeState ClippingWindow::getState(WindowEdge boundary, Edge edge) {
 
     switch (boundary) {
         case LEFT: {
-            return classifyState(edge.getStart().x >= this->left.x,
-                                edge.getEnd().x >= this->left.x);
+            return classifyState(edge.getStart().x >= getMinX(), edge.getEnd().x >= getMinX());
+            break;
         }
         case RIGHT: {
-            return classifyState(edge.getStart().x <= clip.right.x,
-                                edge.getEnd().x <= clip.right.x);
+            return classifyState(edge.getStart().x <= getMaxX(), edge.getEnd().x <= getMaxX());
+            break;
         }
         case BOT: {
-            return classifyState(edge.getStart().y <= clip.top.y,
-                                edge.getEnd().x <= clip.top.y);
+            return classifyState(edge.getStart().y >= getMinY(), edge.getEnd().y >= getMinY());
+            break;
         }
         case TOP: {
-            return classifyState(edge.getStart().y >= clip.bot.y,
-                                edge.getEnd().x >= clip.bot.y);
+            return classifyState(edge.getStart().y <= getMaxY(), edge.getEnd().y <= getMaxY());
+            break;
         }
     }
+}
+
+PointFloat ClippingWindow::intersectEdge(WindowEdge boundary, Edge edge) {
+    Point intersectPoint;
+    intersectPoint.rgb = edge.getCurrentColor(); // TODO: increment color
+    start = edge.getStart();
+    end = edge.getEnd();
+    float slope;
+
+    if (start.x != end.x) {
+        slope = (float) (end.y - start.y) / (float) (end.x - start.x);
+    }
+
+    switch(boundary) {
+        case LEFT: {
+            intersectPoint.x = (float) getMinX();
+            intersectPoint.y = (float) start.y + (slope * (intersectPoint.x - (float) start.x));
+            break;
+        }
+        case RIGHT: {
+            intersectPoint.x = (float) getMaxX();
+            intersectPoint.y = (float) start.y + (slope *(intersectPoint.x - (float) start.x));
+            break;
+        }
+        case BOT: {
+            intersectPoint.y = (float) getMinY();
+            intersectPoint.x = (float) start.x + ((intersectPoint.y - (float) start.y) / slope);
+            break;
+        }
+        case TOP: {
+            intersectPoint.y = (float) getMaxY();
+            intersectPoint.x = (float) start.x + ((intersectPoint.y - (float) start.y) / slope);
+            break;
+        }
+    }
+
+    return intersectPoint;
 }

@@ -10,6 +10,12 @@ typedef struct {
     RGB rgb;
 } Point;
 
+//TODO with generic typename
+typedef struct {
+    float x, y;
+    RGB rgb;
+} PointFloat;
+
 typedef enum {
     LEFT,
     RIGHT,
