@@ -9,7 +9,6 @@ using namespace std;
 // Static fields
 // -----------------------------------
 vector<Polygon> Polygon::polys;
-bool Polygon::selectingPolygon = false;
 
 // ----------------------------------- 
 // Private instance methods
@@ -58,6 +57,7 @@ std::vector<Edge> Polygon::getEdges() {
 
 void Polygon::initActiveEdgeTable() {
     int numOfScanlines = getMaxY() - getMinY() + 1;
+    activeEdgeTable.clear();
     activeEdgeTable.resize(numOfScanlines);
     
     int totalMinY = getMinY();
@@ -75,46 +75,13 @@ void Polygon::initActiveEdgeTable() {
     }
 }
 
-// ----------------------------------- 
-// Private static methods
-// -----------------------------------
-Polygon* Polygon::addPolygon() {
-    selectingPolygon = true;
-    polys.push_back(Polygon());
-    return &polys.back();
-}
-
-// ----------------------------------- 
-// Public instance methods
-// -----------------------------------
-void Polygon::addVertex(Point point) {
-    if (vertices.empty()) {
-        totalMaxY = point.y;
-        totalMinY = point.y;
-    }
-
-    totalMaxY = (point.y > totalMaxY) ? point.y : totalMaxY;
-    totalMinY = (point.y < totalMinY) ? point.y : totalMinY;
-
-    vertices.push_back(point);
-}
-
-int Polygon::getMinY() const {
-    return totalMinY;
-}
-
-int Polygon::getMaxY() const {
-    return totalMaxY;
-}
-
-void Polygon::drawLastVertex() {
-    if (vertices.empty()) return;
-
-    Point point = vertices.back();
-    RGB color = point.rgb;
+void Polygon::drawVertices() {
     glBegin(GL_POINTS);
-    glColor3f(color.red, color.green, color.blue);
-    glVertex2i(point.x, point.y);
+    for (Point& point : vertices) {
+        RGB color = point.rgb;
+        glColor3f(color.red, color.green, color.blue);
+        glVertex2i(point.x, point.y);
+    }
     glEnd();
 }
 
@@ -155,14 +122,61 @@ void Polygon::fill() {
 }
 
 // ----------------------------------- 
-// Public static methods
+// Private static methods
 // -----------------------------------
-void Polygon::init() {
-    selectingPolygon = false;
+Polygon* Polygon::addPolygon() {
+    polys.push_back(Polygon());
+    return &polys.back();
 }
 
-void Polygon::destroy() {
+// ----------------------------------- 
+// Public instance methods
+// -----------------------------------
+Polygon::Polygon() {
+    complete = false;
+}
+
+void Polygon::addVertex(Point point) {
+    if (complete) return;
+    if (vertices.empty()) {
+        totalMaxY = point.y;
+        totalMinY = point.y;
+    }
+
+    totalMaxY = (point.y > totalMaxY) ? point.y : totalMaxY;
+    totalMinY = (point.y < totalMinY) ? point.y : totalMinY;
+
+    vertices.push_back(point);
+}
+
+void Polygon::addLastVertex(Point point) {
+    addVertex(point);
+    complete = true;
+}
+
+int Polygon::getMinY() const {
+    return totalMinY;
+}
+
+int Polygon::getMaxY() const {
+    return totalMaxY;
+}
+
+void Polygon::draw() {
+    drawVertices();
+    if (complete)
+        fill();
+}
+
+// ----------------------------------- 
+// Public static methods
+// -----------------------------------
+void Polygon::clear() {
     polys.clear();
+}
+
+Polygon& Polygon::getPolygon(int i) {
+    return polys.at(i);
 }
 
 int Polygon::getTotalPolygons() {
@@ -170,22 +184,9 @@ int Polygon::getTotalPolygons() {
 }
 
 Polygon *Polygon::getCurrent() {
-    return &polys.back();
+    return polys.size() > 0 && !polys.back().complete ? &polys.back() : NULL;
 }
 
 Polygon *Polygon::getCurrentOrCreate() {
-    return selectingPolygon ? &polys.back() : addPolygon();
-}
-
-bool Polygon::completeCurrent(Point vertex) {
-    if (selectingPolygon) {
-        Polygon *cur = getCurrent();
-        cur->addVertex(vertex);
-        cur->drawLastVertex();
-        cur->fill();
-        glFlush();
-    }
-    bool oldVal = selectingPolygon;
-    selectingPolygon = false;
-    return oldVal;
+    return polys.size() > 0 && !polys.back().complete ? &polys.back() : addPolygon();
 }

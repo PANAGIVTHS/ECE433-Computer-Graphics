@@ -7,30 +7,38 @@
 #include <stdlib.h>
 #include <math.h>
 #include "polygon.h"
+#include "clippingWindow.h"
+
+typedef enum {
+    CLIPPING_WINDOW,
+    POLYGON_DRAWING
+} SelectingState;
 
 void display();
+void mouseMove(int x, int y);
 void mouseHandler(int button, int state, int x, int y);
 void keyboardHandler(unsigned char key, int x, int y);
 void windowToWorldCoord(int *x, int *y);
 void cleanUp();
 
-RGB curColor = {.red = 1, .green = 0, .blue = 0};
+RGB curColor = {.red = 1, .green = 0, .blue = 1};
+SelectingState curState = POLYGON_DRAWING;
+ClippingWindow window;
 
 void init() {
-    // initialize polygon array
+    //initialize polygon array
     Polygon::init();
-
-    // backround colour black, alpha parameter set to default
-    glClearColor(1.0, 1.0, 1.0, 0.0);
     
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glColor3f(1.0, 0.0, 0.0);
+    //backround colour dark grey, alpha parameter set to default
+    glClearColor(0.4, 0.4, 0.4, 0.0);
+
+    //glEnable(GL_BLEND);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glPointSize(1.0f);
 
-    gluOrtho2D(-250, 250, -250, 250);
+    gluOrtho2D(-300, 300, -300, 300);
 }
 
 int main(int argc, char** argv) {
@@ -38,49 +46,31 @@ int main(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
 
-    glutInitWindowSize(500, 500);
+    glutInitWindowSize(600, 600);
     glutInitWindowPosition(10, 10);
-    glutCreateWindow("Team 1 - Assignment 2 - Exercise 9");
+    glutCreateWindow("Team 1 - Assignment 2 - Exercise 12");
 
-    // Set up handlers
+    glutDisplayFunc(display);
     glutKeyboardFunc(keyboardHandler);
     glutMouseFunc(mouseHandler);
-    glutDisplayFunc(display);
+    glutMotionFunc(mouseMove);
+    glutSpecialFunc(specialKeyHandler);
 
     init();
     glClear(GL_COLOR_BUFFER_BIT);
     glFlush();
 
     glutMainLoop();
+    return(0);
 }
 
-void display() {
-    if (Polygon::getTotalPolygons() == 0) { 
-        // // 1. TOP VERTEX (Red)
-        // // Window Coord: (250, 150) -> World Coord: (0, 100)
-        // // Set your color to RED here (e.g., currentColor = {1, 0, 0};)
-        // curColor = {.red=0,.green=0,.blue=1};
-        // mouseHandler(GLUT_LEFT_BUTTON, GLUT_DOWN, 250, 150);
-        // curColor = {.red=1,.green=0,.blue=0};
+void mouseMove(int x, int y) {
+    if (curState != CLIPPING_WINDOW) return;
 
-        // // 2. BOTTOM LEFT VERTEX (Green)
-        // // Window Coord: (150, 350) -> World Coord: (-100, -100)
-        // // Set your color to GREEN here
-        // mouseHandler(GLUT_LEFT_BUTTON, GLUT_DOWN, 150, 350);
-        // curColor = {.red=0,.green=1,.blue=0};
-
-        // // 3. BOTTOM RIGHT VERTEX (Blue)
-        // // Window Coord: (350, 350) -> World Coord: (100, -100)
-        // // Set your color to BLUE here
-        // mouseHandler(GLUT_RIGHT_BUTTON, GLUT_DOWN, 350, 350);
-
-        return;
-    }
-
-    Polygon *poly = Polygon::getCurrent();
-    poly->drawLastVertex();
-
-    glFlush();
+    int localX = x, localY = y;
+    windowToWorldCoord(&localX, &localY);
+    window.setEndPoint(localX, localY);
+    glutPostRedisplay();
 }
 
 void mouseHandler(int button, int state, int x, int y) {
@@ -88,8 +78,13 @@ void mouseHandler(int button, int state, int x, int y) {
 
     int localX = x, localY = y;
     windowToWorldCoord(&localX, &localY);
-    Point vertex = {.x = localX, .y = localY, .rgb = curColor};
 
+    if (curState == CLIPPING_WINDOW) {
+        window.setStartPoint(localX, localY);
+        glutPostRedisplay();
+    }
+
+    Point vertex = {.x = localX, .y = localY, .rgb = curColor};
     if (button == GLUT_LEFT_BUTTON) {
         Polygon *poly = Polygon::getCurrentOrCreate();
         poly->addVertex(vertex);
@@ -100,47 +95,28 @@ void mouseHandler(int button, int state, int x, int y) {
     }
 }
 
+void specialKeyHandler(int key, int x, int y) {
+    if (key != GLUT_KEY_F1) return;
+    
+    if (curState == POLYGON_DRAWING)
+        curState = CLIPPING_WINDOW;
+    else
+        curState = POLYGON_DRAWING;
+}
+
 void keyboardHandler(unsigned char key, int x, int y) {
     switch (key) {
         case 'r':
         case 'R':
-            curColor.red = 1.0f;
-            curColor.green = 0.0f;
-            curColor.blue = 0.0f;
-            break;
-        case 'g':
-        case 'G':
-            curColor.red = 0.0f;
-            curColor.green = 1.0f;
-            curColor.blue = 0.0f;
-            break;
-        case 'b':
-        case 'B':
-            curColor.red = 0.0f;
-            curColor.green = 0.0f;
-            curColor.blue = 1.0f;
-            break;
-        case 'm':
-        case 'M':
-            curColor.red = 1.0f;
-            curColor.green = 0.0f;
-            curColor.blue = 1.0f;
-            break;
-        case 'y':
-        case 'Y':
-            curColor.red = 1.0f;
-            curColor.green = 1.0f;
-            curColor.blue = 0.0f;
-            break;
+            //edw kaleitai to cliping
+            break;    
         case 'c':
         case 'C':
-            curColor.red = 0.0f;
-            curColor.green = 1.0f;
-            curColor.blue = 1.0f;
+            glClear(GL_COLOR_BUFFER_BIT);
+            glFlush();
             break;
-        case 'Q':
         case 'q':
-            cleanUp();
+        case 'Q':
             exit(0);
             break;
         default:
