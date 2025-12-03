@@ -18,17 +18,15 @@ void display();
 void mouseMove(int x, int y);
 void mouseHandler(int button, int state, int x, int y);
 void keyboardHandler(unsigned char key, int x, int y);
+void specialKeyHandler(int key, int x, int y);
 void windowToWorldCoord(int *x, int *y);
-void cleanUp();
 
 RGB curColor = {.red = 1, .green = 0, .blue = 1};
 SelectingState curState = POLYGON_DRAWING;
 ClippingWindow window;
+bool windowReady = false;
 
 void init() {
-    //initialize polygon array
-    Polygon::init();
-    
     //backround colour dark grey, alpha parameter set to default
     glClearColor(0.4, 0.4, 0.4, 0.0);
 
@@ -64,12 +62,29 @@ int main(int argc, char** argv) {
     return(0);
 }
 
+void display() {
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Draw clipping window
+	glColor3f(1.0, 1.0, 1.0);
+    if (windowReady)
+        window.draw();
+
+    for (int i = 0; i < Polygon::getTotalPolygons(); i++) {
+        Polygon& p = Polygon::getPolygon(i);
+
+        p.draw();
+    }
+
+    glFlush();
+}
+
 void mouseMove(int x, int y) {
     if (curState != CLIPPING_WINDOW) return;
 
     int localX = x, localY = y;
     windowToWorldCoord(&localX, &localY);
-    window.setEndPoint(localX, localY);
+    window.setEnd({.x=localX, .y=localY});
     glutPostRedisplay();
 }
 
@@ -78,21 +93,27 @@ void mouseHandler(int button, int state, int x, int y) {
 
     int localX = x, localY = y;
     windowToWorldCoord(&localX, &localY);
+    Point vertex = {.x = localX, .y = localY, .rgb = curColor};
 
     if (curState == CLIPPING_WINDOW) {
-        window.setStartPoint(localX, localY);
+        window = ClippingWindow(vertex, vertex);
+        windowReady = true;
         glutPostRedisplay();
+        return;
     }
 
-    Point vertex = {.x = localX, .y = localY, .rgb = curColor};
     if (button == GLUT_LEFT_BUTTON) {
         Polygon *poly = Polygon::getCurrentOrCreate();
         poly->addVertex(vertex);
-        glutPostRedisplay();
-    } else if (button == GLUT_RIGHT_BUTTON && !Polygon::completeCurrent(vertex)) {
-        glClear(GL_COLOR_BUFFER_BIT);
-        glFlush();
+    } else if (button == GLUT_RIGHT_BUTTON) {
+        Polygon *poly = Polygon::getCurrent();
+        if (poly != NULL)
+            poly->addLastVertex(vertex);
+        else
+            Polygon::clear();
     }
+
+    glutPostRedisplay();
 }
 
 void specialKeyHandler(int key, int x, int y) {
@@ -112,8 +133,9 @@ void keyboardHandler(unsigned char key, int x, int y) {
             break;    
         case 'c':
         case 'C':
-            glClear(GL_COLOR_BUFFER_BIT);
-            glFlush();
+            windowReady = false;
+            Polygon::clear();
+            glutPostRedisplay();
             break;
         case 'q':
         case 'Q':
@@ -130,8 +152,4 @@ void windowToWorldCoord(int *x, int *y) {
 
     *x -= halfWidth;
     *y = halfHeight - *y;
-}
-
-void cleanUp() {
-    Polygon::destroy();
 }
