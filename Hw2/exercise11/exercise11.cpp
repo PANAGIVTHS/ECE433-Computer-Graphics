@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
 
-    glutInitWindowSize(501, 501);
+    glutInitWindowSize(500, 500);
     glutInitWindowPosition(10, 10);
     glutCreateWindow("Team 1 - Assignment 2 - Exercise 9");
 
@@ -55,10 +55,30 @@ int main(int argc, char** argv) {
 }
 
 void display() {
-    Polygon *poly = Polygon::getCurrent();
-    if (poly == NULL) return;
+    if (Polygon::getTotalPolygons() == 0) { 
+        // 1. TOP VERTEX (Red)
+        // Window Coord: (250, 150) -> World Coord: (0, 100)
+        // Set your color to RED here (e.g., currentColor = {1, 0, 0};)
+        curColor = {.red=0,.green=0,.blue=1};
+        mouseHandler(GLUT_LEFT_BUTTON, GLUT_DOWN, 250, 150);
+        curColor = {.red=1,.green=0,.blue=0};
 
-    poly->draw();
+        // 2. BOTTOM LEFT VERTEX (Green)
+        // Window Coord: (150, 350) -> World Coord: (-100, -100)
+        // Set your color to GREEN here
+        mouseHandler(GLUT_LEFT_BUTTON, GLUT_DOWN, 150, 350);
+        curColor = {.red=0,.green=1,.blue=0};
+
+        // 3. BOTTOM RIGHT VERTEX (Blue)
+        // Window Coord: (350, 350) -> World Coord: (100, -100)
+        // Set your color to BLUE here
+        mouseHandler(GLUT_RIGHT_BUTTON, GLUT_DOWN, 350, 350);
+
+        return;
+    }
+
+    Polygon *poly = Polygon::getCurrent();
+    poly->drawLastVertex();
 
     glFlush();
 }
@@ -74,9 +94,7 @@ void mouseHandler(int button, int state, int x, int y) {
         Polygon *poly = Polygon::getCurrentOrCreate();
         poly->addVertex(vertex);
         glutPostRedisplay();
-    } else if (button == GLUT_RIGHT_BUTTON && Polygon::completeCurrent(vertex)) {
-        glutPostRedisplay();
-    } else if (button == GLUT_RIGHT_BUTTON) {
+    } else if (button == GLUT_RIGHT_BUTTON && !Polygon::completeCurrent(vertex)) {
         glClear(GL_COLOR_BUFFER_BIT);
         glFlush();
     }

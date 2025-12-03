@@ -14,7 +14,7 @@ for (int i = 0; i < #numOfScanlines; i++>) {
 }
 
 LIST:
-activeEdgeList = newList();
+activeEdgeList = newList();6
 
 for (int i = 0; i < #numOfScanlines; i++>) {
     for (each edge in activeEdgeList) {

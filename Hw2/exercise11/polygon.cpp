@@ -1,161 +1,157 @@
 #include "polygon.h"
+#include "edge.h"
 #include <stdlib.h>
 #include <GL/glut.h>
+#include <algorithm>
+using namespace std;
 
 // ----------------------------------- 
 // Static fields
 // -----------------------------------
-Polygon **Polygon::polys = NULL;
-unsigned int Polygon::totalPolys = 0;
+vector<Polygon> Polygon::polys;
 bool Polygon::selectingPolygon = false;
-
-
-// ----------------------------------- 
-// Constructor and destructor
-// -----------------------------------
-Polygon::Polygon() {
-    vertices = NULL;
-    totalVertices = 0;
-    isFirstVertex = false;
-}
-
-Polygon::~Polygon() {
-    free(vertices);
-}
 
 // ----------------------------------- 
 // Private instance methods
 // -----------------------------------
 
 void Polygon::fillLine(int y) {
-    //TODO Add color to points for interpolation
-    int numEdges = (int)activeEdgeList.size();
-    if (numEdges < 2) return; //! nothing to fill
+    int numEdges = (int) activeEdgeList.size();
+    if (numEdges < 2) return; 
 
-    //* Iterate over successive pairs except the last pair
-    for (int i = 0; i < numEdges - 2; i += 2) {
-        int x1 = (int)ceil(activeEdgeList[i].getX(y));
-        int x2 = (int)floor(activeEdgeList[i + 1].getX(y));
+    for (int i = 0; i < numEdges; i += 2) {
+        Edge& startEdge = activeEdgeList[i];
+        Edge& endEdge = activeEdgeList[i + 1];
+        RGB startColor = startEdge.getCurrentColor();
+        RGB endColor = endEdge.getCurrentColor();
+        int x1 = (int) ceil(startEdge.getCurrentX());
+        int x2 = (int) floor(endEdge.getCurrentX());
+        if (x1 > x2) continue;
 
-        glBegin(GL_LINES);
-        glVertex2i(x1, y);
-        glVertex2i(x2, y);
+        RGB currentColor = startColor;
+        float rIncr = (float) (endColor.red - startColor.red) / (x2 - x1);
+        float gIncr = (float) (endColor.green - startColor.green) / (x2 - x1);
+        float bIncr = (float) (endColor.blue - startColor.blue) / (x2 - x1);
+
+        glBegin(GL_POINTS);
+        for (int j = x1; j <= x2; j++) {
+            glColor3f(currentColor.red, currentColor.green, currentColor.blue);
+            glVertex2i(j, y);
+
+            currentColor.red += rIncr;
+            currentColor.green += gIncr;
+            currentColor.blue += bIncr;
+        }
         glEnd();
     }
+}
 
-    //* Special handling for the last pair
-    int x1 = (int)ceil(activeEdgeList[numEdges - 2].getX(y));
-    int x2 = (int)ceil(activeEdgeList[numEdges - 1].getX(y)) - 1;
+std::vector<Edge> Polygon::getEdges() {
+    std::vector<Edge> edgesVec;
 
+    for (unsigned int i = 0; i < vertices.size(); ++i) {
+        unsigned int j = (i + 1) % vertices.size();
+        edgesVec.push_back(Edge(vertices[i], vertices[j]));
+    }
+    return edgesVec;
+}
 
-    glBegin(GL_LINES);
-    glVertex2i(x1, y);
-    glVertex2i(x2, y);
-    glEnd();
+void Polygon::initActiveEdgeTable() {
+    int numOfScanlines = getMaxY() - getMinY() + 1;
+    activeEdgeTable.resize(numOfScanlines);
+    
+    int totalMinY = getMinY();
+    std::vector<Edge> edgesVec = getEdges();
+
+    for (Edge& curEdge : edgesVec) {
+        int minY = curEdge.getMinY();
+        int maxY = curEdge.getMaxY();
+        curEdge.setHeight(numOfScanlines);
+
+        //* Skip horizontal and if non crossing edges
+        if (maxY - minY == 0)
+            continue;
+
+        activeEdgeTable.at(minY - totalMinY).push_back(curEdge);
+    }
+}
+
+// ----------------------------------- 
+// Private static methods
+// -----------------------------------
+Polygon* Polygon::addPolygon() {
+    selectingPolygon = true;
+    polys.push_back(Polygon());
+    return &polys.back();
 }
 
 // ----------------------------------- 
 // Public instance methods
 // -----------------------------------
 void Polygon::addVertex(Point point) {
-    if (isFirstVertex) {
+    if (vertices.empty()) {
         totalMaxY = point.y;
-        totalMinY = point.x;
-        isFirstVertex = false;
+        totalMinY = point.y;
     }
 
     totalMaxY = (point.y > totalMaxY) ? point.y : totalMaxY;
     totalMinY = (point.y < totalMinY) ? point.y : totalMinY;
 
-    vertices = (Point *) realloc(vertices, (totalVertices + 1) * sizeof(Point));
-    vertices[totalVertices++] = point;
+    vertices.push_back(point);
 }
 
 int Polygon::getMinY() const {
-    return((int) ceil(totalMinY));
+    return totalMinY;
 }
 
 int Polygon::getMaxY() const {
-    return((int) floor(totalMaxY));
+    return totalMaxY;
 }
 
-std::vector<Edge> Polygon::getEdges() const {
-    std::vector<Edge> edgesVec;
-    edgesVec.reserve(totalVertices);
+void Polygon::drawLastVertex() {
+    if (vertices.empty()) return;
 
-    for (unsigned int i = 0; i < totalVertices; ++i) {
-        unsigned int j = (i + 1) % totalVertices;
-        edgesVec.push_back({vertices[i], vertices[j]});
-    }
-    return edgesVec;
-}
-
-std::vector<Edge> Polygon::getEdgesCrossing(int y) const {
-    std::vector<Edge> edgeVecCross;
-    
-    if (y < totalMinY || y > totalMaxY) {
-        return edgeVecCross;
-    }
-
-    std::vector<Edge> edgesVec = getEdges();
-    edgeVecCross.reserve(edgesVec.size());
-
-    for (const Edge& curEdge : edgesVec) {
-        int minY = curEdge.getMinY();
-        int maxY = curEdge.getMaxY();
-
-        //* Skip horizontal and if non crossing edges
-        if (maxY < y || minY > y || (maxY - minY == 0)) 
-            continue;
-
-        edgeVecCross.push_back(curEdge);
-
-    }
-
-    return edgeVecCross;
-}
-
-void Polygon::draw() {
-    if (totalVertices <= 1) return;
-
-    Point first = selectingPolygon ? vertices[totalVertices - 2] : vertices[totalVertices - 1];
-    RGB firstColor = first.rgb;
-    Point second = selectingPolygon ? vertices[totalVertices - 1] : vertices[0];
-    RGB secondColor = second.rgb;
-    glBegin(GL_LINES);
-    glColor3f(firstColor.red, firstColor.green, firstColor.blue);
-    glVertex2i(first.x, first.y);
-    glColor3f(secondColor.red, secondColor.green, secondColor.blue);
-    glVertex2i(second.x, second.y);
+    Point point = vertices.back();
+    RGB color = point.rgb;
+    glBegin(GL_POINTS);
+    glColor3f(color.red, color.green, color.blue);
+    glVertex2i(point.x, point.y);
     glEnd();
 }
 
 void Polygon::fill() {
-    std::vector<Edge> activeEdgeList;
-    
-    int yStart = getMinY();          // first scanline
+    initActiveEdgeTable();
+
+    int yStart = getMinY();
     int offset = 0;
     for (const std::vector<Edge>& curEdgeList : activeEdgeTable) {
         int scanlineY = yStart + offset;
+
         std::vector<Edge>::iterator curEdgeIt = activeEdgeList.begin();
         while (curEdgeIt != activeEdgeList.end()) {
-            if (curEdgeIt->getMaxY() == scanlineY) {
+            if (curEdgeIt->getMaxY() == scanlineY)
                 curEdgeIt = activeEdgeList.erase(curEdgeIt);
-            } else {
-                curEdgeIt++;
-            }
+            else
+                ++curEdgeIt;
         }
 
-        //* Insert all edges from curEdgeList into activeEdgeList in ascending minX order
         for (const Edge& newEdge : curEdgeList) {
-            int k;
-            for (k = 0; k < (int)activeEdgeList.size() &&
-                 activeEdgeList[k].getMinX() < newEdge.getMinX(); k++);
-            //* Insert the new edge at index k
-            activeEdgeList.insert(activeEdgeList.begin() + k, newEdge);
+            activeEdgeList.push_back(newEdge);
         }
 
-        fillLine(offset++);
+        std::sort(activeEdgeList.begin(), activeEdgeList.end(), 
+            [](const Edge& a, const Edge& b) {
+                return a.getCurrentX() < b.getCurrentX();
+            }
+        );
+
+        fillLine(scanlineY);
+
+        for (Edge& newEdge : activeEdgeList) {
+            newEdge.incrementX();
+            newEdge.incrementColor();
+        }
+        offset++;
     }
 }
 
@@ -163,55 +159,34 @@ void Polygon::fill() {
 // Public static methods
 // -----------------------------------
 void Polygon::init() {
-    polys = (Polygon **) malloc(sizeof(Polygon *));
-    totalPolys = 0;
     selectingPolygon = false;
 }
 
 void Polygon::destroy() {
-    for (int i = 0; i < totalPolys; i++) {
-        Polygon *poly = polys[i];
-        poly->~Polygon();
-        free(poly);
-    }
-    free(polys);
+    polys.clear();
+}
+
+int Polygon::getTotalPolygons() {
+    return polys.size();
 }
 
 Polygon *Polygon::getCurrent() {
-    return totalPolys != 0 ? polys[totalPolys - 1] : NULL;
+    return &polys.back();
 }
 
 Polygon *Polygon::getCurrentOrCreate() {
-    return selectingPolygon ? polys[totalPolys - 1] : addPolygon();
+    return selectingPolygon ? &polys.back() : addPolygon();
 }
 
 bool Polygon::completeCurrent(Point vertex) {
     if (selectingPolygon) {
-        Polygon *cur = polys[totalPolys - 1];
+        Polygon *cur = getCurrent();
         cur->addVertex(vertex);
-        
-        int numOfScanlines = getMaxY() - getMinY() - 1;
-        activeEdgeTable.resize(numOfScanlines);
-        
-        int y = getMinY();
-        for (std::vector<Edge>& curEdgeList : activeEdgeTable) {
-            curEdgeList = getEdgesCrossing(y);
-            ++y;
-        }
-        cur->draw();
+        cur->drawLastVertex();
+        cur->fill();
+        glFlush();
     }
     bool oldVal = selectingPolygon;
     selectingPolygon = false;
     return oldVal;
-}
-
-// ----------------------------------- 
-// Private static methods
-// -----------------------------------
-Polygon *Polygon::addPolygon() {
-    selectingPolygon = true;
-    polys = (Polygon **) realloc(polys, (++totalPolys) * sizeof(Polygon *));
-    Polygon *newPolygon = (Polygon *) malloc(sizeof(Polygon));
-    *newPolygon = Polygon();
-    return polys[totalPolys - 1] = newPolygon;
 }
