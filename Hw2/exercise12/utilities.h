@@ -8,7 +8,20 @@ typedef struct {
 typedef struct {
     int x, y;
     RGB rgb;
-    //TODO something about points being floats i dont remember think
 } Point;
+
+typedef enum {
+    LEFT,
+    RIGHT,
+    BOT,
+    TOP
+} WindowEdge;
+
+typedef enum {
+    OUT_OUT,
+    OUT_IN,
+    IN_OUT,
+    IN_IN
+} EdgeState;
 
 #endif

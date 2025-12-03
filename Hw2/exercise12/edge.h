@@ -2,8 +2,7 @@
 #define EDGE_H
 #include "utilities.h"
 
-class Edge
-{
+class Edge {
 private:
     Point start, end;
     int minY, maxY;
