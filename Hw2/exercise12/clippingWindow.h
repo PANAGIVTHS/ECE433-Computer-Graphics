@@ -12,6 +12,7 @@
 template <typename T>
 class ClippingWindow {
 private:
+    bool active = false;
     Point<int> start, end;
     int getMaxX() const;
     int getMaxY() const;
@@ -23,6 +24,7 @@ public:
     EdgeState getState(WindowEdge boundary, Edge<float> edge);
     void setEnd(Point<int> end);
     void draw() const;
+    bool isActive() const;
     void clipSelection();
 };
 

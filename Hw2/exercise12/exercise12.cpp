@@ -71,8 +71,9 @@ void display() {
 
     for (int i = 0; i < Polygon::getTotalPolygons(); i++) {
         Polygon& p = Polygon::getPolygon(i);
-
-        p.draw();
+        
+        if (window == nullptr || window->isActive() == p.isClipped())
+            p.draw();
     }
 
     glFlush();
@@ -101,14 +102,12 @@ void mouseHandler(int button, int state, int x, int y) {
     }
 
     if (button == GLUT_LEFT_BUTTON) {
-        Polygon *poly = Polygon::getCurrentOrCreate();
+        Polygon *poly = Polygon::getCurrentOrCreate(false);
         poly->addVertex(vertex);
     } else if (button == GLUT_RIGHT_BUTTON) {
         Polygon *poly = Polygon::getCurrent();
         if (poly != NULL)
-            poly->addLastVertex(vertex);
-        else
-            Polygon::clear();
+            poly->finish(vertex);
     }
 
     glutPostRedisplay();
@@ -127,8 +126,8 @@ void keyboardHandler(unsigned char key, int x, int y) {
     switch (key) {
         case 'r':
         case 'R':
-            //edw kaleitai to cliping
             window->clipSelection();
+            glutPostRedisplay();
             break;    
         case 'c':
         case 'C':

@@ -17,6 +17,11 @@ void ClippingWindow<T>::draw() const {
 }
 
 template <typename T>
+bool ClippingWindow<T>::isActive() const {
+    return this->active;
+}
+
+template <typename T>
 int ClippingWindow<T>::getMinY() const {
     return start.y < end.y ? start.y : end.y;
 }
@@ -123,6 +128,7 @@ Point<float> ClippingWindow<T>::intersectEdge(WindowEdge boundary, Edge<float> e
 //TODONOW FIX Something with vector returning empty algorithmic probably  
 template <typename T>
 void ClippingWindow<T>::clipSelection() {
+    active = true;
     vector<Polygon>& polys = Polygon::getPolys();
     for (const Polygon& curPoly : polys) {
         //TODO remove after testing
@@ -166,9 +172,9 @@ void ClippingWindow<T>::clipSelection() {
         vector<Point<int>> finalPoints = toInteger(oldPoints); 
 
         for (const Point<int>& curPoint : finalPoints) {
-            Polygon::getCurrentOrCreate()->addVertex(curPoint);
+            Polygon::getCurrentOrCreate(true)->addVertex(curPoint);
         }
-        Polygon::getCurrent()->polyFinish();
+        Polygon::getCurrent()->finish();
     }
 }
 

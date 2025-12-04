@@ -130,24 +130,21 @@ void Polygon::fill() {
 // ----------------------------------- 
 // Private static methods
 // -----------------------------------
-Polygon* Polygon::addPolygon() {
-    polys.push_back(Polygon());
+Polygon* Polygon::addPolygon(bool clipped) {
+    polys.push_back(Polygon(clipped));
     return &polys.back();
 }
 
 // ----------------------------------- 
 // Public instance methods
 // -----------------------------------
-Polygon::Polygon() {
-    complete = false;
+Polygon::Polygon(bool clipped) {
+    this->clipped = clipped;
+    this->complete = false;
 }
 
 vector<Point<int>> Polygon::getVertices() const {
     return vertices;
-}
-
-void Polygon::polyFinish() {
-    this->complete = true;
 }
 
 void Polygon::addVertex(Point<int> point) {
@@ -163,9 +160,13 @@ void Polygon::addVertex(Point<int> point) {
     vertices.push_back(point);
 }
 
-void Polygon::addLastVertex(Point<int> point) {
+void Polygon::finish(Point<int> point) {
     addVertex(point);
     complete = true;
+}
+
+void Polygon::finish() {
+    this->complete = true;
 }
 
 int Polygon::getMinY() const {
@@ -174,6 +175,10 @@ int Polygon::getMinY() const {
 
 int Polygon::getMaxY() const {
     return totalMaxY;
+}
+
+bool Polygon::isClipped() const {
+    return clipped;
 }
 
 void Polygon::draw() {
@@ -201,8 +206,8 @@ Polygon *Polygon::getCurrent() {
     return polys.size() > 0 && !polys.back().complete ? &polys.back() : NULL;
 }
 
-Polygon *Polygon::getCurrentOrCreate() {
-    return polys.size() > 0 && !polys.back().complete ? &polys.back() : addPolygon();
+Polygon *Polygon::getCurrentOrCreate(bool clipped) {
+    return polys.size() > 0 && !polys.back().complete ? &polys.back() : addPolygon(clipped);
 }
 
 vector<Polygon>& Polygon::getPolys() {
