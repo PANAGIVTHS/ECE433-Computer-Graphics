@@ -27,7 +27,7 @@ void init() {
     glLoadIdentity();
     glPointSize(1.0f);
 
-    gluOrtho2D(-250, 250, -250, 250);
+    gluOrtho2D(0, 500, 0, 500);
 }
 
 int main(int argc, char** argv) {
@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
 
-    glutInitWindowSize(500, 500);
+    glutInitWindowSize(501, 501);
     glutInitWindowPosition(10, 10);
     glutCreateWindow("Team 1 - Assignment 2 - Exercise 9");
 
@@ -50,14 +50,14 @@ int main(int argc, char** argv) {
 
     printf("Keyboard commands:\n");
 	printf("LMB - Select each vertex.\n");
-	printf("RMB - Select last vertex.\n");
+	printf("RMB (while selecting polygon) - Select last vertex.\n");
+	printf("RMB - Clear the board.\n");
 	printf("'r' - Select red color for next vertex.\n");
 	printf("'g' - Select green color for next vertex.\n");
 	printf("'b' - Select blue color for next vertex.\n");
 	printf("'c' - Select cyan color for next vertex.\n");
 	printf("'y' - Select yellow color for next vertex.\n");
 	printf("'m' - Select magenta color for next vertex.\n");
-	printf("'c' - Clear the board.\n");
 	printf("'q' - Quit the application.\n");
 
     glutMainLoop();
@@ -144,9 +144,7 @@ void keyboardHandler(unsigned char key, int x, int y) {
 }
 
 void windowToWorldCoord(int *x, int *y) {
-    float halfWidth = glutGet(GLUT_WINDOW_WIDTH) / 2.0f;
-    float halfHeight = glutGet(GLUT_WINDOW_HEIGHT) / 2.0f;
+    float height = glutGet(GLUT_WINDOW_HEIGHT);
 
-    *x -= halfWidth;
-    *y = halfHeight - *y;
+    *y = height - *y;
 }
