@@ -1,6 +1,7 @@
 #include "polygon.h"
 #include "edge.h"
 #include <stdlib.h>
+#include <stdio.h>
 #include <GL/glut.h>
 #include <algorithm>
 using namespace std;
@@ -18,7 +19,7 @@ void Polygon::fillLine(int y) {
     int numEdges = (int) activeEdgeList.size();
     if (numEdges < 2) return; 
 
-    for (int i = 0; i < numEdges; i += 2) {
+    for (int i = 0; i < numEdges - 2; i += 2) {
         Edge& startEdge = activeEdgeList[i];
         Edge& endEdge = activeEdgeList[i + 1];
         RGB startColor = startEdge.getCurrentColor();
@@ -43,6 +44,30 @@ void Polygon::fillLine(int y) {
         }
         glEnd();
     }
+
+    Edge& startEdge = activeEdgeList[numEdges - 2];
+    Edge& endEdge = activeEdgeList[numEdges - 1];
+    RGB startColor = startEdge.getCurrentColor();
+    RGB endColor = endEdge.getCurrentColor();
+    int x1 = (int) ceil(startEdge.getCurrentX());
+    int x2 = ((int) ceil(endEdge.getCurrentX())) - 1;
+    if (x1 > x2) return;
+
+    RGB currentColor = startColor;
+    float rIncr = (float) (endColor.red - startColor.red) / (x2 - x1);
+    float gIncr = (float) (endColor.green - startColor.green) / (x2 - x1);
+    float bIncr = (float) (endColor.blue - startColor.blue) / (x2 - x1);
+
+    glBegin(GL_POINTS);
+    for (int j = x1; j <= x2; j++) {
+        glColor3f(currentColor.red, currentColor.green, currentColor.blue);
+        glVertex2i(j, y);
+
+        currentColor.red += rIncr;
+        currentColor.green += gIncr;
+        currentColor.blue += bIncr;
+    }
+    glEnd();
 }
 
 std::vector<Edge> Polygon::getEdges() {
