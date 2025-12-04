@@ -119,6 +119,8 @@ Point<float> ClippingWindow<T>::intersectEdge(WindowEdge boundary, Edge<float> e
     return intersectPoint;
 }
 
+
+//TODONOW FIX Something with vector returning empty algorithmic probably  
 template <typename T>
 void ClippingWindow<T>::clipSelection() {
     vector<Polygon>& polys = Polygon::getPolys();
@@ -130,8 +132,12 @@ void ClippingWindow<T>::clipSelection() {
         for (Point<float>& curPoint : oldPoints) {
             curPoint.rgb = {1.0f, 0.0, 0.0};
         }
-        
+
         for (WindowEdge boundary = LEFT; boundary <= TOP; ++boundary) {
+            
+            newPoints.clear(); // TODO this i think move does?
+            if (oldPoints.empty()) break;
+
             for (vector<Point<float>>::iterator curPoint = oldPoints.begin(); curPoint != oldPoints.end() - 1; ++curPoint) {
                 // TODO: increment color
                 switch (getState(boundary, Edge<float>(*curPoint, *(curPoint + 1)))) {

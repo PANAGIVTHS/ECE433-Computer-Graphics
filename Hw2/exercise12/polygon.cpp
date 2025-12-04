@@ -60,6 +60,7 @@ std::vector<Edge<int>> Polygon::getEdges() {
 }
 
 void Polygon::initActiveEdgeTable() {
+    if (vertices.empty()) return;
     int numOfScanlines = getMaxY() - getMinY() + 1;
     activeEdgeTable.clear();
     activeEdgeTable.resize(numOfScanlines);
@@ -90,6 +91,7 @@ void Polygon::drawVertices() {
 }
 
 void Polygon::fill() {
+    if (!this->complete) return;
     initActiveEdgeTable();
 
     int yStart = getMinY();
