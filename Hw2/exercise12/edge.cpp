@@ -1,6 +1,7 @@
 #include "edge.h"
 
-Edge::Edge(Point start, Point end) {
+template <typename T>
+Edge<T>::Edge(Point<T> start, Point<T> end) {
     this->start = start;
     this->end = end;
     this->minY = start.y < end.y ? start.y : end.y;
@@ -16,36 +17,47 @@ Edge::Edge(Point start, Point end) {
     this->bIncrement = colorHeight == 0 ? 0 : (float) (endColor.blue - currentColor.blue) / colorHeight;
 }
 
-Point Edge::getStart() const {
+template <typename T>
+Point<T> Edge<T>::getStart() const {
     return this->start;
 }
 
-Point Edge::getEnd() const {
+template <typename T>
+Point<T> Edge<T>::getEnd() const {
     return this->end;
 }
 
-int Edge::getMinY() const {
+template <typename T>
+T Edge<T>::getMinY() const {
     return this->minY;
 }
 
-int Edge::getMaxY() const {
+template <typename T>
+T Edge<T>::getMaxY() const {
     return this->maxY;
 }
 
-float Edge::getCurrentX() const {
+template <typename T>
+float Edge<T>::getCurrentX() const {
     return this->currentX;
 }
 
-RGB Edge::getCurrentColor() const {
+template <typename T>
+RGB Edge<T>::getCurrentColor() const {
     return this->currentColor;
 }
 
-void Edge::incrementX() {
+template <typename T>
+void Edge<T>::incrementX() {
     this->currentX += this->xIncrement;
 }
 
-void Edge::incrementColor() {
+template <typename T>
+void Edge<T>::incrementColor() {
     this->currentColor.red += this->rIncrement;
     this->currentColor.green += this->gIncrement;
     this->currentColor.blue += this->bIncrement;
 }
+
+template class Edge<int>;
+template class Edge<float>;

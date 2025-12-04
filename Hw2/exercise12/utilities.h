@@ -7,23 +7,25 @@ typedef struct {
     float red, green, blue;
 } RGB;
 
-typedef struct {
-    int x, y;
-    RGB rgb;
-} Point;
-
 //TODO with generic typename
-typedef struct {
-    float x, y;
+template <typename T>
+struct Point {
+    T x;
+    T y;
     RGB rgb;
-} PointFloat;
+};
 
 typedef enum {
-    LEFT,
-    RIGHT,
-    BOT,
-    TOP
+    LEFT = 0,
+    RIGHT = 1,
+    BOT = 2,
+    TOP = 3
 } WindowEdge;
+
+inline WindowEdge& operator++(WindowEdge& e) {
+    e = static_cast<WindowEdge>((static_cast<int>(e) + 1) % 4);
+    return e;
+}
 
 typedef enum {
     OUT_OUT,
@@ -32,26 +34,26 @@ typedef enum {
     IN_IN
 } EdgeState;
 
-// vector<PointFloat> toFloat(const vector<Point>& points) {
-//     vector<PointFloat> pointsF;
-//     pointsF.reserve(points.size());
+inline vector<Point<float>> toFloat(const vector<Point<int>>& points) {
+    vector<Point<float>> pointsF;
+    pointsF.reserve(points.size());
 
-//     for (const Point& curPoint : points) {
-//         pointsF.push_back({static_cast<float>(curPoint.x), static_cast<float>(curPoint.y), curPoint.rgb});
-//     }
+    for (const Point<int>& curPoint : points) {
+        pointsF.push_back({static_cast<float>(curPoint.x), static_cast<float>(curPoint.y), curPoint.rgb});
+    }
 
-//     return pointsF;
-// }
+    return pointsF;
+}
 
-// vector<Point> toInteger(vector<PointFloat> pointsF) {
-//     vector<Point> points;
-//     points.reserve(pointsF.size());
+inline vector<Point<int>> toInteger(const vector<Point<float>>& pointsF) {
+    vector<Point<int>> points;
+    points.reserve(pointsF.size());
 
-//     for (const PointFloat& curPoint : pointsF) {
-//         points.push_back({static_cast<int>(curPoint.x), static_cast<int>(curPoint.y), curPoint.rgb});
-//     }
+    for (const Point<float>& curPoint : pointsF) {
+        points.push_back({static_cast<int>(curPoint.x), static_cast<int>(curPoint.y), curPoint.rgb});
+    }
 
-//     return points;
-// }
+    return points;
+}
 
 #endif

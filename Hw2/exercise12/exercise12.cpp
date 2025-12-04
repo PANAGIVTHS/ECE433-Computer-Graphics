@@ -23,7 +23,7 @@ void windowToWorldCoord(int *x, int *y);
 
 RGB curColor = {.red = 1, .green = 0, .blue = 1};
 SelectingState curState = POLYGON_DRAWING;
-ClippingWindow *window = nullptr;
+ClippingWindow<int> *window = nullptr; //TODO i dont like that it needs <int>
 
 void init() {
     //backround colour dark grey, alpha parameter set to default
@@ -92,10 +92,10 @@ void mouseHandler(int button, int state, int x, int y) {
 
     int localX = x, localY = y;
     windowToWorldCoord(&localX, &localY);
-    Point vertex = {.x = localX, .y = localY, .rgb = curColor};
+    Point<int> vertex = {.x = localX, .y = localY, .rgb = curColor};
 
     if (curState == CLIPPING_WINDOW) {
-        window = new ClippingWindow(vertex, vertex);
+        window = new ClippingWindow<int>(vertex, vertex);
         glutPostRedisplay();
         return;
     }
@@ -128,6 +128,7 @@ void keyboardHandler(unsigned char key, int x, int y) {
         case 'r':
         case 'R':
             //edw kaleitai to cliping
+            window->clipSelection();
             break;    
         case 'c':
         case 'C':

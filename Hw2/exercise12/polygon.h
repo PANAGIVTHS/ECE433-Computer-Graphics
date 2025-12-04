@@ -15,12 +15,12 @@ private:
     // Instance members
     bool complete;
     int totalMaxY, totalMinY;
-    vector<Point> vertices;
-    vector<vector<Edge>> activeEdgeTable;
-    vector<Edge> activeEdgeList;
+    vector<Point<int>> vertices;
+    vector<vector<Edge<int>>> activeEdgeTable;
+    vector<Edge<int>> activeEdgeList;
 
     void fillLine(int y);
-    vector<Edge> getEdges();
+    vector<Edge<int>> getEdges();
     void initActiveEdgeTable();
     void drawVertices();
     void fill();
@@ -30,15 +30,19 @@ private:
 
 public:
     Polygon();
-    void addVertex(Point point);
-    void addLastVertex(Point point);
+    void addVertex(Point<int> point);
+    //TODO remve replace with addvrtx and finish
+    void addLastVertex(Point<int> point); 
     void draw();
     int getMinY() const;
     int getMaxY() const;
+    void polyFinish();
+    vector<Point<int>> getVertices() const;
     
     // Static management functions
     static void clear();
     static Polygon& getPolygon(int i);
+    static vector<Polygon>& getPolys();
     static int getTotalPolygons();
     static Polygon *getCurrent();
     static Polygon *getCurrentOrCreate();

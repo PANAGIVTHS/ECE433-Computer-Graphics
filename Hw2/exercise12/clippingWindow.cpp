@@ -1,101 +1,117 @@
 #include "clippingWindow.h"
 
-ClippingWindow::ClippingWindow(Point start, Point end) {
+template <typename T>
+ClippingWindow<T>::ClippingWindow(Point<int> start, Point<int> end) {
     this->start = start;
     this->end = end;
 }
 
-void ClippingWindow::setEnd(Point end) {
+template <typename T>
+void ClippingWindow<T>::setEnd(Point<int> end) {
     this->end = end;
 }
 
-void ClippingWindow::draw() const {
+template <typename T>
+void ClippingWindow<T>::draw() const {
     glRecti(start.x, start.y, end.x, end.y);
 }
 
-int ClippingWindow::getMinY() const {
+template <typename T>
+int ClippingWindow<T>::getMinY() const {
     return start.y < end.y ? start.y : end.y;
 }
 
-int ClippingWindow::getMaxY() const {
+template <typename T>
+int ClippingWindow<T>::getMaxY() const {
     return start.y > end.y ? start.y : end.y;
 }
 
-int ClippingWindow::getMinX() const {
+template <typename T>
+int ClippingWindow<T>::getMinX() const {
     return start.x < end.x ? start.x : end.x;
 }
 
-int ClippingWindow::getMaxX() const {
+template <typename T>
+int ClippingWindow<T>::getMaxX() const {
     return start.x > end.x ? start.x : end.x;
 }
 
-EdgeState ClippingWindow::getState(WindowEdge boundary, Edge edge) {
+template <typename T>
+EdgeState ClippingWindow<T>::getState(WindowEdge boundary, Edge<float> edge) {
     auto classifyState = [](bool s_in, bool e_in) {
         return s_in ? (e_in ? IN_IN : IN_OUT)
                     : (e_in ? OUT_IN : OUT_OUT);
     };
 
+    Point<float> start = edge.getStart();
+    Point<float> end = edge.getEnd();
+
     switch (boundary) {
         case LEFT: {
-            return classifyState(edge.getStart().x >= getMinX(), edge.getEnd().x >= getMinX());
+            float minX = static_cast<float>(getMinX());
+            return classifyState(start.x >= minX, end.x >= minX);
             break;
         }
         case RIGHT: {
-            return classifyState(edge.getStart().x <= getMaxX(), edge.getEnd().x <= getMaxX());
+            float maxX = static_cast<float>(getMaxX());
+            return classifyState(start.x <= maxX, end.x <= maxX);
             break;
         }
         case BOT: {
-            return classifyState(edge.getStart().y >= getMinY(), edge.getEnd().y >= getMinY());
+            float minY = static_cast<float>(getMinY());
+            return classifyState(start.y >= minY, end.y >= minY);
             break;
         }
         case TOP: {
-            return classifyState(edge.getStart().y <= getMaxY(), edge.getEnd().y <= getMaxY());
+            float maxY = static_cast<float>(getMaxY());
+            return classifyState(start.y <= maxY, end.y <= maxY);
             break;
         }
     }
+
+    return OUT_OUT;
 }
 
-PointFloat ClippingWindow::intersectEdge(WindowEdge boundary, Edge edge) {
-    PointFloat intersectPoint;
-    intersectPoint.rgb = edge.getCurrentColor(); // TODO: increment color
-
-    Point start = edge.getStart();
-    Point end = edge.getEnd();
+template <typename T>
+Point<float> ClippingWindow<T>::intersectEdge(WindowEdge boundary, Edge<float> edge) {
+    Point<float> intersectPoint;
+    Point<float> start = edge.getStart();
+    Point<float> end = edge.getEnd();
+    //TODO color
 
     float slope = 0.0f;
     bool vertical = (start.x == end.x);
-
     if (!vertical) {
-        slope = (float)(end.y - start.y) / (float)(end.x - start.x);
+        slope = (end.y - start.y) / (end.x - start.x);
     }
 
     switch (boundary) {
         case LEFT: {
-            intersectPoint.x = (float)getMinX();
+            intersectPoint.x = static_cast<float>(getMinX());
             intersectPoint.y = vertical
-                ? (float)start.y
-                : (float)start.y + slope * (intersectPoint.x - (float)start.x);
+                ? start.y
+                : start.y + slope * (intersectPoint.x - start.x);
             break;
         }
         case RIGHT: {
-            intersectPoint.x = (float)getMaxX();
+            intersectPoint.x = static_cast<float>(getMaxX());
             intersectPoint.y = vertical
-                ? (float)start.y
-                : (float)start.y + slope * (intersectPoint.x - (float)start.x);
+                ? start.y
+                : start.y + slope * (intersectPoint.x - start.x);
             break;
         }
         case BOT: {
-            intersectPoint.y = (float)getMinY();
+            intersectPoint.y = static_cast<float>(getMinY());
             intersectPoint.x = (slope == 0.0f)
-                ? (float)start.x
-                : (float)start.x + ((intersectPoint.y - (float)start.y) / slope);
+                ? start.x
+                : start.x + ((intersectPoint.y - start.y) / slope);
             break;
         }
         case TOP: {
-            intersectPoint.y = (float)getMaxY();
+            intersectPoint.y = static_cast<float>(getMaxY());
             intersectPoint.x = (slope == 0.0f)
-                ? (float)start.x
-                : (float)start.x + ((intersectPoint.y - (float)start.y) / slope);
+                ? start.x
+                : start.x + ((intersectPoint.y - start.y) / slope);
             break;
         }
     }
@@ -103,7 +119,51 @@ PointFloat ClippingWindow::intersectEdge(WindowEdge boundary, Edge edge) {
     return intersectPoint;
 }
 
-void ClippingWindow::ClipSelection() {
-    // for all polygons
-    PointFloat oldPoints = toFloat();
+template <typename T>
+void ClippingWindow<T>::clipSelection() {
+    vector<Polygon>& polys = Polygon::getPolys();
+    for (const Polygon& curPoly : polys) {
+        //TODO remove after testing
+        
+        vector<Point<float>> newPoints;
+        vector<Point<float>> oldPoints = toFloat(curPoly.getVertices());
+        for (Point<float>& curPoint : oldPoints) {
+            curPoint.rgb = {1.0f, 0.0, 0.0};
+        }
+        
+        for (WindowEdge boundary = LEFT; boundary <= TOP; ++boundary) {
+            for (vector<Point<float>>::iterator curPoint = oldPoints.begin(); curPoint != oldPoints.end() - 1; ++curPoint) {
+                // TODO: increment color
+                switch (getState(boundary, Edge<float>(*curPoint, *(curPoint + 1)))) {
+                    case IN_IN: {
+                        newPoints.insert(newPoints.begin(), *(curPoint + 1));
+                        break;
+                    }
+                    case IN_OUT: {
+                        newPoints.insert(newPoints.begin(), intersectEdge(boundary, Edge<float>(*curPoint, *(curPoint + 1))));
+                        break;
+                    }
+                    case OUT_IN: {
+                        newPoints.insert(newPoints.begin(), intersectEdge(boundary, Edge<float>(*curPoint, *(curPoint + 1))));
+                        newPoints.insert(newPoints.begin(), *(curPoint + 1));
+                        break;
+                    }
+                    case OUT_OUT: //! Noop
+                    default:
+                        break;
+                } 
+            }
+            oldPoints = std::move(newPoints);
+        }
+
+        //TODO draw call this or make seperate array of these? idk bruh
+        vector<Point<int>> finalPoints = toInteger(oldPoints); 
+
+        for (const Point<int>& curPoint : finalPoints) {
+            Polygon::getCurrentOrCreate()->addVertex(curPoint);
+        }
+        Polygon::getCurrent()->polyFinish();
+    }
 }
+
+template class ClippingWindow<int>;

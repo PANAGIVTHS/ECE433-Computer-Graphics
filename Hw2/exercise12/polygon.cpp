@@ -23,8 +23,8 @@ void Polygon::fillLine(int y) {
     if (numEdges < 2) return; 
 
     for (int i = 0; i < numEdges; i += 2) {
-        Edge& startEdge = activeEdgeList[i];
-        Edge& endEdge = activeEdgeList[i + 1];
+        Edge<int>& startEdge = activeEdgeList[i];
+        Edge<int>& endEdge = activeEdgeList[i + 1];
         RGB startColor = startEdge.getCurrentColor();
         RGB endColor = endEdge.getCurrentColor();
         int x1 = (int) ceil(startEdge.getCurrentX());
@@ -49,12 +49,12 @@ void Polygon::fillLine(int y) {
     }
 }
 
-std::vector<Edge> Polygon::getEdges() {
-    std::vector<Edge> edgesVec;
+std::vector<Edge<int>> Polygon::getEdges() {
+    std::vector<Edge<int>> edgesVec;
 
     for (unsigned int i = 0; i < vertices.size(); ++i) {
         unsigned int j = (i + 1) % vertices.size();
-        edgesVec.push_back(Edge(vertices[i], vertices[j]));
+        edgesVec.push_back(Edge<int>(vertices[i], vertices[j]));
     }
     return edgesVec;
 }
@@ -65,9 +65,9 @@ void Polygon::initActiveEdgeTable() {
     activeEdgeTable.resize(numOfScanlines);
     
     int totalMinY = getMinY();
-    std::vector<Edge> edgesVec = getEdges();
+    std::vector<Edge<int>> edgesVec = getEdges();
 
-    for (Edge& curEdge : edgesVec) {
+    for (Edge<int>& curEdge : edgesVec) {
         int minY = curEdge.getMinY();
         int maxY = curEdge.getMaxY();
 
@@ -81,7 +81,7 @@ void Polygon::initActiveEdgeTable() {
 
 void Polygon::drawVertices() {
     glBegin(GL_POINTS);
-    for (Point& point : vertices) {
+    for (Point<int>& point : vertices) {
         RGB color = point.rgb;
         glColor3f(color.red, color.green, color.blue);
         glVertex2i(point.x, point.y);
@@ -94,10 +94,10 @@ void Polygon::fill() {
 
     int yStart = getMinY();
     int offset = 0;
-    for (const std::vector<Edge>& curEdgeList : activeEdgeTable) {
+    for (const std::vector<Edge<int>>& curEdgeList : activeEdgeTable) {
         int scanlineY = yStart + offset;
 
-        std::vector<Edge>::iterator curEdgeIt = activeEdgeList.begin();
+        std::vector<Edge<int>>::iterator curEdgeIt = activeEdgeList.begin();
         while (curEdgeIt != activeEdgeList.end()) {
             if (curEdgeIt->getMaxY() == scanlineY)
                 curEdgeIt = activeEdgeList.erase(curEdgeIt);
@@ -105,19 +105,19 @@ void Polygon::fill() {
                 ++curEdgeIt;
         }
 
-        for (const Edge& newEdge : curEdgeList) {
+        for (const Edge<int>& newEdge : curEdgeList) {
             activeEdgeList.push_back(newEdge);
         }
 
         std::sort(activeEdgeList.begin(), activeEdgeList.end(), 
-            [](const Edge& a, const Edge& b) {
+            [](const Edge<int>& a, const Edge<int>& b) {
                 return a.getCurrentX() < b.getCurrentX();
             }
         );
 
         fillLine(scanlineY);
 
-        for (Edge& newEdge : activeEdgeList) {
+        for (Edge<int>& newEdge : activeEdgeList) {
             newEdge.incrementX();
             newEdge.incrementColor();
         }
@@ -140,7 +140,15 @@ Polygon::Polygon() {
     complete = false;
 }
 
-void Polygon::addVertex(Point point) {
+vector<Point<int>> Polygon::getVertices() const {
+    return vertices;
+}
+
+void Polygon::polyFinish() {
+    this->complete = true;
+}
+
+void Polygon::addVertex(Point<int> point) {
     if (complete) return;
     if (vertices.empty()) {
         totalMaxY = point.y;
@@ -153,7 +161,7 @@ void Polygon::addVertex(Point point) {
     vertices.push_back(point);
 }
 
-void Polygon::addLastVertex(Point point) {
+void Polygon::addLastVertex(Point<int> point) {
     addVertex(point);
     complete = true;
 }
@@ -193,4 +201,8 @@ Polygon *Polygon::getCurrent() {
 
 Polygon *Polygon::getCurrentOrCreate() {
     return polys.size() > 0 && !polys.back().complete ? &polys.back() : addPolygon();
+}
+
+vector<Polygon>& Polygon::getPolys() {
+    return polys;
 }

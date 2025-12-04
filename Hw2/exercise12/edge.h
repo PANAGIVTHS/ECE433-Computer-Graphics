@@ -2,20 +2,21 @@
 #define EDGE_H
 #include "utilities.h"
 
+template <typename T>
 class Edge {
 private:
-    Point start, end;
-    int minY, maxY;
+    Point<T> start, end;
+    T minY, maxY;
     float currentX, xIncrement;
     RGB currentColor;
     float rIncrement, gIncrement, bIncrement;
 public:
-    Edge(Point start, Point end);
+    Edge(Point<T> start, Point<T> end);
 
-    int getMinY() const;
-    int getMaxY() const;
-    Point getStart() const;
-    Point getEnd() const;
+    T getMinY() const;
+    T getMaxY() const;
+    Point<T> getStart() const;
+    Point<T> getEnd() const;
     float getCurrentX() const;
     RGB getCurrentColor() const;
     void incrementX();
