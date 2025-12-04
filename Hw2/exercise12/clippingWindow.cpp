@@ -126,7 +126,6 @@ void ClippingWindow::clipSelection() {
             if (oldPoints.empty()) break;
 
             for (vector<Point<float>>::iterator curPoint = oldPoints.begin(); curPoint != oldPoints.end() - 1; ++curPoint) {
-                // TODO: increment color
                 switch (getState(boundary, Edge<float>(*curPoint, *(curPoint + 1)))) {
                     case IN_IN: {
                         newPoints.push_back(*(curPoint + 1));
