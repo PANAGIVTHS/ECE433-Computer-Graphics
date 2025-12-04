@@ -9,7 +9,6 @@
 #include <GL/glut.h>
 #endif
 
-template <typename T>
 class ClippingWindow {
 private:
     bool active = false;

@@ -190,6 +190,17 @@ void Polygon::draw() {
 // ----------------------------------- 
 // Public static methods
 // -----------------------------------
+void Polygon::clearClipped() {
+    polys.erase(
+        std::remove_if(polys.begin(), polys.end(), 
+            [](const Polygon& p) {
+                return p.isClipped();
+            }
+        ),
+        polys.end()
+    );
+}
+
 void Polygon::clear() {
     polys.clear();
 }

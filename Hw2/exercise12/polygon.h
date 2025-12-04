@@ -31,7 +31,6 @@ private:
 public:
     Polygon(bool clipped);
     void addVertex(Point<int> point);
-    //TODO remve replace with addvrtx and finish
     void finish(Point<int> lastPoint); 
     void finish();
     void draw();
@@ -42,6 +41,7 @@ public:
     
     // Static management functions
     static void clear();
+    static void clearClipped();
     static vector<Polygon>& getPolys();
     static Polygon& getPolygon(int i);
     static int getTotalPolygons();

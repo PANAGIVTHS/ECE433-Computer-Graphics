@@ -23,7 +23,8 @@ void windowToWorldCoord(int *x, int *y);
 
 RGB curColor = {.red = 1, .green = 0, .blue = 1};
 SelectingState curState = POLYGON_DRAWING;
-ClippingWindow<int> *window = nullptr; //TODO i dont like that it needs <int>
+ClippingWindow *window = nullptr;
+int lastMouseButton, lastMouseState;
 
 void init() {
     //backround colour dark grey, alpha parameter set to default
@@ -80,7 +81,7 @@ void display() {
 }
 
 void mouseMove(int x, int y) {
-    if (curState != CLIPPING_WINDOW) return;
+    if (curState != CLIPPING_WINDOW || lastMouseButton != GLUT_LEFT_BUTTON) return;
 
     int localX = x, localY = y;
     windowToWorldCoord(&localX, &localY);
@@ -89,14 +90,17 @@ void mouseMove(int x, int y) {
 }
 
 void mouseHandler(int button, int state, int x, int y) {
+    lastMouseState = state;
+    lastMouseButton = button;
     if (state != GLUT_DOWN) return; //! Ignore mouse release
 
     int localX = x, localY = y;
     windowToWorldCoord(&localX, &localY);
     Point<int> vertex = {.x = localX, .y = localY, .rgb = curColor};
 
-    if (curState == CLIPPING_WINDOW) {
-        window = new ClippingWindow<int>(vertex, vertex);
+    if (curState == CLIPPING_WINDOW && button == GLUT_LEFT_BUTTON) {
+        window = new ClippingWindow(vertex, vertex);
+        Polygon::clearClipped();
         glutPostRedisplay();
         return;
     }
@@ -126,6 +130,8 @@ void keyboardHandler(unsigned char key, int x, int y) {
     switch (key) {
         case 'r':
         case 'R':
+            if (lastMouseState == GLUT_DOWN)
+                break;
             window->clipSelection();
             glutPostRedisplay();
             break;    

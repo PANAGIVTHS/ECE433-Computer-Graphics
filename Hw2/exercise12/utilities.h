@@ -7,7 +7,6 @@ typedef struct {
     float red, green, blue;
 } RGB;
 
-//TODO with generic typename
 template <typename T>
 struct Point {
     T x;
@@ -23,7 +22,7 @@ typedef enum {
 } WindowEdge;
 
 inline WindowEdge& operator++(WindowEdge& e) {
-    e = static_cast<WindowEdge>((static_cast<int>(e) + 1) % 4);
+    e = static_cast<WindowEdge>(static_cast<int>(e) + 1);
     return e;
 }
 
