@@ -12,7 +12,6 @@ void display();
 void mouseHandler(int button, int state, int x, int y);
 void keyboardHandler(unsigned char key, int x, int y);
 void windowToWorldCoord(int *x, int *y);
-void cleanUp();
 
 RGB curColor = {.red = 1, .green = 0, .blue = 0};
 
