@@ -40,7 +40,7 @@ public:
     void addVertex(Point<int> point);
     void finish(Point<int> lastPoint); 
     void finish();
-    void draw();
+    void draw(bool fill);
     int getMinY() const;
     int getMaxY() const;
     vector<Point<int>> getVertices() const;

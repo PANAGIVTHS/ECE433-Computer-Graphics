@@ -48,6 +48,18 @@ int main(int argc, char** argv) {
     glClear(GL_COLOR_BUFFER_BIT);
     glFlush();
 
+    printf("Keyboard commands:\n");
+	printf("LMB - Select each vertex.\n");
+	printf("RMB - Select last vertex.\n");
+	printf("'r' - Select red color for next vertex.\n");
+	printf("'g' - Select green color for next vertex.\n");
+	printf("'b' - Select blue color for next vertex.\n");
+	printf("'c' - Select cyan color for next vertex.\n");
+	printf("'y' - Select yellow color for next vertex.\n");
+	printf("'m' - Select magenta color for next vertex.\n");
+	printf("'c' - Clear the board.\n");
+	printf("'q' - Quit the application.\n");
+
     glutMainLoop();
 }
 

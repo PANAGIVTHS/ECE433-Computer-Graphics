@@ -25,6 +25,7 @@ RGB curColor = {.red = 1, .green = 0, .blue = 1};
 SelectingState curState = POLYGON_DRAWING;
 ClippingWindow *window = nullptr;
 int lastMouseButton, lastMouseState;
+bool fillEnabled = false;
 
 void init() {
     //backround colour dark grey, alpha parameter set to default
@@ -34,7 +35,7 @@ void init() {
     //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glPointSize(10.0f);
+    glPointSize(fillEnabled ? 1.0f : 10.0f);
 
     gluOrtho2D(-4.0, 4.0, -3.0, 3.0);
 }
@@ -58,6 +59,16 @@ int main(int argc, char** argv) {
     glClear(GL_COLOR_BUFFER_BIT);
     glFlush();
 
+	printf("Keyboard commands:\n");
+	printf("LMB (Polygon mode) - Select each vertex.\n");
+	printf("RMB (Polygon mode) - Select last vertex.\n");
+	printf("LMB (Window mode) - Press and drag to select window.\n");
+	printf("'F1' - Toggle between polygon selection and window selection.\n");
+	printf("'f' - Toggle filling on polygons.\n");
+	printf("'r' - Apply clipping if clipping window is selected.\n");
+	printf("'c' - Clear the board.\n");
+	printf("'q' - Quit the application.\n");
+
     glutMainLoop();
     return(0);
 }
@@ -74,7 +85,7 @@ void display() {
         Polygon& p = Polygon::getPolygon(i);
         
         if (window == nullptr || window->isActive() == p.isClipped())
-            p.draw();
+            p.draw(fillEnabled);
     }
 
     glFlush();
@@ -128,6 +139,12 @@ void specialKeyHandler(int key, int x, int y) {
 
 void keyboardHandler(unsigned char key, int x, int y) {
     switch (key) {
+        case 'f':
+        case 'F':
+            glPointSize(!fillEnabled ? 1.0f : 10.0f);
+            fillEnabled = !fillEnabled;
+            glutPostRedisplay();
+            break; 
         case 'r':
         case 'R':
             if (lastMouseState == GLUT_DOWN || window == nullptr)

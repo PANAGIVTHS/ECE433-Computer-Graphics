@@ -174,10 +174,10 @@ bool Polygon::isClipped() const {
     return clipped;
 }
 
-void Polygon::draw() {
+void Polygon::draw(bool fill) {
     drawVertices();
-    // if (complete)
-    //     fill();
+    if (complete && fill)
+        this->fill();
 }
 
 // ----------------------------------- 
