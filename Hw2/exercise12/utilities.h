@@ -32,26 +32,26 @@ typedef enum {
     IN_IN
 } EdgeState;
 
-vector<PointFloat> toFloat(const vector<Point>& points) {
-    vector<PointFloat> pointsF;
-    pointsF.reserve(points.size());
+// vector<PointFloat> toFloat(const vector<Point>& points) {
+//     vector<PointFloat> pointsF;
+//     pointsF.reserve(points.size());
 
-    for (const Point& curPoint : points) {
-        pointsF.push_back({static_cast<float>(curPoint.x), static_cast<float>(curPoint.y), curPoint.rgb});
-    }
+//     for (const Point& curPoint : points) {
+//         pointsF.push_back({static_cast<float>(curPoint.x), static_cast<float>(curPoint.y), curPoint.rgb});
+//     }
 
-    return pointsF;
-}
+//     return pointsF;
+// }
 
-vector<Point> toInteger(vector<PointFloat> pointsF) {
-    vector<Point> points;
-    points.reserve(pointsF.size());
+// vector<Point> toInteger(vector<PointFloat> pointsF) {
+//     vector<Point> points;
+//     points.reserve(pointsF.size());
 
-    for (const PointFloat& curPoint : pointsF) {
-        points.push_back({static_cast<int>(curPoint.x), static_cast<int>(curPoint.y), curPoint.rgb});
-    }
+//     for (const PointFloat& curPoint : pointsF) {
+//         points.push_back({static_cast<int>(curPoint.x), static_cast<int>(curPoint.y), curPoint.rgb});
+//     }
 
-    return points;
-}
+//     return points;
+// }
 
 #endif
