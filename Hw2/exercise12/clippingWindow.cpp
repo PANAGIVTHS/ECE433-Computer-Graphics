@@ -114,10 +114,9 @@ Point<float> ClippingWindow::intersectEdge(WindowEdge boundary, Edge<float> edge
     return intersectPoint;
 }
 
-
 void ClippingWindow::clipSelection() {
     active = true;
-    vector<Polygon>& polys = Polygon::getPolys();
+    vector<Polygon> polys = Polygon::getPolys();
 
     for (const Polygon& curPoly : polys) {
         vector<Point<float>> newPoints;
@@ -130,16 +129,16 @@ void ClippingWindow::clipSelection() {
                 // TODO: increment color
                 switch (getState(boundary, Edge<float>(*curPoint, *(curPoint + 1)))) {
                     case IN_IN: {
-                        newPoints.insert(newPoints.begin(), *(curPoint + 1));
+                        newPoints.push_back(*(curPoint + 1));
                         break;
                     }
                     case IN_OUT: {
-                        newPoints.insert(newPoints.begin(), intersectEdge(boundary, Edge<float>(*curPoint, *(curPoint + 1))));
+                        newPoints.push_back(intersectEdge(boundary, Edge<float>(*curPoint, *(curPoint + 1))));
                         break;
                     }
                     case OUT_IN: {
-                        newPoints.insert(newPoints.begin(), intersectEdge(boundary, Edge<float>(*curPoint, *(curPoint + 1))));
-                        newPoints.insert(newPoints.begin(), *(curPoint + 1));
+                        newPoints.push_back(intersectEdge(boundary, Edge<float>(*curPoint, *(curPoint + 1))));
+                        newPoints.push_back(*(curPoint + 1));
                         break;
                     }
                     default:
@@ -151,22 +150,23 @@ void ClippingWindow::clipSelection() {
             Point<float> back = oldPoints.back();
             switch (getState(boundary, Edge<float>(back, front))) {
                 case IN_IN: {
-                    newPoints.insert(newPoints.begin(), front);
+                    newPoints.push_back(front);
                     break;
                 }
                 case IN_OUT: {
-                    newPoints.insert(newPoints.begin(), intersectEdge(boundary, Edge<float>(back, front)));
+                    newPoints.push_back(intersectEdge(boundary, Edge<float>(back, front)));
                     break;
                 }
                 case OUT_IN: {
-                    newPoints.insert(newPoints.begin(), intersectEdge(boundary, Edge<float>(back, front)));
-                    newPoints.insert(newPoints.begin(), front);
+                    newPoints.push_back(intersectEdge(boundary, Edge<float>(back, front)));
+                    newPoints.push_back(front);
                     break;
                 }
                 default:
                     break;
             } 
-
+            
+            std::reverse(newPoints.begin(), newPoints.end());
             oldPoints = std::move(newPoints);
         }
 

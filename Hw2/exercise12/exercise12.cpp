@@ -130,7 +130,7 @@ void keyboardHandler(unsigned char key, int x, int y) {
     switch (key) {
         case 'r':
         case 'R':
-            if (lastMouseState == GLUT_DOWN)
+            if (lastMouseState == GLUT_DOWN || window == nullptr)
                 break;
             window->clipSelection();
             glutPostRedisplay();

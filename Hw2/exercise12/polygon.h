@@ -1,10 +1,17 @@
 #ifndef POLYGON_H
 #define POLYGON_H
+#include "utilities.h"
+#include "edge.h"
 #include <vector>
 #include <optional>
 #include <cmath>
-#include "utilities.h"
-#include "edge.h"
+#include <stdlib.h>
+#include <algorithm>
+#ifdef __APPLE_CC__
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
 using namespace std;
 
 class Polygon {

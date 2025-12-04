@@ -1,12 +1,5 @@
 #include "polygon.h"
 #include "edge.h"
-#include <stdlib.h>
-#ifdef __APPLE_CC__
-#include <GLUT/glut.h>
-#else
-#include <GL/glut.h>
-#endif
-#include <algorithm>
 using namespace std;
 
 // ----------------------------------- 
