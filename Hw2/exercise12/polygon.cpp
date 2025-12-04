@@ -32,7 +32,7 @@ void Polygon::fillLine(int y) {
         glBegin(GL_POINTS);
         for (int j = x1; j <= x2; j++) {
             glColor3f(currentColor.red, currentColor.green, currentColor.blue);
-            glVertex2i(j, y);
+            glVertex2f(j / WORLD_SCALE, y / WORLD_SCALE);
 
             currentColor.red += rIncr;
             currentColor.green += gIncr;
@@ -78,7 +78,7 @@ void Polygon::drawVertices() {
     for (Point<int>& point : vertices) {
         RGB color = point.rgb;
         glColor3f(color.red, color.green, color.blue);
-        glVertex2i(point.x, point.y);
+        glVertex2f(point.x / WORLD_SCALE, point.y / WORLD_SCALE);
     }
     glEnd();
 }
@@ -176,8 +176,8 @@ bool Polygon::isClipped() const {
 
 void Polygon::draw() {
     drawVertices();
-    if (complete)
-        fill();
+    // if (complete)
+    //     fill();
 }
 
 // ----------------------------------- 

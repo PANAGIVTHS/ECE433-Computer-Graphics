@@ -34,9 +34,9 @@ void init() {
     //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glPointSize(1.0f);
+    glPointSize(10.0f);
 
-    gluOrtho2D(-300, 300, -300, 300);
+    gluOrtho2D(-4.0, 4.0, -3.0, 3.0);
 }
 
 int main(int argc, char** argv) {
@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
 
-    glutInitWindowSize(600, 600);
+    glutInitWindowSize(801, 601);
     glutInitWindowPosition(10, 10);
     glutCreateWindow("Team 1 - Assignment 2 - Exercise 12");
 

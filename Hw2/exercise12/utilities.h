@@ -3,6 +3,8 @@
 #include <vector>
 using namespace std;
 
+const float WORLD_SCALE = 100.0f;
+
 typedef struct {
     float red, green, blue;
 } RGB;

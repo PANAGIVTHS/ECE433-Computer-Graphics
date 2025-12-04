@@ -10,7 +10,7 @@ void ClippingWindow::setEnd(Point<int> end) {
 }
 
 void ClippingWindow::draw() const {
-    glRecti(start.x, start.y, end.x, end.y);
+    glRectf(start.x / WORLD_SCALE, start.y / WORLD_SCALE, end.x / WORLD_SCALE, end.y / WORLD_SCALE);
 }
 
 bool ClippingWindow::isActive() const {
