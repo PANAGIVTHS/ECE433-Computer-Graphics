@@ -31,8 +31,6 @@ void init() {
     //backround colour dark grey, alpha parameter set to default
     glClearColor(0.4, 0.4, 0.4, 0.0);
 
-    //glEnable(GL_BLEND);
-    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glPointSize(fillEnabled ? 1.0f : 10.0f);
