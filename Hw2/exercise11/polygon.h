@@ -1,8 +1,14 @@
 #ifndef POLYGON_H
 #define POLYGON_H
+#ifdef __APPLE_CC__
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
 #include <vector>
 #include <optional>
 #include <cmath>
+#include <algorithm>
 #include "utilities.h"
 #include "edge.h"
 using namespace std;

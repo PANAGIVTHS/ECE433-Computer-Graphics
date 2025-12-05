@@ -1,9 +1,5 @@
 #include "polygon.h"
 #include "edge.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <GL/glut.h>
-#include <algorithm>
 using namespace std;
 
 // ----------------------------------- 

@@ -1,34 +1,36 @@
-EDGE:
-struct {
-    int maxY;
-    float currentX, xIncr;
-} Edge;
-
 TABLE:
-#numOfScanlines = ceil(floor(maxYpoly) - ceil(minYpoly)) - 1;
+minYpoly = minimum Y of all vertices of the polygon
+maxYpoly = maximum Y of all vertices of the polygon
+
+#numOfScanlines = maxYpoly - minYpoly + 1
 activeEdgeTable[#numOfScanlines];
 
-for (int i = 0; i < #numOfScanlines; i++>) {
-    (edge1, edge2, ...) = scanline(.y(i))
-    activeEdgeTable[i] = newList(edge1, edge2, ...);
+for (each edge e of the polygon) {
+    minY = minimum Y of e;
+    maxY = maximum Y of e;
+
+    if (maxY == minY)
+        continue;
+    
+    activeEdgeTable[minY - minYpoly] = e;
 }
 
 LIST:
 activeEdgeList = newList();
 
-for (int i = 0; i < #numOfScanlines; i++>) {
+for (int i = 0; i < #numOfScanlines; i++) {
     for (each edge in activeEdgeList) {
-        if (edge.maxY == i) {   
-            removeElement(.list(activeEdgeList), .elements(edge))
+        if (edge.maxY == i + poly.minY) {   
+            removeElements(activeEdgeList, edge);
         }
     }
-    addElement(.list(activeEdgeList), .elements(activeEdgeTable[i]))
-    fillCurrentLine(.y(i));
+    addElements(activeEdgeList, activeEdgeTable[i]);
+    fillCurrentLine(i + poly.minY);
 }
 
 FILL_LINE: Input: y
 
-edges[] = getElements(.list(activeEdgeList)); // #elements are mult 2
+edges[] = getElements(activeEdgeList);
 for (each successive pair of edges except last) {
     drawHorzLine(ceil(edges1.getX(y)), floor(edges2.getX(y)));
 }
