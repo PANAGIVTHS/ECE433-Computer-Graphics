@@ -166,7 +166,7 @@ rendering.
 #endif
 #include <stdlib.h> 
 #include <stdio.h>
-#include <bmp.h>
+#include "bmp.h"
 
 static GLuint mytexture; //the variable for our textures
 
