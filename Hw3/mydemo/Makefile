@@ -18,7 +18,7 @@ endif
 RM = /bin/rm -f
 all: mydemo
 %: %.c
-	$(CC) $(CFLAGS) $(INCFLAGS) $(LDFLAGS) -o $@ $<
+	$(CC) $(CFLAGS) $(INCFLAGS) -o $@ $< $(LDFLAGS)
 %.o: %.c    #Suppress default rule
 	$(CC) $(CFLAGS) $(INCFLAGS) -c $@ $<
 
