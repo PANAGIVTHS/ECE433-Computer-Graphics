@@ -18,7 +18,7 @@ endif
 RM = /bin/rm -f
 all: culling texture_mapping
 %: %.cpp
-	$(CC) $(CFLAGS) $(INCFLAGS) $(LDFLAGS) -o $@ $<
+	$(CC) $(CFLAGS) $(INCFLAGS) -o $@ $< $(LDFLAGS)
 %.o: %.cpp    #Suppress default rule
 	$(CC) $(CFLAGS) $(INCFLAGS) -c $@ $<
 

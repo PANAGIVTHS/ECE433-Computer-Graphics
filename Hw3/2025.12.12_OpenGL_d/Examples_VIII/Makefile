@@ -13,12 +13,12 @@ CFLAGS = -g #-DGL_GLEXT_PROTOTYPES
 INCFLAGS = -I/usr/X11R6/include -I/sw/include \
 		-I/usr/sww/include -I/usr/sww/pkg/Mesa/include
 LDFLAGS = -L/usr/X11R6/lib -L/sw/lib -L/usr/sww/lib \
-		-L/usr/sww/bin -L/usr/sww/pkg/Mesa/lib -lGLEW -lglut -lGLU -lGL -lX11
+		-L/usr/sww/bin -L/usr/sww/pkg/Mesa/lib -lGLEW -lglut -lGLU -lGL -lX11 -lm
 endif
 RM = /bin/rm -f
 all: movingCamera
 %: %.cpp
-	$(CC) $(CFLAGS) $(INCFLAGS) $(LDFLAGS) -o $@ $<
+	$(CC) $(CFLAGS) $(INCFLAGS) -o $@ $< $(LDFLAGS)
 %.o: %.cpp    #Suppress default rule
 	$(CC) $(CFLAGS) $(INCFLAGS) -c $@ $<
 
