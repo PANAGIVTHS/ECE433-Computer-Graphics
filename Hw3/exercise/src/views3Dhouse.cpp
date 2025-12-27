@@ -18,9 +18,9 @@ GLdouble aspect = (GLdouble) width / height;
 bool gameMode = true;
 int currentWindow;
 
-Object *obj1 = new Object(-2.5f, 2.5f, -2.0f);
-Object *obj2 = new Object(1.0f, 2.5f, -4.0f);
-Object *obj3 = new Object(4.5f, 2.5f, -3.0f);
+Sphere *obj1 = new Sphere(-2.5f, 2.5f, -2.0f);
+Cube *obj2 = new Cube(1.0f, 2.5f, -4.0f);
+Cube *obj3 = new Cube(4.5f, 2.5f, -3.0f);
 Camera *camera = new Camera(0.0f, 0.0f, 2.0f);
 UserInput *userInput;
 
@@ -57,8 +57,11 @@ void display() {
     glLoadIdentity();
 
     camera->set();
+    glColor3f(1, 0, 1);
     obj1->draw();
+    glColor3f(1, 1, 1);
     obj2->draw();
+    glColor3f(1, 0, 0);
     obj3->draw();
 
     glutSwapBuffers();
@@ -76,7 +79,7 @@ void reshape(int newWidth, int newHeight) {
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(fov, aspect, 1, 100);
+    gluPerspective(fov, aspect, 0.1, 100);
     glMatrixMode(GL_MODELVIEW);
     glViewport(0, 0, width, height);
 }
@@ -100,8 +103,8 @@ void setupWindow(bool gameMode) {
     glutReshapeFunc(reshape);
     glutSpecialFunc(onSpecialKey);
 
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    // glEnable(GL_DEPTH_TEST); // TODO I'll enable it when I introduce textures
+    glClearColor(0.3828125f, 0.75390625f, 0.89453125f, 0.0f);
+    glEnable(GL_DEPTH_TEST);
     reshape(width, height);
 }
 
