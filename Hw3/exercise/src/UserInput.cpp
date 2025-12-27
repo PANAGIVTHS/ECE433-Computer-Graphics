@@ -1,5 +1,4 @@
 #include "UserInput.h"
-#include <stdio.h>
 
 Camera *UserInput::camera = nullptr;
 float UserInput::speed; 
@@ -70,8 +69,8 @@ void UserInput::keyboardDown(unsigned char key, int x, int y) {
 }
 
 void UserInput::mouseMovePassive(int x, int y) {
-    int centerX = width / 2;
-    int centerY = height / 2;
+    GLint centerX = width / 2;
+    GLint centerY = height / 2;
 
     if (x == centerX && y == centerY)
         return;

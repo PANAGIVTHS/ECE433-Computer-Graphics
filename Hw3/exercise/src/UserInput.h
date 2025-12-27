@@ -13,13 +13,13 @@ private:
     static bool pressedKeys[6];
     static Camera *camera;
     static GLfloat speed, sensitivity;
-    static int width, height;
+    static GLint width, height;
 
     static void keyboardUp(unsigned char key, int x, int y);
     static void keyboardDown(unsigned char key, int x, int y);
     static void mouseMovePassive(int x, int y);
 public:
-    static void init(Camera &camera, GLfloat speed, GLfloat sensitivity, int width, int height) {
+    static void init(Camera &camera, GLfloat speed, GLfloat sensitivity, GLint width, GLint height) {
         UserInput::camera = &camera;
         UserInput::speed = speed;
         UserInput::sensitivity = sensitivity; 
@@ -29,6 +29,11 @@ public:
         glutKeyboardUpFunc(keyboardUp);
         glutPassiveMotionFunc(mouseMovePassive);
     };
+
+    static void setDimensions(GLint width, GLint height) {
+        UserInput::width = width;
+        UserInput::height = height;
+    }
 
     static void updateMovement();
 };

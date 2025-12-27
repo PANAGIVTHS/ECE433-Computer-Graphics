@@ -12,17 +12,14 @@
 const GLfloat speed = 0.2f;
 const GLfloat sensitivity = 0.04f;
 const GLdouble fov = 90.0f;
-int width = 800;
-int height = 600;
+const GLint initialWidth = 800, initialHeight = 600;
+
+GLint width = initialWidth;
+GLint height = initialHeight;
 GLdouble aspect = (GLdouble) width / height;
 bool gameMode = true;
 int currentWindow;
-
-Sphere *obj1 = new Sphere(-2.5f, 2.5f, -2.0f);
-Cube *obj2 = new Cube(1.0f, 2.5f, -4.0f);
-Cube *obj3 = new Cube(4.5f, 2.5f, -3.0f);
-Camera *camera = new Camera(0.0f, 0.0f, 2.0f);
-UserInput *userInput;
+Camera *camera;
 
 void init(int argc, char *argv[]);
 void setupWindow(bool gameMode);
@@ -39,9 +36,12 @@ int main(int argc, char *argv[]) {
 	printf("'a' - Move left.\n");
 	printf("'s' - Move backward.\n");
 	printf("'d' - Move right.\n");
-	printf("'e' - Move up.\n");
-	printf("'q' - Move down.\n");
+	printf("'SPACE' - Move up.\n");
+	printf("'z' - Move down.\n");
 	printf("'ESC' - Quit the application.\n");
+	printf("'F11' - Toggle fullscreen.\n");
+	printf("\n");
+    printf("Move the mouse to look around!\n");
 
     glutMainLoop();
     return 0;
@@ -49,6 +49,10 @@ int main(int argc, char *argv[]) {
 
 void init(int argc, char *argv[]) {
     glutInit(&argc, argv);
+    camera = new Camera(1.0f, 0.0f, 2.0f);
+    new Sphere(-2.5f, 2.5f, -2.0f);
+    new Cube(1.0f, 2.5f, -4.0f);
+    new Cube(4.5f, 2.5f, -3.0f);
     setupWindow(gameMode);
 }
 
@@ -57,12 +61,9 @@ void display() {
     glLoadIdentity();
 
     camera->set();
-    glColor3f(1, 0, 1);
-    obj1->draw();
-    glColor3f(1, 1, 1);
-    obj2->draw();
-    glColor3f(1, 0, 0);
-    obj3->draw();
+    for (Object *o : ObjectHandler::getObjects()) {
+        o->draw();
+    }
 
     glutSwapBuffers();
 }
@@ -76,6 +77,7 @@ void reshape(int newWidth, int newHeight) {
     width = newWidth;
     height = newHeight;
     aspect = (GLfloat) width / height;
+    UserInput::setDimensions(width, height);
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -86,22 +88,27 @@ void reshape(int newWidth, int newHeight) {
 
 void setupWindow(bool gameMode) {
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    if (gameMode)
+    if (gameMode) {
         currentWindow = glutEnterGameMode();
-    else {
+        width = glutGameModeGet(GLUT_GAME_MODE_WIDTH);
+        height = glutGameModeGet(GLUT_GAME_MODE_HEIGHT);
+    } else {
+        width = initialWidth;
+        height = initialHeight;
         glutInitWindowSize(width, height);
         glutInitWindowPosition(10, 10);
         currentWindow = glutCreateWindow("Team 1 - Assignment 3");
     }
 
-    UserInput::init(*camera, speed, sensitivity, width, height);
     glutIgnoreKeyRepeat(1);
     glutSetCursor(GLUT_CURSOR_NONE);
+    glutWarpPointer(width/2, height/2);
 
     glutDisplayFunc(display);
     glutIdleFunc(idle);
     glutReshapeFunc(reshape);
     glutSpecialFunc(onSpecialKey);
+    UserInput::init(*camera, speed, sensitivity, width, height);
 
     glClearColor(0.3828125f, 0.75390625f, 0.89453125f, 0.0f);
     glEnable(GL_DEPTH_TEST);

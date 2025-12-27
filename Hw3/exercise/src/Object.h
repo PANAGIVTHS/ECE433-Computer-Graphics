@@ -6,6 +6,7 @@
 #else
 #include <GL/glut.h>
 #endif
+#include <vector>
 
 class Object {
 private:
@@ -13,9 +14,18 @@ private:
 
     virtual void drawInternal() = 0;
 public:
-    Object(Vec3<GLfloat> &pos): pos(pos) {}
-    Object(GLfloat x, GLfloat y, GLfloat z): pos(Vec3(x, y, z)) {}
+    Object(Vec3<GLfloat> &pos);
+    Object(GLfloat x, GLfloat y, GLfloat z);
     void draw();
+};
+
+class ObjectHandler {
+private:
+    static std::vector<Object *> objects;
+public:
+    static void addObject(Object *o);
+    static std::vector<Object *> &getObjects();
+    static void clear();
 };
 
 class Cube : public Object {
