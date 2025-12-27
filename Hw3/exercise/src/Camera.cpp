@@ -9,9 +9,6 @@ void Camera::updateDirection() {
     direction.x = cos(radYaw) * cos(radPitch);
     direction.y = sin(radPitch);
     direction.z = sin(radYaw) * cos(radPitch);
-
-    printf("Yaw: %f\n", yaw);
-    printf("Pitch: %f\n", pitch);
 }
 
 void Camera::offset(GLfloat x, GLfloat y, GLfloat z) {

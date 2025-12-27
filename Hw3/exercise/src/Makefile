@@ -17,14 +17,16 @@ LDFLAGS = -L/usr/X11R6/lib -L/sw/lib -L/usr/sww/lib \
 endif
 RM = /bin/rm -f
 all: views3Dhouse
-views3Dhouse: views3Dhouse.o Object.o Camera.o
-	$(CC) $(CFLAGS) -o views3Dhouse views3Dhouse.o Object.o Camera.o $(INCFLAGS) $(LDFLAGS)
+views3Dhouse: views3Dhouse.o Object.o Camera.o UserInput.o
+	$(CC) $(CFLAGS) -o views3Dhouse views3Dhouse.o Object.o Camera.o UserInput.o $(INCFLAGS) $(LDFLAGS)
 views3Dhouse.o: views3Dhouse.cpp 
 	$(CC) $(CFLAGS) $(INCFLAGS) -c views3Dhouse.cpp
 Object.o: Object.cpp Object.h
 	$(CC) $(CFLAGS) $(INCFLAGS) -c Object.cpp
 Camera.o: Camera.cpp Camera.h
 	$(CC) $(CFLAGS) $(INCFLAGS) -c Camera.cpp
+UserInput.o: UserInput.cpp UserInput.h
+	$(CC) $(CFLAGS) $(INCFLAGS) -c UserInput.cpp
 
 
 #all: Sphere_red
