@@ -1,9 +1,11 @@
 #include "UserInput.h"
+#include <stdio.h>
 
 Camera *UserInput::camera = nullptr;
 float UserInput::speed; 
 float UserInput::sensitivity;
 bool UserInput::pressedKeys[6] = {false};
+int UserInput::width, UserInput::height;
 
 void UserInput::keyboardUp(unsigned char key, int x, int y) {
     switch (key) {
@@ -68,7 +70,18 @@ void UserInput::keyboardDown(unsigned char key, int x, int y) {
 }
 
 void UserInput::mouseMovePassive(int x, int y) {
+    int centerX = width / 2;
+    int centerY = height / 2;
 
+    if (x == centerX && y == centerY)
+        return;
+
+    GLfloat yaw = (x - centerX) * sensitivity;
+    GLfloat pitch = (centerY - y) * sensitivity;
+    camera->rotateYaw(yaw);
+    camera->rotatePitch(pitch);
+
+    glutWarpPointer(centerX, centerY);
 }
 
 void UserInput::updateMovement() {
@@ -84,12 +97,4 @@ void UserInput::updateMovement() {
         camera->move(UP, speed);
     if (pressedKeys[DOWN])
         camera->move(DOWN, speed);
-}
-
-void UserInput::updateRotation() {
-}
-
-void UserInput::updateCamera() {
-    updateMovement();
-    updateRotation();
 }

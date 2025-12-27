@@ -10,12 +10,13 @@
 #include "UserInput.h"
 
 const GLfloat speed = 0.2f;
-const GLfloat sensitivity = 2.5f;
+const GLfloat sensitivity = 0.04f;
 const GLdouble fov = 90.0f;
 int width = 800;
 int height = 600;
 GLdouble aspect = (GLdouble) width / height;
 bool gameMode = true;
+int currentWindow;
 
 Object *obj1 = new Object(-2.5f, 2.5f, -2.0f);
 Object *obj2 = new Object(1.0f, 2.5f, -4.0f);
@@ -51,31 +52,6 @@ void init(int argc, char *argv[]) {
     setupWindow(gameMode);
 }
 
-void setupWindow(bool gameMode) {
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    if (gameMode)
-        glutEnterGameMode();
-    else {
-        glutInitWindowSize(width, height);
-        glutInitWindowPosition(10, 10);
-        glutCreateWindow("Team 1 - Assignment 3");
-    }
-    UserInput::init(*camera, speed, sensitivity);
-    glutDisplayFunc(display);
-    glutIdleFunc(idle);
-    glutReshapeFunc(reshape);
-    glutSpecialFunc(onSpecialKey);
-    glutSetCursor(GLUT_CURSOR_NONE);
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(fov, aspect, 1, 10);
-    glMatrixMode(GL_MODELVIEW);
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    glViewport(0, 0, width, height);
-    // glEnable(GL_DEPTH_TEST); // TODO I'll enable it when I introduce textures
-}
-
 void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
@@ -89,7 +65,7 @@ void display() {
 }
 
 void idle() {
-    UserInput::updateCamera();
+    UserInput::updateMovement();
     glutPostRedisplay();
 }
 
@@ -105,7 +81,39 @@ void reshape(int newWidth, int newHeight) {
     glViewport(0, 0, width, height);
 }
 
+void setupWindow(bool gameMode) {
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+    if (gameMode)
+        currentWindow = glutEnterGameMode();
+    else {
+        glutInitWindowSize(width, height);
+        glutInitWindowPosition(10, 10);
+        currentWindow = glutCreateWindow("Team 1 - Assignment 3");
+    }
+
+    UserInput::init(*camera, speed, sensitivity, width, height);
+    glutIgnoreKeyRepeat(1);
+    glutSetCursor(GLUT_CURSOR_NONE);
+
+    glutDisplayFunc(display);
+    glutIdleFunc(idle);
+    glutReshapeFunc(reshape);
+    glutSpecialFunc(onSpecialKey);
+
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    // glEnable(GL_DEPTH_TEST); // TODO I'll enable it when I introduce textures
+    reshape(width, height);
+}
+
 void onSpecialKey(int key, int x, int y) {
     if (key != GLUT_KEY_F11)
-        return;  
+        return;
+    
+    if (gameMode)
+        glutLeaveGameMode();
+    else
+        glutDestroyWindow(currentWindow);
+
+    gameMode = !gameMode;
+    setupWindow(gameMode);
 }
