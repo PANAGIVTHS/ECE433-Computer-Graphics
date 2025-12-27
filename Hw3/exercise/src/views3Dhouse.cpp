@@ -9,6 +9,7 @@
 #include "Camera.h"
 
 const GLfloat speed = 0.2f;
+const GLfloat sensitivity = 2.5f;
 const GLdouble fov = 90.0f;
 const int width = 800;
 const int height = 600;
@@ -89,27 +90,27 @@ void keyboardHandler(unsigned char key, int x, int y) {
             break;
         case 'e':
         case 'E':
-            camera->offset(0.0f, speed, 0.0f);
+            camera->move(UP, speed);
             break;
         case 'q':
         case 'Q':
-            camera->offset(0.0f, -speed, 0.0f);
+            camera->move(DOWN, speed);
             break;
         case 'l':
         case 'L':
-            camera->offsetCenter(speed, 0.0f, 0.0f);
+            camera->rotateYaw(sensitivity);
             break;
         case 'j':
         case 'J':
-            camera->offsetCenter(-speed, 0.0f, 0.0f);
+            camera->rotateYaw(-sensitivity);
             break;
         case 'i':
         case 'I':
-            camera->offsetCenter(0.0f, speed, 0.0f);
+            camera->rotatePitch(sensitivity);
             break;
         case 'k':
         case 'K':
-            camera->offsetCenter(0.0f, -speed, 0.0f);
+            camera->rotatePitch(-sensitivity);
             break;
         case 27: // Escape
             exit(0);
