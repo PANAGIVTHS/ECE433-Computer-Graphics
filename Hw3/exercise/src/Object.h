@@ -28,22 +28,25 @@ public:
     static void clear();
 };
 
+class Terrain : public Object {
+public: 
+    Terrain(float x, float y, float z) : Object(x, y, z) {}
+private:
+    void drawInternal();
+};
+
 class Cube : public Object {
 public: 
     Cube(float x, float y, float z) : Object(x, y, z) {}
 private:
-    void drawInternal() {
-        glutSolidCube(1.0f);
-    }
+    void drawInternal();
 };
 
 class Sphere : public Object {
 public: 
     Sphere(float x, float y, float z) : Object(x, y, z) {}
 private:
-    void drawInternal() {
-        glutSolidSphere(1.0f, 20, 20);
-    }
+    void drawInternal();
 };
 
 #endif

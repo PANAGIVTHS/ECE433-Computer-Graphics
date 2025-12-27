@@ -1,6 +1,6 @@
 #include "Object.h"
 
-std::vector<Object *> ObjectHandler::objects;
+// Object implementation
 
 Object::Object(Vec3<GLfloat> &pos): pos(pos) {
     ObjectHandler::addObject(this);
@@ -19,6 +19,10 @@ void Object::draw() {
     glPopMatrix();
 }
 
+// ObjectHandler implementation
+
+std::vector<Object *> ObjectHandler::objects;
+
 void ObjectHandler::addObject(Object *o) {
     ObjectHandler::objects.push_back(o);
 }
@@ -32,4 +36,23 @@ void ObjectHandler::clear() {
         delete o;
     }
     objects.clear();
+}
+
+// Object subclasses implementation
+
+// Terrain
+void Terrain::drawInternal() {
+    glScaled(10, 0.1, 10);
+    glTranslated(0, -10, 0);
+    glutSolidCube(10.0f);
+}
+
+// Cube
+void Cube::drawInternal() {
+    glutSolidCube(1.0f);
+}
+
+// Sphere
+void Sphere::drawInternal() {
+    glutSolidSphere(1.0f, 20, 20);
 }
