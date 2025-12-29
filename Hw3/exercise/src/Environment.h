@@ -13,7 +13,7 @@ private:
     Color3f skyColor;
 public:
     Environment(Color3f skyColor);
-    void apply();
+    void spawn();
 };
 
 #endif

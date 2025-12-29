@@ -12,6 +12,8 @@ private:
     /* data */
 public:
     House(/* args */);
+
+    void spawn();
 };
 
 #endif

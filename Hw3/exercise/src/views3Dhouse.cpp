@@ -43,10 +43,18 @@ int main(int argc, char *argv[]) {
 	printf("'d' - Move right.\n");
 	printf("'SPACE' - Move up.\n");
 	printf("'z' - Move down.\n");
+#ifndef MOUSE_ROTATION
+	printf("'i' - Look up.\n");
+	printf("'j' - Look left.\n");
+	printf("'k' - Look down.\n");
+	printf("'l' - Look right.\n");
+#endif
 	printf("'ESC' - Quit the application.\n");
 	printf("'F11' - Toggle fullscreen.\n");
+#ifdef MOUSE_ROTATION
 	printf("\n");
     printf("Move the mouse to look around!\n");
+#endif
 
     glutMainLoop();
     return 0;
@@ -54,14 +62,12 @@ int main(int argc, char *argv[]) {
 
 void init(int argc, char *argv[]) {
     glutInit(&argc, argv);
-    camera = new Camera(1.0f, 0.0f, 0.0f);
+    camera = new Camera(0.0f, 0.0f, 0.0f);
     environment = new Environment({.red = 0.3828125f, .green = 0.75390625f, .blue = 0.89453125f});
-    new Terrain(0, 0, 0);
-    new Sphere(-2.5f, 2.5f, -4.0f);
-    new Cube(1.0f, 2.5f, -6.0f);
-    new Cube(4.5f, 2.5f, -5.0f);
+    
     setupWindow(gameMode);
-    environment->apply();
+    environment->spawn();
+    house->spawn();
 }
 
 void display() {
@@ -69,9 +75,8 @@ void display() {
     glLoadIdentity();
 
     camera->set();
-    for (Object *o : ObjectHandler::getObjects()) {
+    for (Object *o : ObjectHandler::getObjects())
         o->draw();
-    }
 
     glutSwapBuffers();
 }
