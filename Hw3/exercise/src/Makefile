@@ -16,24 +16,29 @@ LDFLAGS = -L/usr/X11R6/lib -L/sw/lib -L/usr/sww/lib \
 		-L/usr/sww/bin -L/usr/sww/pkg/Mesa/lib -lGLEW -lglut -lGLU -lGL -lX11 -lm -lstdc++
 endif
 RM = /bin/rm -f
-all: views3Dhouse
-views3Dhouse: views3Dhouse.o Object.o Camera.o UserInput.o
-	$(CC) $(CFLAGS) -o views3Dhouse views3Dhouse.o Object.o Camera.o UserInput.o $(INCFLAGS) $(LDFLAGS)
-views3Dhouse.o: views3Dhouse.cpp 
-	$(CC) $(CFLAGS) $(INCFLAGS) -c views3Dhouse.cpp
-Object.o: Object.cpp Object.h
-	$(CC) $(CFLAGS) $(INCFLAGS) -c Object.cpp
-Camera.o: Camera.cpp Camera.h
-	$(CC) $(CFLAGS) $(INCFLAGS) -c Camera.cpp
-UserInput.o: UserInput.cpp UserInput.h
-	$(CC) $(CFLAGS) $(INCFLAGS) -c UserInput.cpp
 
+TARGET = views3Dhouse
+SRCS   = views3Dhouse.cpp Object.cpp Camera.cpp UserInput.cpp Environment.cpp House.cpp
+OBJS   = $(SRCS:.cpp=.o)
 
-#all: Sphere_red
-#lab2_example1: lab2_example1.o 
-#	$(CC) $(CFLAGS) -o lab2_example1 lab2_example1.o $(INCFLAGS) $(LDFLAGS)
-#lab2_example1.o: lab2_example1.cpp 
-#	$(CC) $(CFLAGS) $(INCFLAGS) -c lab2_example1.cpp 
-clean: 
-	$(RM) *.o views views3Dhouse
+USE_MOUSE ?= 0
+ifeq ($(USE_MOUSE), 1)
+    CFLAGS += -DMOUSE_ROTATION
+endif
+
+.PHONY: all clean
+
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+
+%.o: %.cpp %.h
+	$(CC) $(CFLAGS) $(INCFLAGS) -c $< -o $@
+
+views3Dhouse.o: views3Dhouse.cpp
+	$(CC) $(CFLAGS) $(INCFLAGS) -c $< -o $@
+
+clean:
+	rm -f $(OBJS) $(TARGET)
  

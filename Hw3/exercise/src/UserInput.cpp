@@ -5,6 +5,10 @@ float UserInput::speed;
 float UserInput::sensitivity;
 bool UserInput::pressedKeys[6] = {false};
 int UserInput::width, UserInput::height;
+void (*UserInput::cleanUp)() = nullptr;
+#ifndef MOUSE_ROTATION
+    bool UserInput::pressedRotationKeys[4] = {false};
+#endif
 
 void UserInput::keyboardUp(unsigned char key, int x, int y) {
     switch (key) {
@@ -28,6 +32,24 @@ void UserInput::keyboardUp(unsigned char key, int x, int y) {
         case 'Z':
             pressedKeys[DOWN] = false;
             break;
+#ifndef MOUSE_ROTATION
+        case 'i':
+        case 'I':
+            pressedRotationKeys[FRONT] = false;
+            break;
+        case 'l':
+        case 'L':
+            pressedRotationKeys[LEFT] = false;
+            break;
+        case 'k':
+        case 'K':
+            pressedRotationKeys[BACK] = false;
+            break;
+        case 'j':
+        case 'J':
+            pressedRotationKeys[RIGHT] = false;
+            break;
+#endif
         case 32: // Space
             pressedKeys[UP] = false;
             break;
@@ -61,7 +83,26 @@ void UserInput::keyboardDown(unsigned char key, int x, int y) {
         case 32: // Space
             pressedKeys[UP] = true;
             break;
+#ifndef MOUSE_ROTATION
+        case 'i':
+        case 'I':
+            pressedRotationKeys[FRONT] = true;
+            break;
+        case 'l':
+        case 'L':
+            pressedRotationKeys[LEFT] = true;
+            break;
+        case 'k':
+        case 'K':
+            pressedRotationKeys[BACK] = true;
+            break;
+        case 'j':
+        case 'J':
+            pressedRotationKeys[RIGHT] = true;
+            break;
+#endif
         case 27: // Escape
+            if (cleanUp) cleanUp();
             exit(0);
         default:
             break;
@@ -97,3 +138,23 @@ void UserInput::updateMovement() {
     if (pressedKeys[DOWN])
         camera->move(DOWN, speed);
 }
+
+#ifndef MOUSE_ROTATION
+void UserInput::updateRotation() {
+    GLfloat yaw = 0;
+    GLfloat pitch = 0;
+    const int sensAmplification = 50;
+
+    if (pressedRotationKeys[FRONT])
+        pitch += sensitivity * sensAmplification;
+    if (pressedRotationKeys[BACK])
+        pitch -= sensitivity * sensAmplification;
+    if (pressedRotationKeys[LEFT])
+        yaw += sensitivity * sensAmplification;
+    if (pressedRotationKeys[RIGHT])
+        yaw -= sensitivity * sensAmplification;
+
+    camera->rotateYaw(yaw);
+    camera->rotatePitch(pitch);
+}
+#endif

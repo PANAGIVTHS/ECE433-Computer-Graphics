@@ -8,6 +8,8 @@
 #include "Object.h"
 #include "Camera.h"
 #include "UserInput.h"
+#include "Environment.h"
+#include "House.h"
 
 const GLfloat speed = 0.2f;
 const GLfloat sensitivity = 0.04f;
@@ -20,6 +22,8 @@ GLdouble aspect = (GLdouble) width / height;
 bool gameMode = true;
 int currentWindow;
 Camera *camera;
+Environment *environment;
+House *house;
 
 void init(int argc, char *argv[]);
 void setupWindow(bool gameMode);
@@ -27,6 +31,7 @@ void display();
 void idle();
 void reshape(int newWidth, int newHeight);
 void onSpecialKey(int key, int x, int y);
+void cleanUp();
 
 int main(int argc, char *argv[]) {
     init(argc, argv);
@@ -50,11 +55,13 @@ int main(int argc, char *argv[]) {
 void init(int argc, char *argv[]) {
     glutInit(&argc, argv);
     camera = new Camera(1.0f, 0.0f, 0.0f);
+    environment = new Environment({.red = 0.3828125f, .green = 0.75390625f, .blue = 0.89453125f});
     new Terrain(0, 0, 0);
     new Sphere(-2.5f, 2.5f, -4.0f);
     new Cube(1.0f, 2.5f, -6.0f);
     new Cube(4.5f, 2.5f, -5.0f);
     setupWindow(gameMode);
+    environment->apply();
 }
 
 void display() {
@@ -71,6 +78,9 @@ void display() {
 
 void idle() {
     UserInput::updateMovement();
+#ifndef MOUSE_ROTATION
+    UserInput::updateRotation();
+#endif
     glutPostRedisplay();
 }
 
@@ -109,9 +119,8 @@ void setupWindow(bool gameMode) {
     glutIdleFunc(idle);
     glutReshapeFunc(reshape);
     glutSpecialFunc(onSpecialKey);
-    UserInput::init(*camera, speed, sensitivity, width, height);
+    UserInput::init(*camera, speed, sensitivity, width, height, cleanUp);
 
-    glClearColor(0.3828125f, 0.75390625f, 0.89453125f, 0.0f);
     glEnable(GL_DEPTH_TEST);
     reshape(width, height);
 }
@@ -127,4 +136,11 @@ void onSpecialKey(int key, int x, int y) {
 
     gameMode = !gameMode;
     setupWindow(gameMode);
+}
+
+void cleanUp() {
+    delete camera;
+    delete environment;
+    delete house;
+    ObjectHandler::clear();
 }

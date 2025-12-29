@@ -14,20 +14,27 @@ private:
     static Camera *camera;
     static GLfloat speed, sensitivity;
     static GLint width, height;
+    static void (*cleanUp) ();
+#ifndef MOUSE_ROTATION
+    static bool pressedRotationKeys[4];
+#endif
 
     static void keyboardUp(unsigned char key, int x, int y);
     static void keyboardDown(unsigned char key, int x, int y);
     static void mouseMovePassive(int x, int y);
 public:
-    static void init(Camera &camera, GLfloat speed, GLfloat sensitivity, GLint width, GLint height) {
+    static void init(Camera &camera, GLfloat speed, GLfloat sensitivity, GLint width, GLint height, void (*cleanUp) ()) {
         UserInput::camera = &camera;
         UserInput::speed = speed;
         UserInput::sensitivity = sensitivity; 
         UserInput::width = width;
         UserInput::height = height;
+        UserInput::cleanUp = cleanUp;
         glutKeyboardFunc(keyboardDown);
         glutKeyboardUpFunc(keyboardUp);
+#ifdef MOUSE_ROTATION
         glutPassiveMotionFunc(mouseMovePassive);
+#endif
     };
 
     static void setDimensions(GLint width, GLint height) {
@@ -36,6 +43,9 @@ public:
     }
 
     static void updateMovement();
+#ifndef MOUSE_ROTATION
+    static void updateRotation();
+#endif
 };
 
 #endif

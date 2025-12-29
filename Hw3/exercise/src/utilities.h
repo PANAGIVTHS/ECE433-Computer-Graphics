@@ -18,7 +18,7 @@ enum Direction {
 
 typedef struct {
     float red, green, blue;
-} RGB;
+} Color3f;
 
 template <typename T>
 class Vec3

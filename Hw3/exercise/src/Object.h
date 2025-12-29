@@ -16,6 +16,7 @@ private:
 public:
     Object(Vec3<GLfloat> &pos);
     Object(GLfloat x, GLfloat y, GLfloat z);
+    ~Object();
     void draw();
 };
 
@@ -24,6 +25,7 @@ private:
     static std::vector<Object *> objects;
 public:
     static void addObject(Object *o);
+    static void removeObject(Object *o);
     static std::vector<Object *> &getObjects();
     static void clear();
 };
