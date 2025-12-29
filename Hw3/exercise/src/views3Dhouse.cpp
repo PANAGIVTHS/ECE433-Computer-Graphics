@@ -78,9 +78,6 @@ void display() {
 
 void idle() {
     UserInput::updateMovement();
-#ifndef MOUSE_ROTATION
-    UserInput::updateRotation();
-#endif
     glutPostRedisplay();
 }
 

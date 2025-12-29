@@ -22,6 +22,9 @@ private:
     static void keyboardUp(unsigned char key, int x, int y);
     static void keyboardDown(unsigned char key, int x, int y);
     static void mouseMovePassive(int x, int y);
+#ifndef MOUSE_ROTATION
+    static void updateRotation();
+#endif
 public:
     static void init(Camera &camera, GLfloat speed, GLfloat sensitivity, GLint width, GLint height, void (*cleanUp) ()) {
         UserInput::camera = &camera;
@@ -43,9 +46,6 @@ public:
     }
 
     static void updateMovement();
-#ifndef MOUSE_ROTATION
-    static void updateRotation();
-#endif
 };
 
 #endif

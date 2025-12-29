@@ -137,6 +137,9 @@ void UserInput::updateMovement() {
         camera->move(UP, speed);
     if (pressedKeys[DOWN])
         camera->move(DOWN, speed);
+#ifndef MOUSE_ROTATION
+    updateRotation();
+#endif
 }
 
 #ifndef MOUSE_ROTATION
