@@ -15,10 +15,13 @@ private:
     inline static Environment *environment = nullptr;
     inline static House *house = nullptr;
     inline static GLint oldTime;
+
+    static void updateDeltaTime();
 public:
     static constexpr GLfloat speed = 4.137f; // m/s
     static constexpr GLfloat sensitivity = 0.03f; // deg / pixel
     static constexpr GLfloat gravity = 9.81f; // m/s^2
+    static constexpr GLfloat jumpSpeed = 4.0f; // m/s
     static constexpr GLfloat maxPitch = 89.5;
     static constexpr GLdouble fov = 90.0f;
     static constexpr GLdouble near = 0.1;
@@ -29,8 +32,7 @@ public:
 
     static void init();
     static void onWindowUpdate(GLint width, GLint height, bool newContext);
-    static void updateDeltaTime();
-    static void updatePositions();
+    static void runGameLoop();
     static void cleanUp();
     
     static Camera *getCamera();

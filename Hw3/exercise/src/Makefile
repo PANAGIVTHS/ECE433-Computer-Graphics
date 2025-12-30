@@ -17,8 +17,8 @@ LDFLAGS = -L/usr/X11R6/lib -L/sw/lib -L/usr/sww/lib \
 endif
 RM = /bin/rm -f
 
-TARGET = views3Dhouse
-SRCS   = views3Dhouse.cpp Object.cpp Camera.cpp Environment.cpp House.cpp GameManager.cpp WindowManager.cpp InputManager.cpp Sun.cpp
+TARGET = visiting3Dhouse
+SRCS   = visiting3Dhouse.cpp Object.cpp Camera.cpp Environment.cpp House.cpp GameManager.cpp WindowManager.cpp InputManager.cpp Sun.cpp
 OBJS   = $(SRCS:.cpp=.o)
 
 USE_MOUSE ?= 1
@@ -36,7 +36,7 @@ $(TARGET): $(OBJS)
 %.o: %.cpp %.h
 	$(CC) $(CFLAGS) $(INCFLAGS) -c $< -o $@
 
-views3Dhouse.o: views3Dhouse.cpp
+visiting3Dhouse.o: visiting3Dhouse.cpp
 	$(CC) $(CFLAGS) $(INCFLAGS) -c $< -o $@
 
 clean:

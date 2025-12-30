@@ -61,8 +61,6 @@ void InputManager::keyboardUp(unsigned char key, int x, int y) {
 
 void InputManager::keyboardDown(unsigned char key, int x, int y) {
     Camera *camera = GameManager::getCamera();
-    GLfloat speed = GameManager::speed;
-    const GLfloat jumpAmpliefier = 20.0f;
     switch (key) {
         case 'w':
         case 'W':
@@ -87,7 +85,7 @@ void InputManager::keyboardDown(unsigned char key, int x, int y) {
         case 32: // Space
             pressedKeys[UP] = true;
             if (camera->hasGravity()) 
-                camera->getVelocity().y += 4;
+                camera->getVelocity().y += GameManager::jumpSpeed;
             break;
 #ifndef MOUSE_ROTATION
         case 'i':

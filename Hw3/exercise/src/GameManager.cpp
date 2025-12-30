@@ -25,7 +25,9 @@ void GameManager::updateDeltaTime() {
     dt = (GLdouble) diffMs / 1000.0f;
 }
 
-void GameManager::updatePositions() {
+void GameManager::runGameLoop() {
+    updateDeltaTime();
+
     for(Object *o : ObjectHandler::getObjects())
         o->update();
 

@@ -27,8 +27,9 @@ void Camera::move(Direction dir, GLfloat amount) {
     Vec3 horizontal = direction;
     horizontal.y = 0;
     horizontal.normalize();
-    
-    Vec3 ccw = horizontal.cross(direction).normalize();
+
+    Vec3 upVector(0.0f, -1.0f, 0.0f);
+    Vec3 ccw = direction.cross(upVector).normalize();
 
     switch (dir) {
         case FRONT:
@@ -97,8 +98,8 @@ void Camera::update() {
         velocity.y -= GameManager::gravity * GameManager::dt;
     position += velocity * (GLfloat) GameManager::dt;
 
-    if (position.y <= 1) { // Temporary ground collision
-        position.y = 1;
+    if (position.y <= 2) { // Temporary ground collision
+        position.y = 2;
         velocity.y = 0;
     }
 }
