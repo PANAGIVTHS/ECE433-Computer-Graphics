@@ -10,14 +10,24 @@
 
 class Object {
 private:
-    Vec3<GLfloat> pos;
+    Vec3<GLfloat> position, velocity;
+    bool gravity = true;
 
     virtual void drawInternal() = 0;
 public:
     Object(Vec3<GLfloat> &pos);
     Object(GLfloat x, GLfloat y, GLfloat z);
+    Object(Vec3<GLfloat> &pos, bool gravity);
+    Object(GLfloat x, GLfloat y, GLfloat z, bool gravity);
     ~Object();
     void draw();
+    bool hasGravity();
+    void setGravity(bool gravity);
+    Vec3<GLfloat>& getPosition();
+    void setPosition(Vec3<GLfloat>& position);
+    Vec3<GLfloat>& getVelocity();
+    void setVelocity(Vec3<GLfloat>& velocity);
+    void applyVelocity();
 };
 
 class ObjectHandler {

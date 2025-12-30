@@ -18,11 +18,11 @@ private:
     static void specialKeyboardDown(int key, int x, int y);
     static void mouseMovePassive(int x, int y);
 #ifndef MOUSE_ROTATION
-    static void updateRotation();
+    static void updateCameraRotation();
 #endif
 public:
     static void init();
-    static void updateMovement();
+    static void applyInputToCamera();
 };
 
 #endif

@@ -1,5 +1,6 @@
 #include "GameManager.h"
 #include "Object.h"
+#include "InputManager.h"
 
 void GameManager::init() {
     if (camera) delete camera;
@@ -12,6 +13,19 @@ void GameManager::init() {
     house = new House();
     environment->init();
     house->init();
+}
+
+void GameManager::updatePositions() {
+    for(Object *o : ObjectHandler::getObjects()) {
+        if (o->hasGravity())
+            o->getVelocity().y -= gravity;
+        o->applyVelocity();
+    }
+
+    InputManager::applyInputToCamera();
+    if (camera->hasGravity())
+        camera->getVelocity().y -= gravity;
+    camera->applyVelocity();
 }
 
 void GameManager::onWindowUpdate(GLint width, GLint height, bool newContext) {

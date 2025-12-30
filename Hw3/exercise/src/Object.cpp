@@ -3,11 +3,19 @@
 
 // Object implementation
 
-Object::Object(Vec3<GLfloat> &pos): pos(pos) {
+Object::Object(Vec3<GLfloat> &position): position(position) {
     ObjectHandler::addObject(this);
 }
 
-Object::Object(GLfloat x, GLfloat y, GLfloat z): pos(Vec3(x, y, z)) { 
+Object::Object(GLfloat x, GLfloat y, GLfloat z): position(Vec3(x, y, z)) { 
+    ObjectHandler::addObject(this); 
+}
+
+Object::Object(Vec3<GLfloat> &position, bool gravity): position(position), gravity(gravity) {
+    ObjectHandler::addObject(this);
+}
+
+Object::Object(GLfloat x, GLfloat y, GLfloat z, bool gravity): position(Vec3(x, y, z)), gravity(gravity) { 
     ObjectHandler::addObject(this); 
 }
 
@@ -18,10 +26,38 @@ Object::~Object() {
 void Object::draw() {
     glPushMatrix();
 
-    glTranslated(pos.x, pos.y, pos.z);
+    glTranslated(position.x, position.y, position.z);
     drawInternal();
 
     glPopMatrix();
+}
+
+bool Object::hasGravity() {
+    return gravity;
+}
+
+void Object::setGravity(bool gravity) {
+    this->gravity = gravity;
+}
+
+Vec3<GLfloat>& Object::getPosition() {
+    return position;
+}
+
+void Object::setPosition(Vec3<GLfloat>& position) {
+    this->position = position;
+}
+
+Vec3<GLfloat>& Object::getVelocity() {
+    return velocity;
+}
+
+void Object::setVelocity(Vec3<GLfloat>& velocity) {
+    this->velocity = velocity;
+}
+
+void Object::applyVelocity() {
+    this->position += this->velocity;
 }
 
 // ObjectHandler implementation

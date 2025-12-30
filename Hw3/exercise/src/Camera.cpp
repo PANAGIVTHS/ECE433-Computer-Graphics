@@ -11,15 +11,15 @@ void Camera::updateDirection() {
 }
 
 void Camera::offset(GLfloat x, GLfloat y, GLfloat z) {
-    pos.x += x;
-    pos.y += y;
-    pos.z += z;
+    position.x += x;
+    position.y += y;
+    position.z += z;
 }
 
 void Camera::moveTo(GLfloat x, GLfloat y, GLfloat z) {
-    pos.x = x;
-    pos.y = y;
-    pos.z = z;
+    position.x = x;
+    position.y = y;
+    position.z = z;
 }
 
 void Camera::move(Direction dir, GLfloat amount) {
@@ -35,22 +35,22 @@ void Camera::move(Direction dir, GLfloat amount) {
 
     switch (dir) {
         case FRONT:
-            pos += horizontal * amount;
+            position += horizontal * amount;
             break;
         case BACK:
-            pos -= horizontal * amount;
+            position -= horizontal * amount;
             break;
         case LEFT:
-            pos += ccw * amount;
+            position += ccw * amount;
             break;
         case RIGHT:
-            pos -= ccw * amount;
+            position -= ccw * amount;
             break;
         case UP:
-            pos.y += amount;
+            position.y += amount;
             break;
         case DOWN:
-            pos.y -= amount;
+            position.y -= amount;
             break;
     }
 }
@@ -71,5 +71,29 @@ void Camera::rotatePitch(GLfloat angle) {
 }  
 
 void Camera::set() {
-    gluLookAt(pos.x, pos.y, pos.z, pos.x + direction.x, pos.y + direction.y, pos.z + direction.z, up.x, up.y, up.z);
+    gluLookAt(position.x, position.y, position.z, position.x + direction.x, position.y + direction.y, position.z + direction.z, up.x, up.y, up.z);
+}
+
+bool Camera::hasGravity() {
+    return gravity;
+}
+
+void Camera::setGravity(bool gravity) {
+    this->gravity = gravity;
+}
+
+Vec3<GLfloat> Camera::getPosition() {
+    return position;
+}
+
+Vec3<GLfloat>& Camera::getVelocity() {
+    return velocity;
+}
+
+void Camera::setVelocity(Vec3<GLfloat>& velocity) {
+    this->velocity = velocity;
+}
+
+void Camera::applyVelocity() {
+    this->position += this->velocity;
 }

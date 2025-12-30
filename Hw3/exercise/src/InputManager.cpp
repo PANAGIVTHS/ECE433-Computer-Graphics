@@ -60,6 +60,9 @@ void InputManager::keyboardUp(unsigned char key, int x, int y) {
 }
 
 void InputManager::keyboardDown(unsigned char key, int x, int y) {
+    Camera *camera = GameManager::getCamera();
+    GLfloat speed = GameManager::speed;
+    const GLfloat jumpAmpliefier = 2.0f;
     switch (key) {
         case 'w':
         case 'W':
@@ -83,6 +86,8 @@ void InputManager::keyboardDown(unsigned char key, int x, int y) {
             break;
         case 32: // Space
             pressedKeys[UP] = true;
+            if (camera->hasGravity()) 
+                camera->getVelocity().y += speed * jumpAmpliefier;
             break;
 #ifndef MOUSE_ROTATION
         case 'i':
@@ -102,6 +107,11 @@ void InputManager::keyboardDown(unsigned char key, int x, int y) {
             pressedRotationKeys[RIGHT] = true;
             break;
 #endif
+        case 'f': 
+        case 'F': 
+            camera->setGravity(!camera->hasGravity());
+            camera->getVelocity().y = 0;
+            break;
         case 27: // Escape
             GameManager::cleanUp();
             exit(0);
@@ -136,7 +146,7 @@ void InputManager::mouseMovePassive(int x, int y) {
     glutWarpPointer(centerX, centerY);
 }
 
-void InputManager::updateMovement() {
+void InputManager::applyInputToCamera() {
     Camera *camera = GameManager::getCamera();
     GLfloat speed = GameManager::speed;
 
@@ -148,17 +158,17 @@ void InputManager::updateMovement() {
         camera->move(LEFT, speed);
     if (pressedKeys[RIGHT])
         camera->move(RIGHT, speed);
-    if (pressedKeys[UP])
+    if (pressedKeys[UP] && !camera->hasGravity())
         camera->move(UP, speed);
-    if (pressedKeys[DOWN])
+    if (pressedKeys[DOWN] && !camera->hasGravity())
         camera->move(DOWN, speed);
 #ifndef MOUSE_ROTATION
-    updateRotation();
+    updateCameraRotation();
 #endif
 }
 
 #ifndef MOUSE_ROTATION
-void InputManager::updateRotation() {
+void InputManager::updateCameraRotation() {
     Camera *camera = GameManager::getCamera();
     GLfloat sensitivity = GameManager::sensitivity;
     GLfloat yaw = 0;

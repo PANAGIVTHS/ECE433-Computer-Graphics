@@ -1,7 +1,6 @@
 #ifndef UTILITIES_H
 #define UTILITIES_H
 #include <math.h>
-using namespace std;
 
 inline float toRadians(float degrees) {
     return degrees * (M_PI / 180);
@@ -26,7 +25,6 @@ class Vec3
 public:
     T x, y, z;
     
-    Vec3() : x(0), y(0), z(0) {}
     Vec3(T x = 0, T y = 0, T z = 0): x(x), y(y), z(z) {}
 
     Vec3& normalize() {

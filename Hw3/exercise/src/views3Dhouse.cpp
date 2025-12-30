@@ -5,7 +5,6 @@
 #endif
 #include <stdio.h>
 #include "Object.h"
-#include "InputManager.h"
 #include "GameManager.h"
 #include "WindowManager.h"
 
@@ -60,7 +59,7 @@ void display() {
 }
 
 void idle() {
-    InputManager::updateMovement();
+    GameManager::updatePositions();
     glutPostRedisplay();
 }
 
