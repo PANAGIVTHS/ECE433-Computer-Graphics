@@ -19,13 +19,13 @@ void GameManager::updatePositions() {
     for(Object *o : ObjectHandler::getObjects()) {
         if (o->hasGravity())
             o->getVelocity().y -= gravity;
-        o->applyVelocity();
+        o->update();
     }
 
     InputManager::applyInputToCamera();
     if (camera->hasGravity())
         camera->getVelocity().y -= gravity;
-    camera->applyVelocity();
+    camera->update();
 }
 
 void GameManager::onWindowUpdate(GLint width, GLint height, bool newContext) {

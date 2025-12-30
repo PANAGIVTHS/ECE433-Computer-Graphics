@@ -1,5 +1,6 @@
 #include "Environment.h"
 #include "Object.h"
+#include "Sun.h"
 
 Environment::Environment(Color3f skyColor) {
     this->skyColor = skyColor;
@@ -11,4 +12,5 @@ void Environment::init() {
 
 void Environment::spawn() {
     new Terrain(0, 0, 0);
+    new Sun();
 }

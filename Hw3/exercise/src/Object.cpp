@@ -56,7 +56,7 @@ void Object::setVelocity(Vec3<GLfloat>& velocity) {
     this->velocity = velocity;
 }
 
-void Object::applyVelocity() {
+void Object::update() {
     this->position += this->velocity;
 }
 

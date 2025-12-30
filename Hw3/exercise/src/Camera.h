@@ -32,7 +32,7 @@ public:
     Vec3<GLfloat> getPosition();
     Vec3<GLfloat>& getVelocity();
     void setVelocity(Vec3<GLfloat>& velocity);
-    void applyVelocity();
+    void update();
 };
 
 #endif

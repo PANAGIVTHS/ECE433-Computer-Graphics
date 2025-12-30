@@ -94,6 +94,6 @@ void Camera::setVelocity(Vec3<GLfloat>& velocity) {
     this->velocity = velocity;
 }
 
-void Camera::applyVelocity() {
+void Camera::update() {
     this->position += this->velocity;
 }

@@ -9,7 +9,7 @@
 #include <vector>
 
 class Object {
-private:
+protected:
     Vec3<GLfloat> position, velocity;
     bool gravity = true;
 
@@ -21,13 +21,14 @@ public:
     Object(GLfloat x, GLfloat y, GLfloat z, bool gravity);
     ~Object();
     void draw();
+    virtual void update();
+
     bool hasGravity();
     void setGravity(bool gravity);
     Vec3<GLfloat>& getPosition();
     void setPosition(Vec3<GLfloat>& position);
     Vec3<GLfloat>& getVelocity();
     void setVelocity(Vec3<GLfloat>& velocity);
-    void applyVelocity();
 };
 
 class ObjectHandler {
@@ -43,6 +44,7 @@ public:
 class Terrain : public Object {
 public: 
     Terrain(float x, float y, float z) : Object(x, y, z) {}
+    Terrain(float x, float y, float z, bool gravity) : Object(x, y, z, gravity) {}
 private:
     void drawInternal();
 };
@@ -50,6 +52,7 @@ private:
 class Cube : public Object {
 public: 
     Cube(float x, float y, float z) : Object(x, y, z) {}
+    Cube(float x, float y, float z, bool gravity) : Object(x, y, z, gravity) {}
 private:
     void drawInternal();
 };
@@ -57,6 +60,7 @@ private:
 class Sphere : public Object {
 public: 
     Sphere(float x, float y, float z) : Object(x, y, z) {}
+    Sphere(float x, float y, float z, bool gravity) : Object(x, y, z, gravity) {}
 private:
     void drawInternal();
 };
