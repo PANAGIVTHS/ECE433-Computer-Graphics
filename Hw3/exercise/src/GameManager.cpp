@@ -12,7 +12,7 @@ void GameManager::init() {
     oldTime = glutGet(GLUT_ELAPSED_TIME);
     camera = new Camera(initialCameraPos);
     environment = new Environment(skyColor);
-    house = new House();
+    house = new Compound();
     environment->init();
     house->init();
 }
@@ -68,6 +68,6 @@ Environment *GameManager::getEnvironment() {
     return environment;
 }
 
-House *GameManager::getHouse() {
+Compound *GameManager::getHouse() {
     return house;
 }
