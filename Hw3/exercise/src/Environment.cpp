@@ -11,6 +11,6 @@ void Environment::init() {
 }
 
 void Environment::spawn() {
-    new Terrain(0, 0, 0);
+    (new Terrain(0, 0, 0))->setGravity(false);
     new Sun();
 }

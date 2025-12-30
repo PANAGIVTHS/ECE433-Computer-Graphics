@@ -14,7 +14,7 @@ void WindowManager::init() {
         width = initialWidth;
         height = initialHeight;
         glutInitWindowSize(width, height);
-        glutInitWindowPosition(10, 10);
+        glutInitWindowPosition(initialX, initialY);
         currentWindow = glutCreateWindow("Team 1 - Assignment 3");
     }
     

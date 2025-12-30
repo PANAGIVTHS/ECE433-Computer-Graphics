@@ -59,6 +59,7 @@ void display() {
 }
 
 void idle() {
+    GameManager::updateDeltaTime();
     GameManager::updatePositions();
     glutPostRedisplay();
 }

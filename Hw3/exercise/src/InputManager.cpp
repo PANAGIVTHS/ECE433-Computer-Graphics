@@ -62,7 +62,7 @@ void InputManager::keyboardUp(unsigned char key, int x, int y) {
 void InputManager::keyboardDown(unsigned char key, int x, int y) {
     Camera *camera = GameManager::getCamera();
     GLfloat speed = GameManager::speed;
-    const GLfloat jumpAmpliefier = 2.0f;
+    const GLfloat jumpAmpliefier = 20.0f;
     switch (key) {
         case 'w':
         case 'W':
@@ -87,7 +87,7 @@ void InputManager::keyboardDown(unsigned char key, int x, int y) {
         case 32: // Space
             pressedKeys[UP] = true;
             if (camera->hasGravity()) 
-                camera->getVelocity().y += speed * jumpAmpliefier;
+                camera->getVelocity().y += 4;
             break;
 #ifndef MOUSE_ROTATION
         case 'i':
@@ -130,7 +130,7 @@ void InputManager::specialKeyboardDown(int key, int x, int y) {
 void InputManager::mouseMovePassive(int x, int y) {
     GLint width = WindowManager::getWidth(), height = WindowManager::getHeight();
     Camera *camera = GameManager::getCamera();
-    GLfloat sensitivity = GameManager::sensitivity;
+    GLfloat sensitivity = GameManager::sensitivity * 0.001f;
 
     GLint centerX = width / 2;
     GLint centerY = height / 2;
@@ -148,20 +148,20 @@ void InputManager::mouseMovePassive(int x, int y) {
 
 void InputManager::applyInputToCamera() {
     Camera *camera = GameManager::getCamera();
-    GLfloat speed = GameManager::speed;
+    GLfloat distance = GameManager::speed * GameManager::dt;
 
     if (pressedKeys[FRONT])
-        camera->move(FRONT, speed);
+        camera->move(FRONT, distance);
     if (pressedKeys[BACK])
-        camera->move(BACK, speed);
+        camera->move(BACK, distance);
     if (pressedKeys[LEFT])
-        camera->move(LEFT, speed);
+        camera->move(LEFT, distance);
     if (pressedKeys[RIGHT])
-        camera->move(RIGHT, speed);
+        camera->move(RIGHT, distance);
     if (pressedKeys[UP] && !camera->hasGravity())
-        camera->move(UP, speed);
+        camera->move(UP, distance);
     if (pressedKeys[DOWN] && !camera->hasGravity())
-        camera->move(DOWN, speed);
+        camera->move(DOWN, distance);
 #ifndef MOUSE_ROTATION
     updateCameraRotation();
 #endif
@@ -170,19 +170,18 @@ void InputManager::applyInputToCamera() {
 #ifndef MOUSE_ROTATION
 void InputManager::updateCameraRotation() {
     Camera *camera = GameManager::getCamera();
-    GLfloat sensitivity = GameManager::sensitivity;
+    GLfloat angle = GameManager::sensitivity * GameManager::dt;
     GLfloat yaw = 0;
     GLfloat pitch = 0;
-    const int sensAmplification = 50;
 
     if (pressedRotationKeys[FRONT])
-        pitch += sensitivity * sensAmplification;
+        pitch += angle;
     if (pressedRotationKeys[BACK])
-        pitch -= sensitivity * sensAmplification;
+        pitch -= angle;
     if (pressedRotationKeys[LEFT])
-        yaw += sensitivity * sensAmplification;
+        yaw += angle;
     if (pressedRotationKeys[RIGHT])
-        yaw -= sensitivity * sensAmplification;
+        yaw -= angle;
 
     camera->rotateYaw(yaw);
     camera->rotatePitch(pitch);

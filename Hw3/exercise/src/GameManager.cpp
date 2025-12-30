@@ -8,6 +8,7 @@ void GameManager::init() {
     if (house) delete house;
     ObjectHandler::clear();
 
+    oldTime = glutGet(GLUT_ELAPSED_TIME);
     camera = new Camera(initialCameraPos);
     environment = new Environment(skyColor);
     house = new House();
@@ -15,16 +16,19 @@ void GameManager::init() {
     house->init();
 }
 
+void GameManager::updateDeltaTime() {
+    GLint newTime = glutGet(GLUT_ELAPSED_TIME);
+    GLint diffMs = newTime - oldTime;
+    oldTime = newTime;
+
+    dt = (GLdouble) diffMs / 1000.0f;
+}
+
 void GameManager::updatePositions() {
-    for(Object *o : ObjectHandler::getObjects()) {
-        if (o->hasGravity())
-            o->getVelocity().y -= gravity;
+    for(Object *o : ObjectHandler::getObjects())
         o->update();
-    }
 
     InputManager::applyInputToCamera();
-    if (camera->hasGravity())
-        camera->getVelocity().y -= gravity;
     camera->update();
 }
 

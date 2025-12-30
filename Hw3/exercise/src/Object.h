@@ -11,7 +11,7 @@
 class Object {
 protected:
     Vec3<GLfloat> position, velocity;
-    bool gravity = true;
+    bool gravity = false;
 
     virtual void drawInternal() = 0;
 public:

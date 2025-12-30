@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include "GameManager.h"
 #include <math.h>
 
 void Camera::updateDirection() {
@@ -95,5 +96,12 @@ void Camera::setVelocity(Vec3<GLfloat>& velocity) {
 }
 
 void Camera::update() {
-    this->position += this->velocity;
+    if (gravity)
+        velocity.y -= GameManager::gravity * GameManager::dt;
+    position += velocity * (GLfloat) GameManager::dt;
+
+    if (position.y <= 1) {
+        position.y = 1;
+        velocity.y = 0;
+    }
 }

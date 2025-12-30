@@ -1,4 +1,5 @@
 #include "Object.h"
+#include "GameManager.h"
 #include <algorithm>
 
 // Object implementation
@@ -57,7 +58,9 @@ void Object::setVelocity(Vec3<GLfloat>& velocity) {
 }
 
 void Object::update() {
-    this->position += this->velocity;
+    if (gravity)
+        velocity.y -= GameManager::gravity * GameManager::dt;
+    this->position += this->velocity * (GLfloat) GameManager::dt;
 }
 
 // ObjectHandler implementation
