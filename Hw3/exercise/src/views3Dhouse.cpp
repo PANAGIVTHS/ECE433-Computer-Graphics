@@ -3,11 +3,10 @@
 #else
 #include <GL/glut.h>
 #endif
-#include <stdlib.h>
 #include <stdio.h>
 #include "Object.h"
-#include "UserInput.h"
-#include "GameState.h"
+#include "InputManager.h"
+#include "GameManager.h"
 #include "WindowManager.h"
 
 void init(int argc, char *argv[]);
@@ -44,16 +43,16 @@ int main(int argc, char *argv[]) {
 void init(int argc, char *argv[]) {
     glutInit(&argc, argv);
     WindowManager::init(display, idle);
-    GameState::init();
-    GameState::getEnvironment()->spawn();
-    GameState::getHouse()->spawn();
+    GameManager::init();
+    GameManager::getEnvironment()->spawn();
+    GameManager::getHouse()->spawn();
 }
 
 void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
-    GameState::getCamera()->set();
+    GameManager::getCamera()->set();
     for (Object *o : ObjectHandler::getObjects())
         o->draw();
 
@@ -61,7 +60,7 @@ void display() {
 }
 
 void idle() {
-    UserInput::updateMovement();
+    InputManager::updateMovement();
     glutPostRedisplay();
 }
 

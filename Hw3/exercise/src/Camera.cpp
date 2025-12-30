@@ -1,6 +1,5 @@
 #include "Camera.h"
 #include <math.h>
-#include <stdio.h>
 
 void Camera::updateDirection() {
     GLfloat radYaw = toRadians(yaw);

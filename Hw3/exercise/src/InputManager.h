@@ -1,17 +1,16 @@
-#ifndef USERINPUT_H
-#define USERINPUT_H
+#ifndef INPUTMANAGER_H
+#define INPUTMANAGER_H
 #ifdef __APPLE_CC__
 #include <GLUT/glut.h>
 #else
 #include <GL/glut.h>
 #endif
-#include <vector>
 
-class UserInput {
+class InputManager {
 private:
-    static bool pressedKeys[6];
+    inline static bool pressedKeys[6] = { false };
 #ifndef MOUSE_ROTATION
-    static bool pressedRotationKeys[4];
+    inline static bool pressedRotationKeys[4] = { false };
 #endif
 
     static void keyboardUp(unsigned char key, int x, int y);
