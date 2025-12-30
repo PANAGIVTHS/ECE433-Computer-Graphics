@@ -21,15 +21,7 @@ private:
     static void updateRotation();
 #endif
 public:
-    static void init() {
-        glutKeyboardFunc(keyboardDown);
-        glutKeyboardUpFunc(keyboardUp);
-        glutSpecialFunc(specialKeyboardDown);
-#ifdef MOUSE_ROTATION
-        glutPassiveMotionFunc(mouseMovePassive);
-#endif
-    };
-
+    static void init();
     static void updateMovement();
 };
 

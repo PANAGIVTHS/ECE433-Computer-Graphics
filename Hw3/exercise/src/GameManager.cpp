@@ -15,13 +15,17 @@ void GameManager::init() {
 }
 
 void GameManager::onWindowUpdate(GLint width, GLint height, bool newContext) {
+    // Set projection and viewport
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluPerspective(fov, (GLdouble) width / height, near, far);
     glMatrixMode(GL_MODELVIEW);
     glViewport(0, 0, width, height);
 
-    // Initialize anything that is per window
+    // Set other OpenGL settings
+    glEnable(GL_DEPTH_TEST);
+
+    // Initialize anything that has a per window context
     if (newContext) {
         if(environment) environment->init();
         if(house) house->init();

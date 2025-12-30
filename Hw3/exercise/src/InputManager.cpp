@@ -2,6 +2,15 @@
 #include "GameManager.h"
 #include "WindowManager.h"
 
+void InputManager::init() {
+        glutKeyboardFunc(keyboardDown);
+        glutKeyboardUpFunc(keyboardUp);
+        glutSpecialFunc(specialKeyboardDown);
+#ifdef MOUSE_ROTATION
+        glutPassiveMotionFunc(mouseMovePassive);
+#endif
+}
+
 void InputManager::keyboardUp(unsigned char key, int x, int y) {
     switch (key) {
         case 'w':

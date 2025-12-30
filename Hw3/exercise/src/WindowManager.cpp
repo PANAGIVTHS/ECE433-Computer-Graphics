@@ -17,9 +17,6 @@ void WindowManager::init() {
         glutInitWindowPosition(10, 10);
         currentWindow = glutCreateWindow("Team 1 - Assignment 3");
     }
-
-    InputManager::init();
-    GameManager::onWindowUpdate(width, height, true);
     
     glutIgnoreKeyRepeat(1);
     glutSetCursor(GLUT_CURSOR_NONE);
@@ -29,7 +26,8 @@ void WindowManager::init() {
     glutIdleFunc(idle);
     glutReshapeFunc(reshape);
 
-    glEnable(GL_DEPTH_TEST);
+    InputManager::init();
+    GameManager::onWindowUpdate(width, height, true);
 }
 
 void WindowManager::reshape(int newWidth, int newHeight) {
