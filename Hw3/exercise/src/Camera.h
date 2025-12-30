@@ -13,7 +13,7 @@ private:
     Vec3<GLfloat> direction = Vec3<GLfloat>(0.0f, 0.0f, -1.0f);
     Vec3<GLfloat> up = Vec3<GLfloat>(0.0f, 1.0f, 0.0f);
     GLfloat yaw = -90.0f, pitch = 0.0f;
-    bool gravity = true;
+    bool gravity = false;
 
     void updateDirection();
 public:
