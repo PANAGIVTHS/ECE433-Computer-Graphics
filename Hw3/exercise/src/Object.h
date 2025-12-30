@@ -19,7 +19,7 @@ public:
     Object(GLfloat x, GLfloat y, GLfloat z);
     Object(Vec3<GLfloat> &pos, bool gravity);
     Object(GLfloat x, GLfloat y, GLfloat z, bool gravity);
-    ~Object();
+    virtual ~Object();
     void draw();
     virtual void update();
 
