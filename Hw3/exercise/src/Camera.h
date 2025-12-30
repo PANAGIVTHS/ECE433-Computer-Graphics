@@ -16,7 +16,7 @@ private:
 
     void updateDirection();
 public:
-    Camera(Vec3<GLfloat> &pos): pos(pos) {}
+    Camera(const Vec3<GLfloat> &pos): pos(pos) {}
     Camera(GLfloat x, GLfloat y, GLfloat z): pos(Vec3(x, y, z)) {}
     void offset(GLfloat x, GLfloat y, GLfloat z);
     void moveTo(GLfloat x, GLfloat y, GLfloat z);

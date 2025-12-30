@@ -6,13 +6,13 @@
 #include <GL/glut.h>
 #endif
 
-class House
-{
+class House {
 private:
     /* data */
 public:
     House(/* args */);
 
+    void init();
     void spawn();
 };
 

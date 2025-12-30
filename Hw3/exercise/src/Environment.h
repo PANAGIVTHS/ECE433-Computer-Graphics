@@ -7,12 +7,12 @@
 #include <GL/glut.h>
 #endif
 
-class Environment
-{
+class Environment {
 private:
     Color3f skyColor;
 public:
     Environment(Color3f skyColor);
+    void init();
     void spawn();
 };
 
