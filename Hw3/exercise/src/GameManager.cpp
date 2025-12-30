@@ -1,6 +1,7 @@
 #include "GameManager.h"
 #include "Object.h"
 #include "InputManager.h"
+#include <stdio.h>
 
 void GameManager::init() {
     if (camera) delete camera;

@@ -21,7 +21,7 @@ TARGET = views3Dhouse
 SRCS   = views3Dhouse.cpp Object.cpp Camera.cpp Environment.cpp House.cpp GameManager.cpp WindowManager.cpp InputManager.cpp Sun.cpp
 OBJS   = $(SRCS:.cpp=.o)
 
-USE_MOUSE ?= 0
+USE_MOUSE ?= 1
 ifeq ($(USE_MOUSE), 1)
     CFLAGS += -DMOUSE_ROTATION
 endif

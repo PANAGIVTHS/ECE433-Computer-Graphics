@@ -127,10 +127,9 @@ void InputManager::specialKeyboardDown(int key, int x, int y) {
     WindowManager::switchMode();
 }
 
+#ifdef MOUSE_ROTATION
 void InputManager::mouseMovePassive(int x, int y) {
     GLint width = WindowManager::getWidth(), height = WindowManager::getHeight();
-    Camera *camera = GameManager::getCamera();
-    GLfloat sensitivity = GameManager::sensitivity * 0.001f;
 
     GLint centerX = width / 2;
     GLint centerY = height / 2;
@@ -138,13 +137,12 @@ void InputManager::mouseMovePassive(int x, int y) {
     if (x == centerX && y == centerY)
         return;
 
-    GLfloat yaw = (x - centerX) * sensitivity;
-    GLfloat pitch = (centerY - y) * sensitivity;
-    camera->rotateYaw(yaw);
-    camera->rotatePitch(pitch);
+    pending_yaw += (x - centerX);
+    pending_pitch += (centerY - y);
 
     glutWarpPointer(centerX, centerY);
 }
+#endif
 
 void InputManager::applyInputToCamera() {
     Camera *camera = GameManager::getCamera();
@@ -162,15 +160,21 @@ void InputManager::applyInputToCamera() {
         camera->move(UP, distance);
     if (pressedKeys[DOWN] && !camera->hasGravity())
         camera->move(DOWN, distance);
+    
 #ifndef MOUSE_ROTATION
     updateCameraRotation();
+#else
+    camera->rotatePitch(pending_pitch * GameManager::sensitivity);
+    camera->rotateYaw(pending_yaw * GameManager::sensitivity);
+    pending_pitch = 0.0f;
+    pending_yaw = 0.0f;
 #endif
 }
 
 #ifndef MOUSE_ROTATION
 void InputManager::updateCameraRotation() {
     Camera *camera = GameManager::getCamera();
-    GLfloat angle = GameManager::sensitivity * GameManager::dt;
+    GLfloat angle = GameManager::sensitivity * GameManager::dt * kbSensitivityMultiplier;
     GLfloat yaw = 0;
     GLfloat pitch = 0;
 

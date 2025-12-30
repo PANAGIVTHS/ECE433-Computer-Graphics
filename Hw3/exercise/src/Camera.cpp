@@ -27,12 +27,8 @@ void Camera::move(Direction dir, GLfloat amount) {
     Vec3 horizontal = direction;
     horizontal.y = 0;
     horizontal.normalize();
-
-    Vec3 ccw = horizontal;
-    ccw.y = -ccw.x;
-    ccw.x = ccw.z;
-    ccw.z = ccw.y;
-    ccw.y = 0;
+    
+    Vec3 ccw = horizontal.cross(direction).normalize();
 
     switch (dir) {
         case FRONT:
@@ -62,11 +58,12 @@ void Camera::rotateYaw(GLfloat angle) {
 }
 
 void Camera::rotatePitch(GLfloat angle) {
+    GLfloat maxPitch = GameManager::maxPitch;
     pitch += angle;
-    if (pitch > 89.0f)
-        pitch = 89.0f;
-    else if (pitch < -89.0f)
-        pitch = -89.0f;
+    if (pitch > maxPitch)
+        pitch = maxPitch;
+    else if (pitch < -maxPitch)
+        pitch = -maxPitch;
 
     updateDirection();
 }  
@@ -100,7 +97,7 @@ void Camera::update() {
         velocity.y -= GameManager::gravity * GameManager::dt;
     position += velocity * (GLfloat) GameManager::dt;
 
-    if (position.y <= 1) {
+    if (position.y <= 1) { // Temporary ground collision
         position.y = 1;
         velocity.y = 0;
     }

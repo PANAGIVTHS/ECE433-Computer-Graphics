@@ -16,9 +16,10 @@ private:
     inline static House *house = nullptr;
     inline static GLint oldTime;
 public:
-    static constexpr GLfloat speed = 1.4f;
-    static constexpr GLfloat sensitivity = 45.0f;
-    static constexpr GLfloat gravity = 9.81f; // Disabled until collision detection is implemented
+    static constexpr GLfloat speed = 4.137f; // m/s
+    static constexpr GLfloat sensitivity = 0.03f; // deg / pixel
+    static constexpr GLfloat gravity = 9.81f; // m/s^2
+    static constexpr GLfloat maxPitch = 89.5;
     static constexpr GLdouble fov = 90.0f;
     static constexpr GLdouble near = 0.1;
     static constexpr GLdouble far = 2000;

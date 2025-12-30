@@ -10,15 +10,19 @@ class InputManager {
 private:
     inline static bool pressedKeys[6] = { false };
 #ifndef MOUSE_ROTATION
+    static constexpr float kbSensitivityMultiplier = 2000.0f; // pixel / s
     inline static bool pressedRotationKeys[4] = { false };
+#else
+    inline static GLint pending_yaw, pending_pitch;
 #endif
 
     static void keyboardUp(unsigned char key, int x, int y);
     static void keyboardDown(unsigned char key, int x, int y);
     static void specialKeyboardDown(int key, int x, int y);
-    static void mouseMovePassive(int x, int y);
 #ifndef MOUSE_ROTATION
     static void updateCameraRotation();
+#else
+    static void mouseMovePassive(int x, int y);
 #endif
 public:
     static void init();
