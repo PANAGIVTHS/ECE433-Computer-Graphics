@@ -7,13 +7,13 @@
 #endif
 #include "Camera.h"
 #include "Environment.h"
-#include "Compound.h"
+#include "Object.h"
 
 class GameManager {
 private:
     inline static Camera *camera = nullptr;
     inline static Environment *environment = nullptr;
-    inline static Compound *house = nullptr;
+    inline static Object *house = nullptr;
     inline static GLint oldTime;
 
     static void updateDeltaTime();
@@ -37,7 +37,7 @@ public:
     
     static Camera *getCamera();
     static Environment *getEnvironment();
-    static Compound *getHouse();
+    static Object *getHouse();
 };
 
 #endif

@@ -44,7 +44,6 @@ void init(int argc, char *argv[]) {
     WindowManager::init(display, idle);
     GameManager::init();
     GameManager::getEnvironment()->spawn();
-    GameManager::getHouse()->spawn();
 }
 
 void display() {

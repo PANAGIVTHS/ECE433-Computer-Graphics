@@ -1,7 +1,6 @@
 #include "GameManager.h"
 #include "Object.h"
 #include "InputManager.h"
-#include <stdio.h>
 
 void GameManager::init() {
     if (camera) delete camera;
@@ -12,9 +11,15 @@ void GameManager::init() {
     oldTime = glutGet(GLUT_ELAPSED_TIME);
     camera = new Camera(initialCameraPos);
     environment = new Environment(skyColor);
-    house = new Compound();
+    house = (new Object(Vec3(0.0f, 0.0f, 0.0f)))
+            ->addChildren(new Sphere(-2.5f, 2.5f, -4.0f))
+            ->addChildren(new Cube(1.0f, 2.5f, -6.0f))
+            ->addChildren(new Cube(4.5f, 2.5f, -5.0f))
+            ->addChildren(new Cube(0.0f, 0.0f, 0.0f))
+            ->addChildren(new Cube(1.0f, 0.0f, 1.0f));
+    house->setGravity(false);
+    house->setHidden(true);
     environment->init();
-    house->init();
 }
 
 void GameManager::updateDeltaTime() {
@@ -49,14 +54,12 @@ void GameManager::onWindowUpdate(GLint width, GLint height, bool newContext) {
     // Initialize anything that has a per window context
     if (newContext) {
         if(environment) environment->init();
-        if(house) house->init();
     }
 }
 
 void GameManager::cleanUp() {
     delete camera;
     delete environment;
-    delete house;
     ObjectHandler::clear();
 }
 
@@ -68,6 +71,6 @@ Environment *GameManager::getEnvironment() {
     return environment;
 }
 
-Compound *GameManager::getHouse() {
+Object *GameManager::getHouse() {
     return house;
 }

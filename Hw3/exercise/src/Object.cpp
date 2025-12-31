@@ -4,33 +4,53 @@
 
 // Object implementation
 
-Object::Object(Vec3<GLfloat> &position): position(position) {
+Object::Object(Vec3<GLfloat> position, bool gravity): position(position), gravity(gravity) {
     ObjectHandler::addObject(this);
-}
-
-Object::Object(GLfloat x, GLfloat y, GLfloat z): position(Vec3(x, y, z)) { 
-    ObjectHandler::addObject(this); 
-}
-
-Object::Object(Vec3<GLfloat> &position, bool gravity): position(position), gravity(gravity) {
-    ObjectHandler::addObject(this);
-}
-
-Object::Object(GLfloat x, GLfloat y, GLfloat z, bool gravity): position(Vec3(x, y, z)), gravity(gravity) { 
-    ObjectHandler::addObject(this); 
 }
 
 Object::~Object() {
     ObjectHandler::removeObject(this);
+
+    for (Object *o : children)
+        delete o;
+    children.clear();
 }
 
 void Object::draw() {
+    if (hidden)
+        return;
+
     glPushMatrix();
 
     glTranslated(position.x, position.y, position.z);
     drawInternal();
+    for (Object *o : children)
+        o->draw();
 
     glPopMatrix();
+}
+
+void Object::update() {
+    if (gravity)
+        velocity.y -= GameManager::gravity * GameManager::dt;
+    this->position += this->velocity * (GLfloat) GameManager::dt;
+}
+
+Object *Object::addChildren(Object *o) {
+    ObjectHandler::removeObject(o);
+    o->setGravity(false);
+    o->setVelocity(Vec3(0.0f, 0.0f, 0.0f));
+    children.push_back(o);
+
+    return this;
+}
+
+bool Object::isHidden() {
+    return hidden;
+}
+
+void Object::setHidden(bool hidden) {
+    this->hidden = hidden;
 }
 
 bool Object::hasGravity() {
@@ -45,7 +65,7 @@ Vec3<GLfloat>& Object::getPosition() {
     return position;
 }
 
-void Object::setPosition(Vec3<GLfloat>& position) {
+void Object::setPosition(Vec3<GLfloat> position) {
     this->position = position;
 }
 
@@ -53,14 +73,8 @@ Vec3<GLfloat>& Object::getVelocity() {
     return velocity;
 }
 
-void Object::setVelocity(Vec3<GLfloat>& velocity) {
+void Object::setVelocity(Vec3<GLfloat> velocity) {
     this->velocity = velocity;
-}
-
-void Object::update() {
-    if (gravity)
-        velocity.y -= GameManager::gravity * GameManager::dt;
-    this->position += this->velocity * (GLfloat) GameManager::dt;
 }
 
 // ObjectHandler implementation

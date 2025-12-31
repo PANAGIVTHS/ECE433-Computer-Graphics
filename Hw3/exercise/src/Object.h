@@ -10,25 +10,30 @@
 
 class Object {
 protected:
-    Vec3<GLfloat> position, velocity;
-    bool gravity = false;
+    static constexpr bool DEFAULT_GRAVITY = true;
 
-    virtual void drawInternal() = 0;
+    std::vector<Object *> children;
+    Vec3<GLfloat> position, velocity;
+    bool gravity, hidden = false;
+
+    virtual void drawInternal() {};
 public:
-    Object(Vec3<GLfloat> &pos);
-    Object(GLfloat x, GLfloat y, GLfloat z);
-    Object(Vec3<GLfloat> &pos, bool gravity);
-    Object(GLfloat x, GLfloat y, GLfloat z, bool gravity);
+    Object(Vec3<GLfloat> pos, bool gravity = DEFAULT_GRAVITY);
+    Object(GLfloat x, GLfloat y, GLfloat z, bool gravity = DEFAULT_GRAVITY) : Object(Vec3(x, y, z), gravity) {};
     virtual ~Object();
+    
     void draw();
     virtual void update();
+    Object *addChildren(Object *object);
 
+    bool isHidden();
+    void setHidden(bool hidden);
     bool hasGravity();
     void setGravity(bool gravity);
     Vec3<GLfloat>& getPosition();
-    void setPosition(Vec3<GLfloat>& position);
+    void setPosition(Vec3<GLfloat> position);
     Vec3<GLfloat>& getVelocity();
-    void setVelocity(Vec3<GLfloat>& velocity);
+    void setVelocity(Vec3<GLfloat> velocity);
 };
 
 class ObjectHandler {

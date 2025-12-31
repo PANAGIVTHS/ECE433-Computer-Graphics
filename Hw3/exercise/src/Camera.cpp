@@ -89,7 +89,7 @@ Vec3<GLfloat>& Camera::getVelocity() {
     return velocity;
 }
 
-void Camera::setVelocity(Vec3<GLfloat>& velocity) {
+void Camera::setVelocity(Vec3<GLfloat> velocity) {
     this->velocity = velocity;
 }
 
