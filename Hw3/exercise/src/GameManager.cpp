@@ -1,6 +1,7 @@
 #include "GameManager.h"
 #include "Object.h"
 #include "InputManager.h"
+#include "TextureManager.h"
 
 void GameManager::init() {
     if (camera) delete camera;
@@ -8,17 +9,18 @@ void GameManager::init() {
     if (house) delete house;
     ObjectHandler::clear();
 
+    TextureManager::init(TextureID::IRON, "./libTexture/iron022.bmp");
+
     oldTime = glutGet(GLUT_ELAPSED_TIME);
     camera = new Camera(initialCameraPos);
     environment = new Environment(skyColor);
-    house = (new Object(Vec3(0.0f, 0.0f, 0.0f)))
-            ->addChildren(new Sphere(-2.5f, 2.5f, -4.0f))
-            ->addChildren(new Cube(1.0f, 2.5f, -6.0f))
-            ->addChildren(new Cube(4.5f, 2.5f, -5.0f))
-            ->addChildren(new Cube(0.0f, 0.0f, 0.0f))
-            ->addChildren(new Cube(1.0f, 0.0f, 1.0f));
-    house->setGravity(false);
-    house->setHidden(true);
+    house = (new Object(Vec3(0.0f, 0.0f, 0.0f), false))
+            ->addChildren(new Sphere(-2.5f, 2.5f, -4.0f, false, TextureID::IRON))
+            ->addChildren(new Cube(1.0f, 2.5f, -6.0f, false, TextureID::IRON))
+            ->addChildren(new Cube(4.5f, 2.5f, -5.0f, false, TextureID::IRON))
+            ->addChildren(new Cube(0.0f, 0.0f, 0.0f, false, TextureID::IRON))
+            ->addChildren(new Cube(1.0f, 0.0f, 1.0f, false, TextureID::IRON));
+    house->setHidden(false);
     environment->init();
 }
 

@@ -7,6 +7,7 @@
 #include <GL/glut.h>
 #endif
 #include <vector>
+#include "TextureID.h"
 
 class Object {
 protected:
@@ -15,11 +16,12 @@ protected:
     std::vector<Object *> children;
     Vec3<GLfloat> position, velocity;
     bool gravity, hidden = false;
+    TextureID texture = TextureID::NONE;
 
     virtual void drawInternal() {};
 public:
-    Object(Vec3<GLfloat> pos, bool gravity = DEFAULT_GRAVITY);
-    Object(GLfloat x, GLfloat y, GLfloat z, bool gravity = DEFAULT_GRAVITY) : Object(Vec3(x, y, z), gravity) {};
+    Object(Vec3<GLfloat> pos, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE);
+    Object(GLfloat x, GLfloat y, GLfloat z, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE) : Object(Vec3(x, y, z), gravity, texture) {}
     virtual ~Object();
     
     void draw();
@@ -48,26 +50,27 @@ public:
 
 class Terrain : public Object {
 public: 
-    Terrain(float x, float y, float z) : Object(x, y, z) {}
-    Terrain(float x, float y, float z, bool gravity) : Object(x, y, z, gravity) {}
+    Terrain(float x, float y, float z, bool gravity = true, TextureID texture = TextureID::NONE)
+        : Object(x, y, z, gravity, texture) {}
 private:
     void drawInternal();
 };
 
 class Cube : public Object {
 public: 
-    Cube(float x, float y, float z) : Object(x, y, z) {}
-    Cube(float x, float y, float z, bool gravity) : Object(x, y, z, gravity) {}
+    Cube(float x, float y, float z, bool gravity = true, TextureID texture = TextureID::NONE)
+        : Object(x, y, z, gravity, texture) {}
 private:
     void drawInternal();
 };
 
 class Sphere : public Object {
 public: 
-    Sphere(float x, float y, float z) : Object(x, y, z) {}
-    Sphere(float x, float y, float z, bool gravity) : Object(x, y, z, gravity) {}
+    Sphere(float x, float y, float z, bool gravity = true, TextureID texture = TextureID::NONE)
+        : Object(x, y, z, gravity, texture) {}
 private:
     void drawInternal();
 };
+
 
 #endif

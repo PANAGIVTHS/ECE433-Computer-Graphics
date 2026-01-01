@@ -1,10 +1,11 @@
 #include "Object.h"
 #include "GameManager.h"
 #include <algorithm>
+#include "TextureManager.h"
 
 // Object implementation
 
-Object::Object(Vec3<GLfloat> position, bool gravity): position(position), gravity(gravity) {
+Object::Object(Vec3<GLfloat> position, bool gravity, TextureID texture) : position(position), gravity(gravity), texture(texture) {
     ObjectHandler::addObject(this);
 }
 
@@ -23,7 +24,16 @@ void Object::draw() {
     glPushMatrix();
 
     glTranslated(position.x, position.y, position.z);
+
+    if (texture != TextureID::NONE) {
+        TextureManager::bind(texture);
+    }
+
     drawInternal();
+
+    if (texture != TextureID::NONE) {
+        TextureManager::bind(TextureID::NONE);
+    }
     for (Object *o : children)
         o->draw();
 

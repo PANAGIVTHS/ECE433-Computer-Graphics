@@ -14,7 +14,7 @@ private:
     inline static GLint height = initialHeight;
     inline static GLdouble aspect = (GLdouble) width / height;
     inline static int currentWindow = -1;
-    inline static bool gameMode = true;
+    inline static bool gameMode = false;
     inline static void (*display) () = nullptr;
     inline static void (*idle) () = nullptr;
 
