@@ -51,40 +51,51 @@ void TextureManager::clear() {
     textures.clear();
 }
 
-bool TextureManager::init(TextureID id, const std::string& bmpPath) {
-    if (id == TextureID::NONE) {
-        return false;
+bool TextureManager::init(TextureID id, const std::string& path, int width, int height) {
+    if (id == TextureID::NONE) return false;
+    if (textures.count(id)) return true; // Already loaded
+
+    unsigned char* data = nullptr;
+    int imgWidth = 0;
+    int imgHeight = 0;
+    
+    if (width > 0 && height > 0) {
+        imgWidth = width;
+        imgHeight = height;
+        
+        data = LoadTextureFile(const_cast<char*>(path.c_str()), width, height);
+        
+        if (!data) {
+            std::cerr << "Failed to load RAW: " << path << "\n";
+            return false;
+        }
+    } 
+    else {
+        bitmapFileHeader_t fileHeader;
+        bitmapInfoHeader_t infoHeader;
+
+        data = LoadTextureFile(const_cast<char*>(path.c_str()), &fileHeader, &infoHeader);
+
+        if (!data) {
+            std::cerr << "Failed to load BMP: " << path << "\n";
+            return false;
+        }
+
+        if (infoHeader.biBitCount != 24) {
+            std::cerr << "Only 24-bit BMP supported: " << path << "\n";
+            free(data);
+            return false;
+        }
+
+        imgWidth = infoHeader.biWidth;
+        imgHeight = infoHeader.biHeight;
+
+        int byteWidth = imgWidth * 3;
+        int paddedWidth = byteWidth;
+        while (paddedWidth % 4 != 0) paddedWidth++;
+        
+        reverseImage(data, byteWidth, imgHeight, paddedWidth - byteWidth);
     }
-
-    if (textures.count(id)) {
-        return true;
-    }
-
-    bitmapFileHeader_t fileHeader;
-    bitmapInfoHeader_t infoHeader;
-
-    unsigned char* data =
-        LoadTextureFile(const_cast<char*>(bmpPath.c_str()), &fileHeader, &infoHeader);
-
-    if (!data) {
-        std::cerr << "Failed to load BMP: " << bmpPath << "\n";
-        return false;
-    }
-
-    if (infoHeader.biBitCount != 24) {
-        std::cerr << "Only 24-bit BMP supported: " << bmpPath << "\n";
-        free(data);
-        return false;
-    }
-
-    int width  = infoHeader.biWidth;
-    int height = infoHeader.biHeight;
-
-    int byteWidth = width * 3;
-    int paddedWidth = byteWidth;
-    while (paddedWidth % 4 != 0) paddedWidth++;
-
-    reverseImage(data, byteWidth, height, paddedWidth - byteWidth);
 
     GLuint texID;
     glGenTextures(1, &texID);
@@ -101,8 +112,8 @@ bool TextureManager::init(TextureID id, const std::string& bmpPath) {
         GL_TEXTURE_2D,
         0,
         GL_RGB,
-        width,
-        height,
+        imgWidth,
+        imgHeight,
         0,
         GL_RGB,
         GL_UNSIGNED_BYTE,

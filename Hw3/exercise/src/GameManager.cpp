@@ -6,6 +6,7 @@
 //TODO idk where to put this (dont say the joke haha we get it)
 void loadGameTextures() {
     TextureManager::init(TextureID::IRON, "../Texture_Images/LaGioconda.bmp");
+    TextureManager::init(TextureID::GRASS, "../Texture_Images/grass.raw", 256, 256);
 }
 
 void GameManager::init() {
@@ -21,7 +22,7 @@ void GameManager::init() {
     house = (new Object(Vec3(0.0f, 0.0f, 0.0f), false))
             ->addChildren(new Sphere(-2.5f, 2.5f, -4.0f, false, TextureID::IRON))
             ->addChildren(new Cuboid(1.0f, 2.5f, -6.0f, 0.5f, 4.0f, 0.5f, false, TextureID::IRON))
-            ->addChildren(new Cuboid(4.5f, 2.5f, -5.0f, 2.0f, 2.0f, 2.0f, false, TextureID::IRON, TextureConfig(TextureMode::REPEAT_CUSTOM, 6.7f, 3.0f)))
+            ->addChildren(new Cuboid(4.5f, 2.5f, -5.0f, 2.0f, 2.0f, 2.0f, false, TextureID::GRASS, TextureConfig(TextureMode::REPEAT_CUSTOM, 6.7f, 3.0f)))
             ->addChildren(new Cuboid(1.0f, 0.0f, 0.0f,  4.0f, 0.5f, 0.2f, false, TextureID::IRON))
             ->addChildren(new Cuboid(1.0f, 0.0f, 1.0f,  0.5f, 0.5f, 5.0f, false, TextureID::IRON));
     house->setHidden(false);

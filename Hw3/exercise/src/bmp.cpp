@@ -130,6 +130,46 @@ unsigned char *LoadTextureFile(char *filename, bitmapFileHeader_t *bitmapFileHea
 
 }
 
+unsigned char *LoadTextureFile(char *filename, int width, int height) 
+{
+    FILE *filePtr;
+    unsigned char *bitmapImage;
+    long size;
+
+    // Open file in read binary mode
+    filePtr = fopen(filename, "rb");
+    if (filePtr == NULL) {
+        printf("Can't find file with filename %s in current directory\n", filename);
+        return NULL;
+    }
+
+    // Calculate size: Width * Height * 3 bytes (RGB)
+    size = width * height * 3;
+
+    // Allocate memory for the image data
+    bitmapImage = (unsigned char *)malloc(size * sizeof(unsigned char));
+
+    // Verify memory allocation
+    if (!bitmapImage) {
+        fclose(filePtr);
+        perror("System has run out of memory\n");
+        exit(0);
+    }
+
+    size_t result = fread(bitmapImage, 1, size, filePtr);
+
+    if (result != size) {
+        printf("Error reading raw file. Expected %ld bytes, read %zu bytes.\n", size, result);
+        free(bitmapImage);
+        fclose(filePtr);
+        return NULL;
+    }
+
+    fclose(filePtr);
+
+    return bitmapImage;
+}
+
 
 /* reverseImage
  *
