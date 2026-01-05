@@ -28,6 +28,6 @@ typedef struct BITMAPINFOHEADER_struct{
 
 }bitmapInfoHeader_t;
 
-unsigned char *LoadBitmapFile(char *filename, bitmapFileHeader_t *bitmapFileHeader, bitmapInfoHeader_t *bitmapInfoHeader);
+unsigned char *LoadTextureFile(char *filename, bitmapFileHeader_t *bitmapFileHeader, bitmapInfoHeader_t *bitmapInfoHeader);
 void reverseImage(unsigned char *imageArray, unsigned int byteWidth, unsigned int height, unsigned int padding);
 #endif

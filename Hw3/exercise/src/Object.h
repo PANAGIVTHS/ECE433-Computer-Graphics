@@ -7,7 +7,7 @@
 #include <GL/glut.h>
 #endif
 #include <vector>
-#include "TextureID.h"
+#include "TextureEnums.h"
 
 class Object {
 protected:
@@ -52,6 +52,26 @@ class Terrain : public Object {
 public: 
     Terrain(float x, float y, float z, bool gravity = true, TextureID texture = TextureID::NONE)
         : Object(x, y, z, gravity, texture) {}
+private:
+    void drawInternal();
+};
+
+class Cuboid : public Object {
+    float width, height, length;
+    TextureConfig texConfig;
+public: 
+    Cuboid(float x, float y, float z, float w, float h, float l, bool gravity = true, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
+        : Object(x, y, z, gravity, texture), width(w), height(h), length(l), texConfig(config) {}
+
+    Cuboid(Vec3<float> pos, float w, float h, float l, bool gravity = true, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
+        : Object(pos, gravity, texture), width(w), height(h), length(l), texConfig(config) {}
+
+    //TODO check if directions are set correctly
+    Cuboid(Vec3<float> pos, Vec3<float>dim, bool gravity = true, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
+        : Object(pos, gravity, texture), width(dim.x), height(dim.y), length(dim.z), texConfig(config) {}
+
+    Cuboid(float x, float y, float z, bool gravity = true, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
+        : Object(x, y, z, gravity, texture), width(1.0f), height(1.0f), length(1.0f), texConfig(config) {}
 private:
     void drawInternal();
 };

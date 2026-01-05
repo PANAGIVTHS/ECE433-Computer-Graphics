@@ -2,9 +2,32 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
+#include "utilities.h"
 #include "bmp.h"
 
 std::map<TextureID, GLuint> TextureManager::textures;
+
+void TextureManager::drawQuadTex(const Vec3<float>& p1, const Vec3<float>& p2, const Vec3<float>& p3, const Vec3<float>& p4, const Vec3<float>& normal, float uMax, float vMax) {
+    
+    glBegin(GL_QUADS); 
+    glNormal3f(normal.x, normal.y, normal.z);
+
+    //TODO Fix mapping IF wrong IDK
+    //! Set texture positions
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(p4.x, p4.y, p4.z);
+    
+    glTexCoord2f(uMax, 0.0f);
+    glVertex3f(p3.x, p3.y, p3.z);
+    
+    glTexCoord2f(uMax, vMax);
+    glVertex3f(p2.x, p2.y, p2.z);
+    
+    glTexCoord2f(0.0f, vMax);
+    glVertex3f(p1.x, p1.y, p1.z);
+    
+    glEnd();
+}
 
 void TextureManager::bind(TextureID id) {
     if (id == TextureID::NONE) {
@@ -41,7 +64,7 @@ bool TextureManager::init(TextureID id, const std::string& bmpPath) {
     bitmapInfoHeader_t infoHeader;
 
     unsigned char* data =
-        LoadBitmapFile(const_cast<char*>(bmpPath.c_str()), &fileHeader, &infoHeader);
+        LoadTextureFile(const_cast<char*>(bmpPath.c_str()), &fileHeader, &infoHeader);
 
     if (!data) {
         std::cerr << "Failed to load BMP: " << bmpPath << "\n";

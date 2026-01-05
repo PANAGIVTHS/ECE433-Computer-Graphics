@@ -3,23 +3,27 @@
 #include "InputManager.h"
 #include "TextureManager.h"
 
+//TODO idk where to put this (dont say the joke haha we get it)
+void loadGameTextures() {
+    TextureManager::init(TextureID::IRON, "../Texture_Images/LaGioconda.bmp");
+}
+
 void GameManager::init() {
     if (camera) delete camera;
     if (environment) delete environment;
     if (house) delete house;
     ObjectHandler::clear();
 
-    TextureManager::init(TextureID::IRON, "./libTexture/iron022.bmp");
-
+    loadGameTextures();
     oldTime = glutGet(GLUT_ELAPSED_TIME);
     camera = new Camera(initialCameraPos);
     environment = new Environment(skyColor);
     house = (new Object(Vec3(0.0f, 0.0f, 0.0f), false))
             ->addChildren(new Sphere(-2.5f, 2.5f, -4.0f, false, TextureID::IRON))
-            ->addChildren(new Cube(1.0f, 2.5f, -6.0f, false, TextureID::IRON))
-            ->addChildren(new Cube(4.5f, 2.5f, -5.0f, false, TextureID::IRON))
-            ->addChildren(new Cube(0.0f, 0.0f, 0.0f, false, TextureID::IRON))
-            ->addChildren(new Cube(1.0f, 0.0f, 1.0f, false, TextureID::IRON));
+            ->addChildren(new Cuboid(1.0f, 2.5f, -6.0f, 0.5f, 4.0f, 0.5f, false, TextureID::IRON))
+            ->addChildren(new Cuboid(4.5f, 2.5f, -5.0f, 2.0f, 2.0f, 2.0f, false, TextureID::IRON, TextureConfig(TextureMode::REPEAT_CUSTOM, 6.7f, 3.0f)))
+            ->addChildren(new Cuboid(1.0f, 0.0f, 0.0f,  4.0f, 0.5f, 0.2f, false, TextureID::IRON))
+            ->addChildren(new Cuboid(1.0f, 0.0f, 1.0f,  0.5f, 0.5f, 5.0f, false, TextureID::IRON));
     house->setHidden(false);
     environment->init();
 }
@@ -56,6 +60,11 @@ void GameManager::onWindowUpdate(GLint width, GLint height, bool newContext) {
     // Initialize anything that has a per window context
     if (newContext) {
         if(environment) environment->init();
+
+        //TODO should this be done like this? Simplest way for sure but idk
+        //! Delete old unreachable textures
+        TextureManager::clear();
+        loadGameTextures();
     }
 }
 

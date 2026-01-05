@@ -3,7 +3,7 @@
 #include <string.h>
 #include "bmp.h"
 
-unsigned char *LoadBitmapFile(char *filename, bitmapFileHeader_t *bitmapFileHeader, bitmapInfoHeader_t *bitmapInfoHeader) 
+unsigned char *LoadTextureFile(char *filename, bitmapFileHeader_t *bitmapFileHeader, bitmapInfoHeader_t *bitmapInfoHeader) 
 {
 
 	FILE *filePtr; //file pointer

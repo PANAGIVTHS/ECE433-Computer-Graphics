@@ -7,13 +7,16 @@
 #endif
 #include <map>
 #include <string>
-#include "TextureID.h"
+#include "TextureEnums.h"
+#include "utilities.h"
 #include "bmp.h"
 
 class TextureManager {
 private:
     static std::map<TextureID, GLuint> textures;
 public:
+    static void drawQuadTex(const Vec3<float>& p1, const Vec3<float>& p2, const Vec3<float>& p3, const Vec3<float>& p4,
+                            const Vec3<float>& normal, float uMax, float vMax);
     static void bind(TextureID id);
     static bool init(TextureID id, const std::string& bmpPath);
     static void clear();
