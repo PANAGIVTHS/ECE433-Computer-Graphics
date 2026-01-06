@@ -5,7 +5,8 @@ enum class TextureID {
     NONE = 0,
     GRASS,
     IRON,
-    WOOD
+    WOOD,
+    WINDOW
 };
 
 enum class TextureMode {

@@ -11,6 +11,6 @@ void Environment::init() {
 }
 
 void Environment::spawn() {
-    (new Terrain(0, 0, 0))->setGravity(false);
+    new Cuboid(0, 0, 0, 100, 0.1, 100, false, TextureID::GRASS, TextureConfig(TextureMode::REPEAT_FIT));
     new Sun();
 }

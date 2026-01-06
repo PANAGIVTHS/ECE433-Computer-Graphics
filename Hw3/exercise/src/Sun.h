@@ -12,13 +12,15 @@ private:
     static constexpr GLfloat orbitSpeed = 0.0005f;
     static constexpr GLfloat orbitRadius = 100.0f;
     static constexpr GLfloat radius = 13.0f;
-    static constexpr Color3f color = {.red = 1.0f, .green = 1.0f, .blue = 0.0f};
+    Color3f color;
     GLfloat orbitAngle = 0;
 
     void drawInternal();
     void update() override;
 public:
-    Sun() : Object(0.0f, 0.0f, 0.0f) {}
+    Sun() : Object(0.0f, 0.0f, 0.0f, false, TextureID::WINDOW) {
+        color = { .red = 1.0f, .green = 0.4f, .blue = 0.0f };
+    }
 };
 
 #endif
