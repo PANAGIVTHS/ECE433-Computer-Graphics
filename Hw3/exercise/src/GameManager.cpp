@@ -16,10 +16,6 @@ void loadGameTextures() {
 
 //fps related
 
-int GameManager::frameCount = 0;
-int GameManager::lastFpsTime = 0;
-float GameManager::fps = 0.0f;
-
 void GameManager::updateFPS() {
     frameCount++;
     int currentTime = glutGet(GLUT_ELAPSED_TIME);

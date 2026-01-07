@@ -16,9 +16,9 @@ private:
     inline static GLint oldTime;
 
     //fps related
-    static int frameCount;
-    static int lastFpsTime;
-    static float fps;
+    inline static int frameCount = 0;
+    inline static int lastFpsTime = 0;
+    inline static float fps = 0.0f;
 
     static void updateDeltaTime();
 public:
