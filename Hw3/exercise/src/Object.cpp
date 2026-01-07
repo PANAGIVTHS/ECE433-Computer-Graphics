@@ -21,6 +21,34 @@ Object::~Object() {
     children.clear();
 }
 
+void Object::invalidateDisplayList() {
+    displayList = 0;
+}
+
+void Object::optimize() {
+    if (displayList != 0) return;
+
+    displayList = glGenLists(1);
+    //! Record mode objects arent displayed
+    glNewList(displayList, GL_COMPILE); 
+
+    if (texture != TextureID::NONE) {
+        TextureManager::bind(texture);
+    }
+
+    drawInternal();
+
+    if (texture != TextureID::NONE) {
+        TextureManager::bind(TextureID::NONE);
+    }
+
+    for (Object *o : children) {
+        o->draw();
+    }
+
+    glEndList();
+}
+
 void Object::draw() {
     if (hidden)
         return;
@@ -35,18 +63,21 @@ void Object::draw() {
         glScaled(transform.scale.x, transform.scale.y, transform.scale.z);
     }
 
-    if (texture != TextureID::NONE) {
-        TextureManager::bind(texture);
+    if (displayList != 0) {
+        glCallList(displayList);
+    } else {
+        if (texture != TextureID::NONE) {
+            TextureManager::bind(texture);
+        }
+
+        drawInternal();
+
+        if (texture != TextureID::NONE) {
+            TextureManager::bind(TextureID::NONE);
+        }
+        for (Object *o : children)
+            o->draw();
     }
-
-    drawInternal();
-
-    if (texture != TextureID::NONE) {
-        TextureManager::bind(TextureID::NONE);
-    }
-    for (Object *o : children)
-        o->draw();
-
     glPopMatrix();
 }
 
@@ -135,6 +166,12 @@ void ObjectHandler::removeObject(Object *o) {
 
 std::vector<Object *> &ObjectHandler::getObjects() {
     return objects;
+}
+
+void ObjectHandler::invalidateListAll() {
+    for (Object *o : objects) {
+        o->invalidateDisplayList();
+    }
 }
 
 void ObjectHandler::clear() {

@@ -14,6 +14,26 @@ void loadGameTextures() {
     TextureManager::init(TextureID::LEAVES, "../Texture_Images/azalea_top.bmp");
 }
 
+//fps related
+
+int GameManager::frameCount = 0;
+int GameManager::lastFpsTime = 0;
+float GameManager::fps = 0.0f;
+
+void GameManager::updateFPS() {
+    frameCount++;
+    int currentTime = glutGet(GLUT_ELAPSED_TIME);
+    
+    if (currentTime - lastFpsTime > 1000) {
+        fps = frameCount * 1000.0f / (currentTime - lastFpsTime);
+        lastFpsTime = currentTime;
+        frameCount = 0;
+    }
+}
+
+float GameManager::getFPS() {
+    return fps;
+}
 
 void GameManager::init() {
     if (camera) delete camera;
@@ -27,10 +47,14 @@ void GameManager::init() {
     environment->spawn();
     
     AssetLoader::load(Vec3(0.0f, 4.0f, -5.0f), "../assets/house.txt")
-        ->setRotation(45.0f, Vec3(1.0f, 0.0f, 0.0f));
-    AssetLoader::load(Vec3(7.0f, 0.2f, 7.0f), "../assets/oaktree.txt");
-    AssetLoader::load(Vec3(1.0f, 0.2f, 2.0f), "../assets/pinetree.txt");
-    AssetLoader::load(Vec3(10.0f, 0.0f, 10.0f), "../assets/pinetree.txt");
+        ->setRotation(45.0f, Vec3(1.0f, 0.0f, 0.0f))
+        ->optimize();
+    AssetLoader::load(Vec3(7.0f, 0.2f, 7.0f), "../assets/oaktree.txt")
+        ->optimize();
+    AssetLoader::load(Vec3(1.0f, 0.2f, 2.0f), "../assets/pinetree.txt")
+        ->optimize();
+    AssetLoader::load(Vec3(10.0f, 0.0f, 10.0f), "../assets/pinetree.txt")
+        ->optimize();
 
     environment->init();
 }
@@ -45,6 +69,7 @@ void GameManager::updateDeltaTime() {
 
 void GameManager::runGameLoop() {
     updateDeltaTime();
+    updateFPS();
 
     for(Object *o : ObjectHandler::getObjects())
         o->update();
@@ -72,6 +97,7 @@ void GameManager::onWindowUpdate(GLint width, GLint height, bool newContext) {
         //! Delete old unreachable textures
         TextureManager::clear();
         LightingManager::init();
+        ObjectHandler::invalidateListAll();
         loadGameTextures();
     }
 }

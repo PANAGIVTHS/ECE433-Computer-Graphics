@@ -28,6 +28,9 @@ public:
     static GLint getHeight();
     static GLdouble getAspect();
     static bool isGameMode();
+
+    //fps related
+    static void drawFPS(float fps);
 };
 
 #endif

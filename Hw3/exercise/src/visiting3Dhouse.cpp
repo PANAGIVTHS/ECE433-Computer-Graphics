@@ -59,6 +59,9 @@ void display() {
     for (Object *o : ObjectHandler::getObjects())
         o->draw();
 
+    //fps related
+    WindowManager::drawFPS(GameManager::getFPS());
+
     glDisable(GL_TEXTURE_2D);
     //glDisable(GL_LIGHTING);
 

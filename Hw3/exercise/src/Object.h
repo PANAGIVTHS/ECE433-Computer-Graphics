@@ -17,7 +17,7 @@ protected:
     Vec3<GLfloat> velocity;
 
     Transform transform;
-
+    GLuint displayList = 0;
     bool gravity, hidden = false;
     TextureID texture = TextureID::NONE;
 
@@ -38,6 +38,8 @@ public:
     bool hasGravity();
     void setGravity(bool gravity);
     void setTexture(TextureID id);
+    void optimize();
+    void invalidateDisplayList();
     Object* setScale(Vec3<GLfloat> scale);
     Object* setScale(GLfloat x, GLfloat y, GLfloat z);
     Object* setRotation(GLfloat angle, Vec3<GLfloat> axis);
@@ -54,6 +56,7 @@ public:
     static void addObject(Object *o);
     static void removeObject(Object *o);
     static std::vector<Object *> &getObjects();
+    static void invalidateListAll();
     static void clear();
 };
 

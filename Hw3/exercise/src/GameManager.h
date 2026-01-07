@@ -15,6 +15,11 @@ private:
     inline static Environment *environment = nullptr;
     inline static GLint oldTime;
 
+    //fps related
+    static int frameCount;
+    static int lastFpsTime;
+    static float fps;
+
     static void updateDeltaTime();
 public:
     static constexpr GLfloat speed = 4.137f; // m/s
@@ -33,6 +38,10 @@ public:
     static void onWindowUpdate(GLint width, GLint height, bool newContext);
     static void runGameLoop();
     static void cleanUp();
+
+    //fps related
+    static void updateFPS();
+    static float getFPS();
     
     static Camera *getCamera();
     static Environment *getEnvironment();
