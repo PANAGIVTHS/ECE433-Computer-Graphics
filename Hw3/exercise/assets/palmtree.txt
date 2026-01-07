@@ -1,0 +1,34 @@
+# --- PALM TREE ---
+# Root Container
+OBJECT 0 0 0
+GRAVITY false
+BEGIN
+    # Tall Thin Trunk
+    # Height 5.0, so centered at y=2.5
+    CUBOID 0.0 2.5 0.0 0.3 5.0 0.3
+    TEXTURE WOOD
+    TEX_CONFIG CUSTOM 1.0 3.0
+
+    # Leaf 1 (Right)
+    CUBOID 1.5 5.0 0.0 3.0 0.1 0.5
+    TEXTURE GRASS
+    
+    # Leaf 2 (Left)
+    CUBOID -1.5 5.0 0.0 3.0 0.1 0.5
+    TEXTURE GRASS
+    
+    # Leaf 3 (Front)
+    CUBOID 0.0 5.0 1.5 0.5 0.1 3.0
+    TEXTURE GRASS
+    
+    # Leaf 4 (Back)
+    CUBOID 0.0 5.0 -1.5 0.5 0.1 3.0
+    TEXTURE GRASS
+
+    # Coconuts (Two small spheres under leaves)
+    SPHERE 0.4 4.6 0.0
+    TEXTURE WOOD
+    
+    SPHERE -0.2 4.7 0.3
+    TEXTURE WOOD
+END

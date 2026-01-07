@@ -8,18 +8,21 @@
 #include <vector>
 #include <stack>
 #include "Object.h"
-#include "TextureEnums.h" // Ensure this is included for TextureMode/Config
+#include "TextureEnums.h" 
+#include "utilities.h" 
 
-class LevelLoader {
+class AssetLoader {
 public:
-    static std::vector<Object*> load(const std::string& filename) {
-        std::vector<Object*> roots;
+    static Object* load(const Vec3<float>& spawnPos, const std::string& filename) {
+        
+        Object* anchor = new Object(spawnPos, false); 
+
         std::stack<Object*> hierarchyStack; 
         std::ifstream file(filename);
         
         if (!file.is_open()) {
             std::cerr << "Error: Could not open " << filename << std::endl;
-            return roots;
+            return anchor; 
         }
 
         std::string line;
@@ -36,19 +39,20 @@ public:
 
             bool objectCreated = false;
 
-            // --- OBJECT CREATION ---
+            float x, y, z; 
+            
             if (cmd == "OBJECT") {
-                float x, y, z; ss >> x >> y >> z;
+                ss >> x >> y >> z;
                 currentObj = new Object(Vec3<float>(x, y, z), false); 
                 objectCreated = true;
             }
             else if (cmd == "SPHERE") {
-                float x, y, z; ss >> x >> y >> z;
+                ss >> x >> y >> z;
                 currentObj = new Sphere(x, y, z, false);
                 objectCreated = true;
             }
             else if (cmd == "CUBOID") {
-                float x, y, z, w, h, l; 
+                float w, h, l; 
                 ss >> x >> y >> z >> w >> h >> l;
                 currentObj = new Cuboid(x, y, z, w, h, l, false);
                 objectCreated = true;
@@ -57,7 +61,7 @@ public:
             // --- LINKING ---
             if (objectCreated && currentObj) {
                 if (hierarchyStack.empty()) {
-                    roots.push_back(currentObj);
+                    anchor->addChildren(currentObj);
                 } else {
                     hierarchyStack.top()->addChildren(currentObj);
                 }
@@ -70,26 +74,21 @@ public:
                     currentObj->setTexture(resolveTexture(texName));
                 }
                 else if (cmd == "ROTATION") {
-                    // Expects: ROTATION <angle> <x> <y> <z>
-                    float angle, x, y, z;
-                    ss >> angle >> x >> y >> z;
-                    currentObj->setRotation(angle, Vec3<float>(x, y, z));
+                    float angle, rx, ry, rz;
+                    ss >> angle >> rx >> ry >> rz;
+                    currentObj->setRotation(angle, Vec3<float>(rx, ry, rz));
                 }
                 else if (cmd == "GRAVITY") {
                     std::string val; ss >> val;
                     currentObj->setGravity(val == "true");
                 }
-                // NEW: Texture Config Support
                 else if (cmd == "TEX_CONFIG") {
                     std::string modeStr;
                     ss >> modeStr;
-
                     if (modeStr == "CUSTOM") {
-                        float u, v;
-                        ss >> u >> v;
+                        float u, v; ss >> u >> v;
                         currentObj->setTextureConfig(TextureConfig(TextureMode::REPEAT_CUSTOM, u, v));
                     } else {
-                        // Default to FIT if mode is FIT or unknown
                         currentObj->setTextureConfig(TextureConfig(TextureMode::REPEAT_FIT));
                     }
                 }
@@ -102,14 +101,10 @@ public:
                         hierarchyStack.pop();
                     }
                 }
-                else {
-                    std::cerr << "WARNING: Unknown command '" << cmd << "' in level file. "
-                            << "Previous object might be corrupted!" << std::endl;
-                }
             }
         }
         
-        return roots;
+        return anchor;
     }
 
 private:

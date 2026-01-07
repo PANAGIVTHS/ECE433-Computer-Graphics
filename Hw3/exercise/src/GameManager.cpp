@@ -13,10 +13,10 @@ void loadGameTextures() {
     TextureManager::init(TextureID::WINDOW, "../Texture_Images/ss0052.bmp");
 }
 
+
 void GameManager::init() {
     if (camera) delete camera;
     if (environment) delete environment;
-    if (house) delete house;
     ObjectHandler::clear();
 
     loadGameTextures();
@@ -24,14 +24,12 @@ void GameManager::init() {
     camera = new Camera(initialCameraPos);
     environment = new Environment(skyColor);
 
-    LevelLoader::load("../assets/house.txt");
+    AssetLoader::load(Vec3(0.0f, 4.0f, -5.0f), "../assets/house.txt")
+        ->setRotation(45.0f, Vec3(1.0f, 0.0f, 0.0f));
+    AssetLoader::load(Vec3(7.0f, 0.2f, 7.0f), "../assets/oaktree.txt");
+    AssetLoader::load(Vec3(1.0f, 0.2f, 2.0f), "../assets/pinetree.txt");
+    AssetLoader::load(Vec3(10.0f, 0.0f, 10.0f), "../assets/pinetree.txt");
 
-    house = new Object(Vec3(0.0f, 0.0f, 0.0f), false, TextureID::NONE, {
-        (new Cuboid(1.0f, 2.5f, -6.0f, 0.5f, 4.0f, 0.5f, false, TextureID::IRON))
-           ->setRotation(45.0f, Vec3(1.0f, 0.0f, 0.0f)),
-        new Sphere(-2.5f, 2.5f, -4.0f, false, TextureID::WINDOW)
-    });
-    house->setHidden(false);
     environment->init();
 }
 
@@ -88,8 +86,4 @@ Camera *GameManager::getCamera() {
 
 Environment *GameManager::getEnvironment() {
     return environment;
-}
-
-Object *GameManager::getHouse() {
-    return house;
 }

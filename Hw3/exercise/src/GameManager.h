@@ -13,7 +13,6 @@ class GameManager {
 private:
     inline static Camera *camera = nullptr;
     inline static Environment *environment = nullptr;
-    inline static Object *house = nullptr;
     inline static GLint oldTime;
 
     static void updateDeltaTime();
@@ -37,7 +36,6 @@ public:
     
     static Camera *getCamera();
     static Environment *getEnvironment();
-    static Object *getHouse();
 };
 
 #endif
