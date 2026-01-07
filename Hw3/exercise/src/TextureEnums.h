@@ -4,6 +4,7 @@
 enum class TextureID {
     NONE = 0,
     GRASS,
+    LEAVES,
     IRON,
     WOOD,
     WINDOW

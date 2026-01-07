@@ -113,6 +113,7 @@ private:
         if (name == "IRON")   return TextureID::IRON;
         if (name == "GRASS")  return TextureID::GRASS;
         if (name == "WOOD")   return TextureID::WOOD;
+        if (name == "LEAVES")   return TextureID::LEAVES;
         return TextureID::NONE;
     }
 };

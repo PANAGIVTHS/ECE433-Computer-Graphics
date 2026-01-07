@@ -102,9 +102,10 @@ bool TextureManager::init(TextureID id, const std::string& path, int width, int 
     glBindTexture(GL_TEXTURE_2D, texID);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
 
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
@@ -114,12 +115,10 @@ bool TextureManager::init(TextureID id, const std::string& path, int width, int 
         glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
     }
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR); 
-    
     // Generate Mipmaps
     gluBuild2DMipmaps(
         GL_TEXTURE_2D, GL_RGB, imgWidth, imgHeight, 
-        GL_RGB, GL_UNSIGNED_BYTE, data
+        GL_BGR_EXT, GL_UNSIGNED_BYTE, data
     );
 
     glBindTexture(GL_TEXTURE_2D, 0);

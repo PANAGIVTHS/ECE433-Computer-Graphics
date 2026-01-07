@@ -6,22 +6,23 @@ BEGIN
     # Thick Trunk
     CUBOID 0.0 1.5 0.0 0.8 3.0 0.8
     TEXTURE WOOD
+    TEX_CONFIG REPEAT_FIT
 
     # Main Canopy (Big Box)
     CUBOID 0.0 4.0 0.0 3.0 2.5 3.0
-    TEXTURE GRASS
+    TEXTURE LEAVES
     TEX_CONFIG CUSTOM 2.0 2.0
 
     # Leaf Details (Small boxes to break up the shape)
     # Side Detail
     CUBOID 1.5 3.5 0.0 1.0 1.0 1.5
-    TEXTURE GRASS
+    TEXTURE LEAVES
     
     # Side Detail
     CUBOID -1.5 3.5 0.0 1.0 1.0 1.5
-    TEXTURE GRASS
+    TEXTURE LEAVES
 
     # Top Detail
     CUBOID 0.0 5.5 0.0 1.5 0.8 1.5
-    TEXTURE GRASS
+    TEXTURE LEAVES
 END

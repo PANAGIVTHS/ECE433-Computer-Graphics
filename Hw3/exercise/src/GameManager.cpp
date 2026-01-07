@@ -9,8 +9,9 @@
 void loadGameTextures() {
     TextureManager::init(TextureID::IRON, "../Texture_Images/LaGioconda.bmp");
     TextureManager::init(TextureID::GRASS, "../Texture_Images/grass.raw", 256, 256);
-    TextureManager::init(TextureID::WOOD, "../Texture_Images/wood01.bmp");
+    TextureManager::init(TextureID::WOOD, "../Texture_Images/oak_log.bmp");
     TextureManager::init(TextureID::WINDOW, "../Texture_Images/ss0052.bmp");
+    TextureManager::init(TextureID::LEAVES, "../Texture_Images/azalea_top.bmp");
 }
 
 

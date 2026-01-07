@@ -7,19 +7,21 @@ BEGIN
     # Positioned up by 1.0 so the bottom touches 0
     CUBOID 0.0 1.0 0.0 0.4 2.0 0.4
     TEXTURE WOOD
+    TEX_CONFIG REPEAT_FIT
+
 
     # Bottom Leaves (Wide)
     CUBOID 0.0 2.5 0.0 2.5 1.0 2.5
-    TEXTURE GRASS
+    TEXTURE LEAVES
     TEX_CONFIG FIT
 
     # Middle Leaves (Medium)
     CUBOID 0.0 3.5 0.0 1.8 1.0 1.8
-    TEXTURE GRASS
+    TEXTURE LEAVES
     TEX_CONFIG FIT
 
     # Top Leaves (Pointy)
     CUBOID 0.0 4.5 0.0 1.0 1.0 1.0
-    TEXTURE GRASS
+    TEXTURE LEAVES
     TEX_CONFIG FIT
 END
