@@ -1,0 +1,40 @@
+# Root Object (The Whole House Container)
+OBJECT 20 0 20
+GRAVITY false
+BEGIN
+
+    # --- Foundation (Stone/Iron Base) ---
+    # Position: y=-0.5 (Half buried) | Size: 10x1x10
+    CUBOID 0.0 -0.5 0.0 10.0 1.0 10.0
+    TEXTURE IRON
+
+    # --- Main Walls (Wood Block) ---
+    # Position: y=2.0 (Sits on foundation) | Size: 8x4x8
+    CUBOID 0.0 2.0 0.0 8.0 4.0 8.0
+    TEXTURE WOOD
+
+    # --- Roof (Flat "Modern" Style) ---
+    CUBOID 0.0 4.5 0.0 9.0 1.0 9.0
+    TEXTURE GRASS
+    # Make the grass texture smaller so it looks like turf, not one giant green pixel
+    TEX_CONFIG CUSTOM 10.0 10.0
+
+    # --- Chimney ---
+    CUBOID 2.5 5.5 2.0 1.0 2.0 1.0
+    TEXTURE IRON
+    # Rotate the chimney slightly for artistic effect?
+    ROTATION 15.0 0 1 0
+
+    # --- Door ---
+    # Pushed slightly forward (z=4.1) to prevent flickering with the wall
+    CUBOID 0.0 1.2 4.2 2.0 2.0 0.2
+    TEXTURE IRON
+
+    # --- Window Left ---
+    CUBOID -2.6 2.5 4.2 2.0 1.5 0.2
+    TEXTURE WINDOW
+
+    # --- Window Right ---
+    CUBOID 2.6 2.5 4.2 2.0 1.5 0.2
+    TEXTURE WINDOW
+END

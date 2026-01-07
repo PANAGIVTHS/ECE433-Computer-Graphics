@@ -73,18 +73,6 @@ unsigned char *LoadTextureFile(char *filename, bitmapFileHeader_t *bitmapFileHea
 		exit(0);
 	
 	}
-
-	/* We assume that the bytes of each column is divisible by 4 so as
-	 * no padding is needed
-	 */
-
-	if(3*biWidth % 4) {
-
-		printf("The number of columns must be divisible by 4\n");
-		fclose(filePtr);
-		exit(0);
-
-	}
 	
 	//initialize the structs
 	

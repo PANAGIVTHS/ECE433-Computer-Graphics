@@ -5,8 +5,12 @@
 
 // Object implementation
 
-Object::Object(Vec3<GLfloat> position, bool gravity, TextureID texture) : position(position), gravity(gravity), texture(texture) {
+Object::Object(Vec3<GLfloat> pos, bool gravity, TextureID texture, std::initializer_list<Object*> children) : transform(pos), gravity(gravity), texture(texture) {
     ObjectHandler::addObject(this);
+
+    for (Object* child : children) {
+        this->addChildren(child);
+    }
 }
 
 Object::~Object() {
@@ -23,7 +27,13 @@ void Object::draw() {
 
     glPushMatrix();
 
-    glTranslated(position.x, position.y, position.z);
+    glTranslated(transform.position.x, transform.position.y, transform.position.z);
+    if (transform.angle != 0.0f) {
+        glRotated(transform.angle, transform.rotateAxis.x, transform.rotateAxis.y, transform.rotateAxis.z);
+    }
+    if (transform.scale.x != 1.0f || transform.scale.y != 1.0f || transform.scale.z != 1.0f) {
+        glScaled(transform.scale.x, transform.scale.y, transform.scale.z);
+    }
 
     if (texture != TextureID::NONE) {
         TextureManager::bind(texture);
@@ -43,7 +53,7 @@ void Object::draw() {
 void Object::update() {
     if (gravity)
         velocity.y -= GameManager::gravity * GameManager::dt;
-    this->position += this->velocity * (GLfloat) GameManager::dt;
+    this->transform.position += this->velocity * (GLfloat) GameManager::dt;
 }
 
 Object *Object::addChildren(Object *o) {
@@ -53,6 +63,26 @@ Object *Object::addChildren(Object *o) {
     children.push_back(o);
 
     return this;
+}
+
+Object* Object::setScale(Vec3<GLfloat> scale) {
+    this->transform.scale = scale;
+    return this;
+}
+
+Object* Object::setScale(GLfloat x, GLfloat y, GLfloat z) {
+    this->transform.scale = Vec3<GLfloat>(x, y, z);
+    return this;
+}
+
+Object* Object::setRotation(GLfloat angle, Vec3<GLfloat> axis) {
+    this->transform.angle = angle;
+    this->transform.rotateAxis = axis;
+    return this;
+}
+
+void Object::setTexture(TextureID id) {
+    this->texture = id;
 }
 
 bool Object::isHidden() {
@@ -72,11 +102,11 @@ void Object::setGravity(bool gravity) {
 }
 
 Vec3<GLfloat>& Object::getPosition() {
-    return position;
+    return transform.position;
 }
 
 void Object::setPosition(Vec3<GLfloat> position) {
-    this->position = position;
+    this->transform.position = position;
 }
 
 Vec3<GLfloat>& Object::getVelocity() {
@@ -115,14 +145,6 @@ void ObjectHandler::clear() {
 
 // Object subclasses implementation
 
-// Terrain
-void Terrain::drawInternal() {
-    glScaled(10, 0.1, 10);
-    glTranslated(0, -10, 0);
-    glColor3f(0, 1.0f, 0.2f);
-    glutSolidCube(10.0f);
-}
-
 // Cuboid
 void Cuboid::drawInternal() {
     glColor3f(1.0f, 1.0f, 1.0f);
@@ -131,9 +153,13 @@ void Cuboid::drawInternal() {
     Vec3<float> right(1.0f, 0.0f, 0.0f), left(-1.0f, 0.0f, 0.0f);
     Vec3<float> up(0.0f, 1.0f, 0.0f), down(0.0f, -1.0f, 0.0f);
 
-    float w = width / 2.0f;
-    float h = height / 2.0f;
-    float l = length / 2.0f;
+    float w = 0.5f;
+    float h = 0.5f;
+    float l = 0.5f;
+
+    float width  = transform.scale.x;
+    float height = transform.scale.y;
+    float length = transform.scale.z;
 
     float uFront = 1.0f, vFront = 1.0f;
     float uSide  = 1.0f, vSide  = 1.0f;
@@ -151,33 +177,37 @@ void Cuboid::drawInternal() {
 
     //! Maybe not clean enough
     TextureManager::drawQuadTex(
-        Vec3<float>(-w, -h,  l), Vec3<float>( w, -h,  l), 
-        Vec3<float>( w,  h,  l), Vec3<float>(-w,  h,  l), front, uFront, vFront);
+        Vec3<GLfloat>(-w, -h,  l), Vec3<GLfloat>( w, -h,  l), 
+        Vec3<GLfloat>( w,  h,  l), Vec3<GLfloat>(-w,  h,  l), front, uFront, vFront);
 
     TextureManager::drawQuadTex(
-        Vec3<float>( w, -h, -l), Vec3<float>(-w, -h, -l), 
-        Vec3<float>(-w,  h, -l), Vec3<float>( w,  h, -l), back, uFront, vFront);
+        Vec3<GLfloat>( w, -h, -l), Vec3<GLfloat>(-w, -h, -l), 
+        Vec3<GLfloat>(-w,  h, -l), Vec3<GLfloat>( w,  h, -l), back, uFront, vFront);
 
     TextureManager::drawQuadTex(
-        Vec3<float>( w, -h, -l), Vec3<float>( w, -h,  l), 
-        Vec3<float>( w,  h,  l), Vec3<float>( w,  h, -l), right, uSide, vSide);
+        Vec3<GLfloat>( w, -h, -l), Vec3<GLfloat>( w, -h,  l), 
+        Vec3<GLfloat>( w,  h,  l), Vec3<GLfloat>( w,  h, -l), right, uSide, vSide);
 
     TextureManager::drawQuadTex(
-        Vec3<float>(-w, -h,  l), Vec3<float>(-w, -h, -l), 
-        Vec3<float>(-w,  h, -l), Vec3<float>(-w,  h,  l), left, uSide, vSide);
+        Vec3<GLfloat>(-w, -h,  l), Vec3<GLfloat>(-w, -h, -l), 
+        Vec3<GLfloat>(-w,  h, -l), Vec3<GLfloat>(-w,  h,  l), left, uSide, vSide);
 
     TextureManager::drawQuadTex(
-        Vec3<float>(-w,  h,  l), Vec3<float>( w,  h,  l), 
-        Vec3<float>( w,  h, -l), Vec3<float>(-w,  h, -l), up, uTop, vTop);
+        Vec3<GLfloat>(-w,  h,  l), Vec3<GLfloat>( w,  h,  l), 
+        Vec3<GLfloat>( w,  h, -l), Vec3<GLfloat>(-w,  h, -l), up, uTop, vTop);
 
     TextureManager::drawQuadTex(
-        Vec3<float>(-w, -h, -l), Vec3<float>( w, -h, -l), 
-        Vec3<float>( w, -h,  l), Vec3<float>(-w, -h,  l), down, uTop, vTop);
+        Vec3<GLfloat>(-w, -h, -l), Vec3<GLfloat>( w, -h, -l), 
+        Vec3<GLfloat>( w, -h,  l), Vec3<GLfloat>(-w, -h,  l), down, uTop, vTop);
 }
 
-
-
 // Cube
+Cube::Cube(Vec3<GLfloat> pos, Vec3<GLfloat> dim, Vec3<GLfloat> rotateAxis, float angle, bool gravity, TextureID texture)
+    : Object(pos, gravity, texture) {
+    setScale(dim);
+    setRotation(angle, rotateAxis);
+}
+
 void Cube::drawInternal() {
     glColor3f(1.0f, 0.0f, 0.0f);
 

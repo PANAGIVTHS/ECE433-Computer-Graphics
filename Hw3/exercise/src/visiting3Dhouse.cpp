@@ -53,7 +53,7 @@ void display() {
     glLoadIdentity();
 
     glEnable(GL_TEXTURE_2D);
-    glEnable(GL_LIGHTING);
+    //glEnable(GL_LIGHTING);
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
     GameManager::getCamera()->set();
@@ -61,7 +61,7 @@ void display() {
         o->draw();
 
     glDisable(GL_TEXTURE_2D);
-    glDisable(GL_LIGHTING);
+    //glDisable(GL_LIGHTING);
 
     glutSwapBuffers();
 }

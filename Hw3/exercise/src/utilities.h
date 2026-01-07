@@ -1,5 +1,10 @@
 #ifndef UTILITIES_H
 #define UTILITIES_H
+#ifdef __APPLE_CC__
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
 #include <math.h>
 
 inline float toRadians(float degrees) {
@@ -90,5 +95,15 @@ Vec3<T> operator/(Vec3<T> vec, T scalar) {
     vec /= scalar;
     return vec;
 }
+
+struct Transform {
+    Vec3<GLfloat> position;
+    Vec3<GLfloat> scale;
+    Vec3<GLfloat> rotateAxis;
+    GLfloat angle;
+
+    Transform(Vec3<GLfloat> pos = Vec3<GLfloat>(0,0,0)) 
+        : position(pos), scale(1.0f, 1.0f, 1.0f), rotateAxis(0.0f, 1.0f, 0.0f), angle(0.0f) {}
+};
 
 #endif

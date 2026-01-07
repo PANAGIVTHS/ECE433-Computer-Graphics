@@ -4,9 +4,9 @@
 #include <math.h>
 
 void Sun::drawInternal() {
-    LightingManager::startLightSource(0, position, Vec3<float>(color.red, color.green, color.blue));
+    //LightingManager::startLightSource(0, transform.position, Vec3<float>(color.red, color.green, color.blue));
     glutSolidSphere(radius, 20, 20);
-    LightingManager::endLightSource();
+    //LightingManager::endLightSource();
 }
 
 void Sun::update() {
@@ -19,8 +19,8 @@ void Sun::update() {
     GLfloat xOffset = cos(orbitAngle) * orbitRadius;
     GLfloat yOffset = sin(orbitAngle) * orbitRadius;
     
-    position = camPos;
-    position += Vec3(xOffset, yOffset, 0.0f);
+    transform.position = camPos;
+    transform.position += Vec3(xOffset, yOffset, 0.0f);
 
     float heightFactor = yOffset / orbitRadius;
     if (heightFactor < 0.0f) heightFactor = 0.0f;

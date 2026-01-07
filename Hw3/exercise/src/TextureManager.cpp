@@ -7,7 +7,7 @@
 
 std::map<TextureID, GLuint> TextureManager::textures;
 
-void TextureManager::drawQuadTex(const Vec3<float>& p1, const Vec3<float>& p2, const Vec3<float>& p3, const Vec3<float>& p4, const Vec3<float>& normal, float uMax, float vMax) {
+void TextureManager::drawQuadTex(const Vec3<GLfloat>& p1, const Vec3<GLfloat>& p2, const Vec3<GLfloat>& p3, const Vec3<GLfloat>& p4, const Vec3<GLfloat>& normal, float uMax, float vMax) {
     
     glBegin(GL_QUADS); 
     glNormal3f(normal.x, normal.y, normal.z);
@@ -108,16 +108,18 @@ bool TextureManager::init(TextureID id, const std::string& path, int width, int 
 
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
-    glTexImage2D(
-        GL_TEXTURE_2D,
-        0,
-        GL_RGB,
-        imgWidth,
-        imgHeight,
-        0,
-        GL_RGB,
-        GL_UNSIGNED_BYTE,
-        data
+    if (width > 0 && height > 0) {
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    } else {
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+    }
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR); 
+    
+    // Generate Mipmaps
+    gluBuild2DMipmaps(
+        GL_TEXTURE_2D, GL_RGB, imgWidth, imgHeight, 
+        GL_RGB, GL_UNSIGNED_BYTE, data
     );
 
     glBindTexture(GL_TEXTURE_2D, 0);
