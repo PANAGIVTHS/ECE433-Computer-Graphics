@@ -78,6 +78,11 @@ public:
                     ss >> angle >> rx >> ry >> rz;
                     currentObj->setRotation(angle, Vec3<float>(rx, ry, rz));
                 }
+                else if (cmd == "SCALE") {
+                    float sx, sy, sz;
+                    ss >> sx >> sy >> sz;
+                    currentObj->setScale(Vec3<float>(sx, sy, sz)); 
+                }
                 else if (cmd == "GRAVITY") {
                     std::string val; ss >> val;
                     currentObj->setGravity(val == "true");
