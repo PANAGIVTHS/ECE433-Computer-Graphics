@@ -4,9 +4,9 @@
 #include <math.h>
 
 void Sun::drawInternal() {
-    //LightingManager::startLightSource(0, transform.position, Vec3<float>(color.red, color.green, color.blue));
+    LightingManager::startLightSource(0, Vec3<float>(0.0f, 0.0f, 0.0f), Vec3<float>(color.red, color.green, color.blue));
     glutSolidSphere(radius, 20, 20);
-    //LightingManager::endLightSource();
+    LightingManager::endLightSource();
 }
 
 void Sun::update() {

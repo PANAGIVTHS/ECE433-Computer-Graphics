@@ -44,7 +44,6 @@ void init(int argc, char *argv[]) {
     glutInit(&argc, argv);
     WindowManager::init(display, idle);
     GameManager::init();
-    GameManager::getEnvironment()->spawn();
     LightingManager::init();
 }
 

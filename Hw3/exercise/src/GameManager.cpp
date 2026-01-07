@@ -24,7 +24,8 @@ void GameManager::init() {
     oldTime = glutGet(GLUT_ELAPSED_TIME);
     camera = new Camera(initialCameraPos);
     environment = new Environment(skyColor);
-
+    environment->spawn();
+    
     AssetLoader::load(Vec3(0.0f, 4.0f, -5.0f), "../assets/house.txt")
         ->setRotation(45.0f, Vec3(1.0f, 0.0f, 0.0f));
     AssetLoader::load(Vec3(7.0f, 0.2f, 7.0f), "../assets/oaktree.txt");
