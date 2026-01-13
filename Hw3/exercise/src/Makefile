@@ -26,6 +26,11 @@ ifeq ($(USE_MOUSE), 1)
     CFLAGS += -DMOUSE_ROTATION
 endif
 
+VSYNC ?= 0
+ifeq ($(VSYNC), 1)
+    CFLAGS += -DVSYNC
+endif
+
 .PHONY: all clean
 
 all: $(TARGET)

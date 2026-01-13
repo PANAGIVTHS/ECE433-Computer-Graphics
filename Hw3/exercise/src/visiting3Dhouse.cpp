@@ -51,19 +51,12 @@ void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
-    glEnable(GL_TEXTURE_2D);
-    //glEnable(GL_LIGHTING);
-    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-
     GameManager::getCamera()->set();
     for (Object *o : ObjectHandler::getObjects())
         o->draw();
 
     //fps related
     WindowManager::drawFPS(GameManager::getFPS());
-
-    glDisable(GL_TEXTURE_2D);
-    //glDisable(GL_LIGHTING);
 
     glutSwapBuffers();
 }
