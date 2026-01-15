@@ -4,6 +4,7 @@
 #include "TextureManager.h"
 #include "AssetLoader.h"
 #include "LightingManager.h"
+#include <iostream>
 
 //TODO idk where to put this (dont say the joke haha we get it)
 void loadGameTextures() {
@@ -42,15 +43,11 @@ void GameManager::init() {
     environment = new Environment(skyColor);
     environment->spawn();
     
-    AssetLoader::load(Vec3(0.0f, 4.0f, -5.0f), "../assets/house.txt")
-        ->setRotation(45.0f, Vec3(1.0f, 0.0f, 0.0f))
-        ->optimize();
-    AssetLoader::load(Vec3(7.0f, 0.2f, 7.0f), "../assets/oaktree.txt")
-        ->optimize();
-    AssetLoader::load(Vec3(1.0f, 0.2f, 2.0f), "../assets/pinetree.txt")
-        ->optimize();
-    AssetLoader::load(Vec3(10.0f, 0.0f, 10.0f), "../assets/pinetree.txt")
-        ->optimize();
+    Object *house = AssetLoader::load("../assets/house.txt", Vec3(0.0f, 3.0f, -10.0f));
+    std::cout << house->to_string() << "\n";
+    AssetLoader::load("../assets/oaktree.txt", Vec3(7.0f, 0.2f, 7.0f));
+    AssetLoader::load("../assets/pinetree.txt", Vec3(1.0f, 0.2f, 2.0f));
+    AssetLoader::load("../assets/pinetree.txt", Vec3(10.0f, 0.0f, 10.0f));
 
     environment->init();
 }
@@ -93,7 +90,7 @@ void GameManager::onWindowUpdate(GLint width, GLint height, bool newContext) {
         //! Delete old unreachable textures
         TextureManager::clear();
         LightingManager::init();
-        ObjectHandler::invalidateListAll();
+        ObjectHandler::optimizeAll(true);
         loadGameTextures();
     }
 }

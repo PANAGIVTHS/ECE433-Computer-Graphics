@@ -8,6 +8,7 @@
 #include <vector>
 #include "utilities.h"
 #include "TextureEnums.h"
+#include <string>
 
 class Object {
 protected:
@@ -22,6 +23,7 @@ protected:
     TextureID texture = TextureID::NONE;
 
     virtual void drawInternal() {};
+    std::string to_string(int depth);
 public:
     Object(Vec3<GLfloat> pos, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, std::initializer_list<Object*> children = {});
     Object(GLfloat x, GLfloat y, GLfloat z, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, std::initializer_list<Object*> children = {}) : Object(Vec3(x, y, z), gravity, texture) {}
@@ -31,6 +33,7 @@ public:
     
     void draw();
     virtual void update();
+    void optimize(bool ignorePrevious);
     Object *addChildren(Object *object);
 
     bool isHidden();
@@ -38,8 +41,6 @@ public:
     bool hasGravity();
     void setGravity(bool gravity);
     void setTexture(TextureID id);
-    void optimize();
-    void invalidateDisplayList();
     Object* setScale(Vec3<GLfloat> scale);
     Object* setScale(GLfloat x, GLfloat y, GLfloat z);
     Object* setRotation(GLfloat angle, Vec3<GLfloat> axis);
@@ -47,6 +48,7 @@ public:
     void setPosition(Vec3<GLfloat> position);
     Vec3<GLfloat>& getVelocity();
     void setVelocity(Vec3<GLfloat> velocity);
+    std::string to_string();
 };
 
 class ObjectHandler {
@@ -56,29 +58,28 @@ public:
     static void addObject(Object *o);
     static void removeObject(Object *o);
     static std::vector<Object *> &getObjects();
-    static void invalidateListAll();
+    static void optimizeAll(bool ignorePrevious);
     static void clear();
 };
 
 class Cuboid : public Object {
     TextureConfig texConfig;
 public: 
+    Cuboid(Vec3<float> pos, Vec3<float> dim, bool gravity = true, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
+        : Object(pos, gravity, texture), texConfig(config) {
+            setScale(dim); 
+            this->optimize(true);
+        }
+
     Cuboid(float x, float y, float z, float w, float h, float l, bool gravity = true, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
-        : Object(x, y, z, gravity, texture), texConfig(config) {
-            setScale(w, h, l);
-        }
+        : Cuboid(Vec3<float>(x, y, z), Vec3<float>(w, h, l), gravity, texture, config) {}
+
     Cuboid(Vec3<float> pos, float w, float h, float l, bool gravity = true, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
-        : Object(pos, gravity, texture), texConfig(config) {
-            setScale(w, h, l);
-        }
-    Cuboid(Vec3<float> pos, Vec3<float>dim, bool gravity = true, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
-        : Object(pos, gravity, texture), texConfig(config) {
-            setScale(dim);
-        }
+        : Cuboid(pos, Vec3<float>(w, h, l), gravity, texture, config) {}
+
     Cuboid(float x, float y, float z, bool gravity = true, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
-        : Object(x, y, z, gravity, texture), texConfig(config) {
-            setScale(1.0f, 1.0f, 1.0f);
-        }
+        : Cuboid(Vec3<float>(x, y, z), Vec3<float>(1.0f, 1.0f, 1.0f), gravity, texture, config) {}
+
     void setTextureConfig(TextureConfig config) override {
         this->texConfig = config;
     }
@@ -90,7 +91,7 @@ class Cube : public Object {
 public: 
     Cube(Vec3<GLfloat> pos, Vec3<GLfloat> dim, Vec3<GLfloat> rotateAxis, float angle, bool gravity = true, TextureID texture = TextureID::NONE);
     Cube(Vec3<GLfloat> pos, bool gravity, TextureID texture)
-        : Object(pos, gravity, texture) {}
+        : Object(pos, gravity, texture) { this->optimize(true); }
 private:
     void drawInternal();
 };
@@ -98,7 +99,7 @@ private:
 class Sphere : public Object {
 public: 
     Sphere(float x, float y, float z, bool gravity = true, TextureID texture = TextureID::NONE)
-        : Object(x, y, z, gravity, texture) {}
+        : Object(x, y, z, gravity, texture) { this->optimize(true); }
 private:
     void drawInternal();
 };

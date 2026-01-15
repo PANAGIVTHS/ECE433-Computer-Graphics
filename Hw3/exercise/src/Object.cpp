@@ -2,6 +2,7 @@
 #include "GameManager.h"
 #include <algorithm>
 #include "TextureManager.h"
+#include <sstream>
 
 // Object implementation
 
@@ -15,18 +16,15 @@ Object::Object(Vec3<GLfloat> pos, bool gravity, TextureID texture, std::initiali
 
 Object::~Object() {
     ObjectHandler::removeObject(this);
+    if (displayList != 0) glDeleteLists(displayList, 1);
 
     for (Object *o : children)
         delete o;
     children.clear();
 }
 
-void Object::invalidateDisplayList() {
-    displayList = 0;
-}
-
-void Object::optimize() {
-    if (displayList != 0) return;
+void Object::optimize(bool ignorePrevious) {
+    if (displayList != 0 && !ignorePrevious) return;
 
     displayList = glGenLists(1);
     //! Record mode objects arent displayed
@@ -148,6 +146,43 @@ void Object::setVelocity(Vec3<GLfloat> velocity) {
     this->velocity = velocity;
 }
 
+std::string Object::to_string() {
+    return to_string(0);
+}
+
+std::string Object::to_string(int depth) {
+    std::stringstream ss;
+    std::string indent(depth * 2, ' '); 
+
+    ss << indent << "Object {\n";
+    
+    // Transform / Position
+    ss << indent << "  Position: (" << transform.position.x << ", " << transform.position.y << ", " << transform.position.z << ")\n";
+    ss << indent << "  Scale: (" << transform.scale.x << ", " << transform.scale.y << ", " << transform.scale.z << ")\n";
+    ss << indent << "  Rotation: " << transform.angle << " deg around (" 
+       << transform.rotateAxis.x << ", " << transform.rotateAxis.y << ", " << transform.rotateAxis.z << ")\n";
+    
+    // State properties
+    ss << indent << "  Velocity: (" << velocity.x << ", " << velocity.y << ", " << velocity.z << ")\n";
+    ss << indent << "  Gravity: " << (gravity ? "enabled" : "disabled") << "\n";
+    ss << indent << "  Hidden: " << (hidden ? "true" : "false") << "\n";
+    ss << indent << "  TextureID: " << static_cast<int>(texture) << "\n";
+
+    // Children recursion
+    if (!children.empty()) {
+        ss << indent << "  Children [" << children.size() << "]:\n";
+        for (Object* child : children) {
+            if (child) {
+                // Recursive call increasing the depth
+                ss << child->to_string(depth + 2);
+            }
+        }
+    }
+
+    ss << indent << "}\n";
+    return ss.str();
+}
+
 // ObjectHandler implementation
 
 std::vector<Object *> ObjectHandler::objects;
@@ -168,9 +203,9 @@ std::vector<Object *> &ObjectHandler::getObjects() {
     return objects;
 }
 
-void ObjectHandler::invalidateListAll() {
+void ObjectHandler::optimizeAll(bool ignorePrevious) {
     for (Object *o : objects) {
-        o->invalidateDisplayList();
+        o->optimize(ignorePrevious);
     }
 }
 
