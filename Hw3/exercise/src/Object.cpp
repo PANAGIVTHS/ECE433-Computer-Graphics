@@ -273,13 +273,6 @@ void Cuboid::drawInternal() {
         Vec3<GLfloat>( w, -h,  l), Vec3<GLfloat>(-w, -h,  l), down, uTop, vTop);
 }
 
-// Cube
-Cube::Cube(Vec3<GLfloat> pos, Vec3<GLfloat> dim, Vec3<GLfloat> rotateAxis, float angle, bool gravity, TextureID texture)
-    : Object(pos, gravity, texture) {
-    setScale(dim);
-    setRotation(angle, rotateAxis);
-}
-
 void Cube::drawInternal() {
     glColor3f(1.0f, 0.0f, 0.0f);
 

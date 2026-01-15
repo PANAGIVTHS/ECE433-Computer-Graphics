@@ -89,9 +89,20 @@ private:
 
 class Cube : public Object {
 public: 
-    Cube(Vec3<GLfloat> pos, Vec3<GLfloat> dim, Vec3<GLfloat> rotateAxis, float angle, bool gravity = true, TextureID texture = TextureID::NONE);
-    Cube(Vec3<GLfloat> pos, bool gravity, TextureID texture)
-        : Object(pos, gravity, texture) { this->optimize(true); }
+    Cube(Vec3<float> pos, Vec3<float> dim, bool gravity = true, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
+        : Object(pos, gravity, texture) {
+            setScale(dim);
+            this->optimize(true);
+        }
+
+    Cube(float x, float y, float z, float w, float h, float l, bool gravity = true, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
+        : Cube(Vec3<float>(x, y, z), Vec3<float>(w, h, l), gravity, texture, config) {}
+
+    Cube(Vec3<float> pos, float w, float h, float l, bool gravity = true, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
+        : Cube(pos, Vec3<float>(w, h, l), gravity, texture, config) {}
+
+    Cube(float x, float y, float z, bool gravity = true, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
+        : Cube(Vec3<float>(x, y, z), Vec3<float>(1.0f, 1.0f, 1.0f), gravity, texture, config) {}
 private:
     void drawInternal();
 };

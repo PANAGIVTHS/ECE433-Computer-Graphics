@@ -68,6 +68,12 @@ public:
                 currentObj = new Cuboid(x, y, z, w, h, l, false);
                 objectCreated = true;
             }
+            else if (cmd == "CUBE") {
+                float w, h, l; 
+                ss >> x >> y >> z >> w >> h >> l;
+                currentObj = new Cube(x, y, z, w, h, l, false);
+                objectCreated = true;
+            }
 
             // --- LINKING ---
             if (objectCreated && currentObj) {
