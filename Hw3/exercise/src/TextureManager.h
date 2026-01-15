@@ -20,6 +20,14 @@ public:
     static void bind(TextureID id);
     static bool init(TextureID id, const std::string& bmpPath, int width = 0, int height = 0);
     static void clear();
+
+    static void initAllTextures() {
+        TextureManager::init(TextureID::IRON, "../Texture_Images/LaGioconda.bmp");
+        TextureManager::init(TextureID::GRASS, "../Texture_Images/grass.raw", 256, 256);
+        TextureManager::init(TextureID::WOOD, "../Texture_Images/oak_log.bmp");
+        TextureManager::init(TextureID::WINDOW, "../Texture_Images/ss0052.bmp");
+        TextureManager::init(TextureID::LEAVES, "../Texture_Images/azalea_top.bmp");
+    }
 };
 
 #endif

@@ -12,7 +12,7 @@
 
 class Object {
 protected:
-    static constexpr bool DEFAULT_GRAVITY = true;
+    static constexpr bool DEFAULT_GRAVITY = false;
 
     std::vector<Object *> children;
     Vec3<GLfloat> velocity;
@@ -23,7 +23,7 @@ protected:
     TextureID texture = TextureID::NONE;
 
     virtual void drawInternal() {};
-    std::string to_string(int depth);
+    std::string toString(int depth);
 public:
     Object(Vec3<GLfloat> pos, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, std::initializer_list<Object*> children = {});
     Object(GLfloat x, GLfloat y, GLfloat z, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, std::initializer_list<Object*> children = {}) : Object(Vec3(x, y, z), gravity, texture) {}
@@ -33,7 +33,7 @@ public:
     
     void draw();
     virtual void update();
-    void optimize(bool ignorePrevious);
+    void resetDisplayList(bool deleteOld);
     Object *addChildren(Object *object);
 
     bool isHidden();
@@ -48,7 +48,7 @@ public:
     void setPosition(Vec3<GLfloat> position);
     Vec3<GLfloat>& getVelocity();
     void setVelocity(Vec3<GLfloat> velocity);
-    std::string to_string();
+    std::string toString();
 };
 
 class ObjectHandler {
@@ -58,26 +58,23 @@ public:
     static void addObject(Object *o);
     static void removeObject(Object *o);
     static std::vector<Object *> &getObjects();
-    static void optimizeAll(bool ignorePrevious);
+    static void resetDisplayListAll(bool deleteOld);
     static void clear();
 };
 
 class Cuboid : public Object {
     TextureConfig texConfig;
 public: 
-    Cuboid(Vec3<float> pos, Vec3<float> dim, bool gravity = true, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
-        : Object(pos, gravity, texture), texConfig(config) {
-            setScale(dim); 
-            this->optimize(true);
-        }
+    Cuboid(Vec3<float> pos, Vec3<float> dim, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
+        : Object(pos, gravity, texture), texConfig(config) { setScale(dim); }
 
-    Cuboid(float x, float y, float z, float w, float h, float l, bool gravity = true, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
+    Cuboid(float x, float y, float z, float w, float h, float l, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
         : Cuboid(Vec3<float>(x, y, z), Vec3<float>(w, h, l), gravity, texture, config) {}
 
-    Cuboid(Vec3<float> pos, float w, float h, float l, bool gravity = true, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
+    Cuboid(Vec3<float> pos, float w, float h, float l, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
         : Cuboid(pos, Vec3<float>(w, h, l), gravity, texture, config) {}
 
-    Cuboid(float x, float y, float z, bool gravity = true, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
+    Cuboid(float x, float y, float z, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
         : Cuboid(Vec3<float>(x, y, z), Vec3<float>(1.0f, 1.0f, 1.0f), gravity, texture, config) {}
 
     void setTextureConfig(TextureConfig config) override {
@@ -89,19 +86,16 @@ private:
 
 class Cube : public Object {
 public: 
-    Cube(Vec3<float> pos, Vec3<float> dim, bool gravity = true, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
-        : Object(pos, gravity, texture) {
-            setScale(dim);
-            this->optimize(true);
-        }
+    Cube(Vec3<float> pos, Vec3<float> dim, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
+        : Object(pos, gravity, texture) { setScale(dim); }
 
-    Cube(float x, float y, float z, float w, float h, float l, bool gravity = true, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
+    Cube(float x, float y, float z, float w, float h, float l, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
         : Cube(Vec3<float>(x, y, z), Vec3<float>(w, h, l), gravity, texture, config) {}
 
-    Cube(Vec3<float> pos, float w, float h, float l, bool gravity = true, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
+    Cube(Vec3<float> pos, float w, float h, float l, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
         : Cube(pos, Vec3<float>(w, h, l), gravity, texture, config) {}
 
-    Cube(float x, float y, float z, bool gravity = true, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
+    Cube(float x, float y, float z, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
         : Cube(Vec3<float>(x, y, z), Vec3<float>(1.0f, 1.0f, 1.0f), gravity, texture, config) {}
 private:
     void drawInternal();
@@ -109,11 +103,34 @@ private:
 
 class Sphere : public Object {
 public: 
-    Sphere(float x, float y, float z, bool gravity = true, TextureID texture = TextureID::NONE)
-        : Object(x, y, z, gravity, texture) { this->optimize(true); }
+    Sphere(float x, float y, float z, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE)
+        : Object(x, y, z, gravity, texture) {}
 private:
     void drawInternal();
 };
 
+class Garage : public Object {
+public: 
+    Garage(float x, float y, float z, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE)
+        : Object(x, y, z, gravity, texture) { addAll(); }
+private:
+    void addAll() {
+        GLfloat wallThickness = 0.25f;
+        GLfloat width = 7.3152f;
+        GLfloat length = 3.8608f;
+        GLfloat height = 4.0f;
+        
+        // RIGHT WALL
+        addChildren(new Cube(0.0f, 0.0f, 0.0f, wallThickness, height, width));
+        addChildren((new Cube(-(length - wallThickness)/2, 0.0f, -width/2, wallThickness, height, length))
+                    ->setRotation(90, Vec3(0.0f, 1.0f, 0.0f)));
+
+        // BACK WALL
+
+        // FRONT WALL
+    }
+    
+    void drawInternal() {}
+};
 
 #endif
