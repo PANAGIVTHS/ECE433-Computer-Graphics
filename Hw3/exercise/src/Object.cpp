@@ -6,7 +6,7 @@
 
 // Object implementation
 
-Object::Object(Vec3<GLfloat> pos, bool gravity, TextureID texture, std::initializer_list<Object*> children) : transform(pos), gravity(gravity), texture(texture) {
+Object::Object(Vec3<GLfloat> pos, bool gravity, TextureID texture, MaterialID material, std::initializer_list<Object*> children) : transform(pos), gravity(gravity), texture(texture), material(material) {
     ObjectHandler::addObject(this);
 
     for (Object* child : children) {
@@ -41,13 +41,9 @@ void Object::draw() {
         displayList = glGenLists(1);
         glNewList(displayList, GL_COMPILE);
 
-        if (texture != TextureID::NONE) 
-            TextureManager::bind(texture);
-        
+        MaterialManager::bind(material);
+        TextureManager::bind(texture);
         drawInternal();
-        
-        if (texture != TextureID::NONE) 
-            TextureManager::bind(TextureID::NONE);
         
         glEndList();
     }

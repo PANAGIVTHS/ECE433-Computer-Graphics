@@ -83,7 +83,7 @@ void GameManager::onWindowUpdate(GLint width, GLint height, bool newContext) {
         TextureManager::clear();
 
         LightingManager::init();
-        TextureManager::initAllTextures();
+        TextureManager::init();
         if(environment) environment->init();
     }
 }

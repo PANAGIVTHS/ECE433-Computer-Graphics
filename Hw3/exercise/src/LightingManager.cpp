@@ -4,6 +4,7 @@ void LightingManager::init() {
     glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
     glEnable(GL_COLOR_MATERIAL);
     glEnable(GL_NORMALIZE);
+    glEnable(GL_LIGHTING);
 }
 
 void LightingManager::startLightSource(int id, const Vec3<float>& position, const Vec3<float>& color) {

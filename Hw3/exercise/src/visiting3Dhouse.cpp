@@ -9,6 +9,7 @@
 #include "WindowManager.h"
 #include "LightingManager.h"
 #include "TextureManager.h"
+#include "MaterialManager.h"
 
 void init(int argc, char *argv[]);
 void display();
@@ -45,7 +46,8 @@ void init(int argc, char *argv[]) {
     glutInit(&argc, argv);
     WindowManager::init(display, idle);
     LightingManager::init();
-    TextureManager::initAllTextures();
+    MaterialManager::init();
+    TextureManager::init();
     GameManager::init();
 }
 
@@ -58,7 +60,7 @@ void display() {
         o->draw();
 
     //fps related
-    WindowManager::drawFPS(GameManager::getFPS());
+    // WindowManager::drawFPS(GameManager::getFPS());
 
     glutSwapBuffers();
 }

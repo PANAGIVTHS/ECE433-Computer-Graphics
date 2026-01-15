@@ -8,6 +8,7 @@
 #include <vector>
 #include "utilities.h"
 #include "TextureEnums.h"
+#include "MaterialManager.h"
 #include <string>
 
 class Object {
@@ -21,12 +22,13 @@ protected:
     GLuint displayList = 0;
     bool gravity, hidden = false;
     TextureID texture = TextureID::NONE;
+    MaterialID material = MaterialID::NONE;
 
     virtual void drawInternal() {};
     std::string toString(int depth);
 public:
-    Object(Vec3<GLfloat> pos, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, std::initializer_list<Object*> children = {});
-    Object(GLfloat x, GLfloat y, GLfloat z, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, std::initializer_list<Object*> children = {}) : Object(Vec3(x, y, z), gravity, texture) {}
+    Object(Vec3<GLfloat> pos, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, MaterialID material = MaterialID::NONE, std::initializer_list<Object*> children = {});
+    Object(GLfloat x, GLfloat y, GLfloat z, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, MaterialID material = MaterialID::NONE, std::initializer_list<Object*> children = {}) : Object(Vec3(x, y, z), gravity, texture) {}
     virtual ~Object();
 
     virtual void setTextureConfig(TextureConfig config) {}
@@ -65,17 +67,17 @@ public:
 class Cuboid : public Object {
     TextureConfig texConfig;
 public: 
-    Cuboid(Vec3<float> pos, Vec3<float> dim, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
-        : Object(pos, gravity, texture), texConfig(config) { setScale(dim); }
+    Cuboid(Vec3<float> pos, Vec3<float> dim, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, MaterialID material = MaterialID::NONE, TextureConfig config = TextureConfig())
+        : Object(pos, gravity, texture, material), texConfig(config) { setScale(dim); }
 
-    Cuboid(float x, float y, float z, float w, float h, float l, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
-        : Cuboid(Vec3<float>(x, y, z), Vec3<float>(w, h, l), gravity, texture, config) {}
+    Cuboid(float x, float y, float z, float w, float h, float l, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, MaterialID material = MaterialID::NONE, TextureConfig config = TextureConfig())
+        : Cuboid(Vec3<float>(x, y, z), Vec3<float>(w, h, l), gravity, texture, material, config) {}
 
-    Cuboid(Vec3<float> pos, float w, float h, float l, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
-        : Cuboid(pos, Vec3<float>(w, h, l), gravity, texture, config) {}
+    Cuboid(Vec3<float> pos, float w, float h, float l, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, MaterialID material = MaterialID::NONE, TextureConfig config = TextureConfig())
+        : Cuboid(pos, Vec3<float>(w, h, l), gravity, texture, material, config) {}
 
-    Cuboid(float x, float y, float z, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
-        : Cuboid(Vec3<float>(x, y, z), Vec3<float>(1.0f, 1.0f, 1.0f), gravity, texture, config) {}
+    Cuboid(float x, float y, float z, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, MaterialID material = MaterialID::NONE, TextureConfig config = TextureConfig())
+        : Cuboid(Vec3<float>(x, y, z), Vec3<float>(1.0f, 1.0f, 1.0f), gravity, texture, material, config) {}
 
     void setTextureConfig(TextureConfig config) override {
         this->texConfig = config;
@@ -85,34 +87,34 @@ private:
 };
 
 class Cube : public Object {
-public: 
-    Cube(Vec3<float> pos, Vec3<float> dim, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
-        : Object(pos, gravity, texture) { setScale(dim); }
+public:
+    Cube(Vec3<float> pos, Vec3<float> dim, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, MaterialID material = MaterialID::NONE, TextureConfig config = TextureConfig())
+        : Object(pos, gravity, texture, material) { setScale(dim); }
 
-    Cube(float x, float y, float z, float w, float h, float l, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
-        : Cube(Vec3<float>(x, y, z), Vec3<float>(w, h, l), gravity, texture, config) {}
+    Cube(float x, float y, float z, float w, float h, float l, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, MaterialID material = MaterialID::NONE, TextureConfig config = TextureConfig())
+        : Cube(Vec3<float>(x, y, z), Vec3<float>(w, h, l), gravity, texture, material, config) {}
 
-    Cube(Vec3<float> pos, float w, float h, float l, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
-        : Cube(pos, Vec3<float>(w, h, l), gravity, texture, config) {}
+    Cube(Vec3<float> pos, float w, float h, float l, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, MaterialID material = MaterialID::NONE, TextureConfig config = TextureConfig())
+        : Cube(pos, Vec3<float>(w, h, l), gravity, texture, material, config) {}
 
-    Cube(float x, float y, float z, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, TextureConfig config = TextureConfig())
-        : Cube(Vec3<float>(x, y, z), Vec3<float>(1.0f, 1.0f, 1.0f), gravity, texture, config) {}
+    Cube(float x, float y, float z, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, MaterialID material = MaterialID::NONE, TextureConfig config = TextureConfig())
+        : Cube(Vec3<float>(x, y, z), Vec3<float>(1.0f, 1.0f, 1.0f), gravity, texture, material, config) {}
 private:
     void drawInternal();
 };
 
 class Sphere : public Object {
 public: 
-    Sphere(float x, float y, float z, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE)
-        : Object(x, y, z, gravity, texture) {}
+    Sphere(float x, float y, float z, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, MaterialID material = MaterialID::NONE)
+        : Object(x, y, z, gravity, texture, material) {}
 private:
     void drawInternal();
 };
 
 class Garage : public Object {
 public: 
-    Garage(float x, float y, float z, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE)
-        : Object(x, y, z, gravity, texture) { addAll(); }
+    Garage(float x, float y, float z, bool gravity = DEFAULT_GRAVITY, TextureID texture = TextureID::NONE, MaterialID material = MaterialID::NONE)
+        : Object(x, y, z, gravity, texture, material) { addAll(); }
 private:
     void addAll() {
         GLfloat wallThickness = 0.25f;
@@ -122,7 +124,7 @@ private:
         
         // RIGHT WALL
         addChildren(new Cube(0.0f, 0.0f, 0.0f, wallThickness, height, width));
-        addChildren((new Cube(-(length - wallThickness)/2, 0.0f, -width/2, wallThickness, height, length))
+        addChildren((new Cube(-(length+wallThickness)/2, 0.0f, -(width - wallThickness)/2, wallThickness, height, length))
                     ->setRotation(90, Vec3(0.0f, 1.0f, 0.0f)));
 
         // BACK WALL

@@ -6,6 +6,7 @@
 #include <GL/glut.h>
 #endif
 #include "TextureEnums.h"
+#include <map>
 
 enum class MaterialID {
     MATTE,
@@ -22,7 +23,7 @@ struct Material {
 
 class MaterialManager {
 private:
-    static std::map<MaterialID, Material> materials;
+    static inline std::map<MaterialID, Material> materials;
 
 public:
     static void init(); 

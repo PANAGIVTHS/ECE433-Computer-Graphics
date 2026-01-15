@@ -21,7 +21,9 @@ public:
     static bool init(TextureID id, const std::string& bmpPath, int width = 0, int height = 0);
     static void clear();
 
-    static void initAllTextures() {
+    static void init() {
+        glEnable(GL_TEXTURE_2D);
+        
         TextureManager::init(TextureID::IRON, "../Texture_Images/LaGioconda.bmp");
         TextureManager::init(TextureID::GRASS, "../Texture_Images/grass.raw", 256, 256);
         TextureManager::init(TextureID::WOOD, "../Texture_Images/oak_log.bmp");
