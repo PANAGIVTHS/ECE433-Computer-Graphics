@@ -8,6 +8,7 @@
 #include "GameManager.h"
 #include "WindowManager.h"
 #include "LightingManager.h"
+#include "TextureManager.h"
 
 void init(int argc, char *argv[]);
 void display();
@@ -43,8 +44,9 @@ int main(int argc, char *argv[]) {
 void init(int argc, char *argv[]) {
     glutInit(&argc, argv);
     WindowManager::init(display, idle);
-    GameManager::init();
     LightingManager::init();
+    TextureManager::initAllTextures();
+    GameManager::init();
 }
 
 void display() {

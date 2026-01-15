@@ -16,39 +16,15 @@ Object::Object(Vec3<GLfloat> pos, bool gravity, TextureID texture, std::initiali
 
 Object::~Object() {
     ObjectHandler::removeObject(this);
-    if (displayList != 0) glDeleteLists(displayList, 1);
+    resetDisplayList(true);
 
     for (Object *o : children)
         delete o;
     children.clear();
 }
 
-void Object::optimize(bool ignorePrevious) {
-    if (displayList != 0 && !ignorePrevious) return;
-
-    displayList = glGenLists(1);
-    //! Record mode objects arent displayed
-    glNewList(displayList, GL_COMPILE); 
-
-    if (texture != TextureID::NONE) {
-        TextureManager::bind(texture);
-    }
-
-    drawInternal();
-
-    if (texture != TextureID::NONE) {
-        TextureManager::bind(TextureID::NONE);
-    }
-
-    for (Object *o : children) {
-        o->draw();
-    }
-
-    glEndList();
-}
-
 void Object::draw() {
-    if (hidden)
+    if (hidden) 
         return;
 
     glPushMatrix();
@@ -61,21 +37,26 @@ void Object::draw() {
         glScaled(transform.scale.x, transform.scale.y, transform.scale.z);
     }
 
-    if (displayList != 0) {
-        glCallList(displayList);
-    } else {
-        if (texture != TextureID::NONE) {
+    if (displayList == 0) {
+        displayList = glGenLists(1);
+        glNewList(displayList, GL_COMPILE);
+
+        if (texture != TextureID::NONE) 
             TextureManager::bind(texture);
-        }
-
+        
         drawInternal();
-
-        if (texture != TextureID::NONE) {
+        
+        if (texture != TextureID::NONE) 
             TextureManager::bind(TextureID::NONE);
-        }
-        for (Object *o : children)
-            o->draw();
+        
+        glEndList();
     }
+
+    glCallList(displayList);
+
+    for (Object *o : children)
+        o->draw();
+
     glPopMatrix();
 }
 
@@ -92,6 +73,18 @@ Object *Object::addChildren(Object *o) {
     children.push_back(o);
 
     return this;
+}
+
+void Object::resetDisplayList(bool deleteOld) {
+    for (Object *o : children) {
+        o->resetDisplayList(deleteOld);
+    }
+
+    if (displayList == 0) return;
+
+    if (deleteOld)
+        glDeleteLists(displayList, 1);
+    displayList = 0;
 }
 
 Object* Object::setScale(Vec3<GLfloat> scale) {
@@ -112,6 +105,7 @@ Object* Object::setRotation(GLfloat angle, Vec3<GLfloat> axis) {
 
 void Object::setTexture(TextureID id) {
     this->texture = id;
+    displayList = 0;
 }
 
 bool Object::isHidden() {
@@ -146,11 +140,11 @@ void Object::setVelocity(Vec3<GLfloat> velocity) {
     this->velocity = velocity;
 }
 
-std::string Object::to_string() {
-    return to_string(0);
+std::string Object::toString() {
+    return toString(0);
 }
 
-std::string Object::to_string(int depth) {
+std::string Object::toString(int depth) {
     std::stringstream ss;
     std::string indent(depth * 2, ' '); 
 
@@ -174,7 +168,7 @@ std::string Object::to_string(int depth) {
         for (Object* child : children) {
             if (child) {
                 // Recursive call increasing the depth
-                ss << child->to_string(depth + 2);
+                ss << child->toString(depth + 2);
             }
         }
     }
@@ -203,9 +197,9 @@ std::vector<Object *> &ObjectHandler::getObjects() {
     return objects;
 }
 
-void ObjectHandler::optimizeAll(bool ignorePrevious) {
+void ObjectHandler::resetDisplayListAll(bool deleteOld) {
     for (Object *o : objects) {
-        o->optimize(ignorePrevious);
+        o->resetDisplayList(deleteOld);
     }
 }
 
@@ -271,13 +265,6 @@ void Cuboid::drawInternal() {
     TextureManager::drawQuadTex(
         Vec3<GLfloat>(-w, -h, -l), Vec3<GLfloat>( w, -h, -l), 
         Vec3<GLfloat>( w, -h,  l), Vec3<GLfloat>(-w, -h,  l), down, uTop, vTop);
-}
-
-// Cube
-Cube::Cube(Vec3<GLfloat> pos, Vec3<GLfloat> dim, Vec3<GLfloat> rotateAxis, float angle, bool gravity, TextureID texture)
-    : Object(pos, gravity, texture) {
-    setScale(dim);
-    setRotation(angle, rotateAxis);
 }
 
 void Cube::drawInternal() {
