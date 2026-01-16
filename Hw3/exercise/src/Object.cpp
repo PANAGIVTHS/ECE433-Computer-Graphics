@@ -99,41 +99,46 @@ Object* Object::setRotation(GLfloat angle, Vec3<GLfloat> axis) {
     return this;
 }
 
-void Object::setTexture(TextureID id) {
+Object* Object::setTexture(TextureID id) {
     this->texture = id;
     displayList = 0;
+    return this;
 }
 
 bool Object::isHidden() {
     return hidden;
 }
 
-void Object::setHidden(bool hidden) {
+Object* Object::setHidden(bool hidden) {
     this->hidden = hidden;
+    return this;
 }
 
 bool Object::hasGravity() {
     return gravity;
 }
 
-void Object::setGravity(bool gravity) {
+Object* Object::setGravity(bool gravity) {
     this->gravity = gravity;
+    return this;
 }
 
 Vec3<GLfloat>& Object::getPosition() {
     return transform.position;
 }
 
-void Object::setPosition(Vec3<GLfloat> position) {
+Object* Object::setPosition(Vec3<GLfloat> position) {
     this->transform.position = position;
+    return this;
 }
 
 Vec3<GLfloat>& Object::getVelocity() {
     return velocity;
 }
 
-void Object::setVelocity(Vec3<GLfloat> velocity) {
+Object* Object::setVelocity(Vec3<GLfloat> velocity) {
     this->velocity = velocity;
+    return this;
 }
 
 std::string Object::toString() {

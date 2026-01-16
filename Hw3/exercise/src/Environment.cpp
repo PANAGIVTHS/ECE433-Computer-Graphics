@@ -12,5 +12,5 @@ void Environment::init() {
 
 void Environment::spawn() {
     new Sun();
-    new Cuboid(0, 0, 0, 100, 0.1, 100, false, TextureID::GRASS, MaterialID::MATTE, TextureConfig(TextureMode::REPEAT_FIT));
+    new Cuboid(0, -0.05, 0, 100, 0.1, 100, false, TextureID::MYCELIUM, MaterialID::MATTE, TextureConfig(TextureMode::REPEAT_FIT));
 }

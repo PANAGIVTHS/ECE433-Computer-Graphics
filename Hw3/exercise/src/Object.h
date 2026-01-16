@@ -39,17 +39,17 @@ public:
     Object *addChildren(Object *object);
 
     bool isHidden();
-    void setHidden(bool hidden);
+    Object* setHidden(bool hidden);
     bool hasGravity();
-    void setGravity(bool gravity);
-    void setTexture(TextureID id);
+    Object* setGravity(bool gravity);
+    Object* setTexture(TextureID id);
     Object* setScale(Vec3<GLfloat> scale);
     Object* setScale(GLfloat x, GLfloat y, GLfloat z);
     Object* setRotation(GLfloat angle, Vec3<GLfloat> axis);
     Vec3<GLfloat>& getPosition();
-    void setPosition(Vec3<GLfloat> position);
+    Object* setPosition(Vec3<GLfloat> position);
     Vec3<GLfloat>& getVelocity();
-    void setVelocity(Vec3<GLfloat> velocity);
+    Object* setVelocity(Vec3<GLfloat> velocity);
     std::string toString();
 };
 
