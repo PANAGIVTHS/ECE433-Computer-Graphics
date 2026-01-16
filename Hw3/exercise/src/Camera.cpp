@@ -85,6 +85,10 @@ Vec3<GLfloat> Camera::getPosition() {
     return position;
 }
 
+Vec3<GLfloat> Camera::getDirection() {
+    return direction;
+}
+
 Vec3<GLfloat>& Camera::getVelocity() {
     return velocity;
 }

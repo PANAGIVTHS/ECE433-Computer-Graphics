@@ -127,7 +127,7 @@ public:
 
 private:
     void generateStructure(Vec3<float> dim, int count, float ridgeThickness) {
-        Cuboid* baseWall = new Cuboid(
+        Cube* baseWall = new Cube(
             Vec3<float>(0.0f, 0.0f, 0.0f),
             dim, 
             gravity, 
@@ -146,7 +146,7 @@ private:
         for (int i = 0; i < count; i++) {
             float xPos = startX + (i * spacing);
 
-            Cuboid* ridge = new Cuboid(
+            Cube* ridge = new Cube(
                 Vec3<float>(xPos, 0.0f, zPos),
                 Vec3<float>(ridgeWidth, ridgeHeight, ridgeThickness),
                 gravity, 
@@ -157,86 +157,6 @@ private:
             this->addChildren(ridge);
         }
     }
-};
-
-class Garage : public Object {
-public: 
-    Garage(float x, float y, float z, bool gravity = DEFAULT_GRAVITY, Color3f color = {.red = 0.19140625, .green = 0.19140625, .blue = 0.19140625}, TextureID texture = DEFAULT_TEXTURE, MaterialID material = DEFAULT_MATERIAL)
-        : Object(x, y, z, gravity, color, texture, material) { addAll(); }
-private:
-    void addAll() {
-        GLfloat wallThickness = 0.25f;
-        GLfloat width = 7.3152f;
-        GLfloat length = 3.8608f;
-        GLfloat height = 4.0f;
-
-        // RIGHT WALL
-        GLint ridgeCount = 23;
-        GLfloat ridgeThickness = 0.1f;
-        Object* rightWall = new RidgedWall(
-            Vec3(0.0f, 0.0f, 0.0f),
-            Vec3(width, height, wallThickness),
-            ridgeCount,
-            ridgeThickness,
-            false,
-            color
-        );
-        rightWall->setRotation(90, Vec3(0.0f, 1.0f, 0.0f));
-        addChildren(rightWall);
-
-        // LEFT WALL
-        // Object* leftWall = new RidgedWall(
-        //     Vec3(-length, 0.0f, 0.0f),
-        //     Vec3(width, height, wallThickness),
-        //     ridgeCount,
-        //     ridgeThickness,
-        //     false,
-        //     color
-        // );
-        // leftWall->setRotation(-90, Vec3(0.0f, 1.0f, 0.0f));
-        // addChildren(leftWall);
-
-        // BACK WALL
-        ridgeCount = 9;
-        ridgeThickness = 0.1f;
-        Object* backWall = new RidgedWall(
-            Vec3(-(length+wallThickness)/2, 0.0f, -(width - wallThickness)/2),
-            Vec3(length, height, wallThickness),
-            ridgeCount,
-            ridgeThickness,
-            false,
-            color
-        );
-        backWall->setRotation(180, Vec3(0.0f, 1.0f, 0.0f));
-        addChildren(backWall);
-
-        // FRONT WALL
-        Object* frontWall = new RidgedWall(
-            Vec3(-(length+wallThickness)/2, 0.0f, (width - wallThickness)/2),
-            Vec3(length, height, wallThickness),
-            ridgeCount,
-            ridgeThickness,
-            false,
-            color
-        );
-        frontWall->setRotation(0, Vec3(0.0f, 1.0f, 0.0f));
-        addChildren(frontWall);
-
-        // CEILING
-        GLfloat ceilingOffset = 0.6f;
-        GLfloat ceilingWidth = width + 2 * ceilingOffset;
-        GLfloat ceilingHeight = length + wallThickness + ceilingOffset;
-        Object* ceiling = new Cube(
-            Vec3(-(length - ceilingOffset)/2.0f, (height + wallThickness) / 2.0f, 0.0f),
-            Vec3(ceilingHeight, wallThickness, ceilingWidth),
-            false,
-            color
-        );
-        addChildren(ceiling);
-        
-    }
-    
-    void drawInternal() override {}
 };
 
 #endif

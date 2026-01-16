@@ -6,6 +6,8 @@
 #include "LightingManager.h"
 #include <iostream>
 
+#include "house/House.h"
+
 //fps related
 
 void GameManager::updateFPS() {
@@ -32,13 +34,9 @@ void GameManager::init() {
     camera = new Camera(initialCameraPos);
     environment = new Environment(skyColor);
     environment->spawn();
-    
-    // Object *house = AssetLoader::load("../assets/house.txt", Vec3(0.0f, 3.0f, -10.0f));
-    // std::cout << house->toString() << "\n";
 
-    Garage *garage = new Garage(0.0f, 2.0f, -10.0f);
-    garage->setMaterial(MaterialID::MATTE, true);
-    std::cout << garage->toString() << "\n";
+    House *house = new House(0.0f, 0.0f, -10.0f);
+    // std::cout << house->toString() << "\n";
 
     AssetLoader::load("../assets/oaktree.txt", Vec3(7.0f, 0.2f, 7.0f))->optimize();
     AssetLoader::load("../assets/pinetree.txt", Vec3(1.0f, 0.2f, 2.0f))->optimize();

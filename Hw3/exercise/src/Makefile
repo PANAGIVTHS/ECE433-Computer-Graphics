@@ -19,6 +19,8 @@ RM = /bin/rm -f
 
 TARGET = visiting3Dhouse
 SRCS   = visiting3Dhouse.cpp Object.cpp Camera.cpp Environment.cpp GameManager.cpp WindowManager.cpp InputManager.cpp Sun.cpp TextureManager.cpp bmp.cpp LightingManager.cpp MaterialManager.cpp
+HOUSE_SRCS = house/Garage.cpp house/House.cpp
+SRCS += $(HOUSE_SRCS)
 OBJS   = $(SRCS:.cpp=.o)
 
 USE_MOUSE ?= 1
