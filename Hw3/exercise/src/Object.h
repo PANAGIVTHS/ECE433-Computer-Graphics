@@ -48,6 +48,8 @@ public:
     bool hasGravity();
     Object* setGravity(bool gravity);
     Object* setTexture(TextureID id);
+    void optimize();
+    void invalidateDisplayList();
     Object* setScale(Vec3<GLfloat> scale);
     Object* setScale(GLfloat x, GLfloat y, GLfloat z);
     Object* setRotation(GLfloat angle, Vec3<GLfloat> axis);

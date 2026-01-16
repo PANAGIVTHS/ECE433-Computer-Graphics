@@ -23,6 +23,29 @@ Object::~Object() {
     children.clear();
 }
 
+void Object::invalidateDisplayList() {
+    displayList = 0;
+}
+
+void Object::optimize() {
+    if (displayList != 0) return;
+
+    displayList = glGenLists(1);
+    //! Record mode objects arent displayed
+    glNewList(displayList, GL_COMPILE); 
+
+    MaterialManager::bind(material);
+    TextureManager::bind(texture);
+
+    drawInternal();
+
+    for (Object *o : children) {
+        o->draw();
+    }
+
+    glEndList();
+}
+
 void Object::draw() {
     if (hidden) 
         return;

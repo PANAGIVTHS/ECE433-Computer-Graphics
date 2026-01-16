@@ -4,7 +4,10 @@
 #include "TextureManager.h"
 #include "AssetLoader.h"
 #include "LightingManager.h"
+<<<<<<< HEAD
 #include <iostream>
+=======
+>>>>>>> from-working
 
 //fps related
 
@@ -83,8 +86,13 @@ void GameManager::onWindowUpdate(GLint width, GLint height, bool newContext) {
         TextureManager::clear();
 
         LightingManager::init();
+<<<<<<< HEAD
         TextureManager::init();
         if(environment) environment->init();
+=======
+        ObjectHandler::invalidateListAll();
+        TextureManager::init();
+>>>>>>> from-working
     }
 }
 

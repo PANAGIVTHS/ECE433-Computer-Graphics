@@ -60,7 +60,7 @@ void display() {
         o->draw();
 
     //fps related
-    // WindowManager::drawFPS(GameManager::getFPS());
+    //WindowManager::drawFPS(GameManager::getFPS());
 
     glutSwapBuffers();
 }
