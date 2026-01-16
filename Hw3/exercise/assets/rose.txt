@@ -1,0 +1,284 @@
+# --- CONFIGURATION ---
+# Stem & Leaf Settings
+STEM_W = 0.25
+SEG_H = 1.3
+LEAF_L = 0.6
+LEAF_W = 0.4
+LEAF_T = 0.02
+
+# Branch Settings
+BRANCH_L = 0.15
+BRANCH_T = 0.08
+
+# Petal Settings
+P_W = 0.5
+P_H = 0.6
+P_T = 0.05
+R_IN = 0.15
+R_MID = 0.3
+R_OUT = 0.5
+
+# --- ROSE ROOT ---
+OBJECT 0 1 0
+SCALE 0.2 0.2 0.2
+BEGIN
+    # ==========================
+    # STEM SEGMENT 1 (Base - Invisible/Transform Only)
+    # Tilted 10 deg Forward
+    # ==========================
+    OBJECT 0 0 0
+    ROTATION 10 1 0 0
+    BEGIN
+        # [REMOVED BOTTOM STEM CUBOID]
+        # [LEAF 1 REMOVED]
+        # [LEAF 3 MOVED TO NEXT SEGMENT]
+    END
+
+    # ==========================
+    # STEM SEGMENT 2 (The Visible Bottom)
+    # Tilted +15 deg (Total ~25 deg)
+    # ==========================
+    OBJECT 0 SEG_H 0
+    ROTATION 15 1 0 0
+    BEGIN
+        CUBOID 0 (SEG_H/2) 0 STEM_W SEG_H STEM_W
+        TEXTURE LEAVES
+
+        # --- LEAF ASSEMBLY 3 (New Small Bottom Leaf) ---
+        # Placed low on this segment (0.2 height)
+        OBJECT 0 (SEG_H*0.9) 0
+        BEGIN
+            # ROTATE ALONG Y AXIS (220 deg)
+            OBJECT 0 0 0
+            ROTATION 200 0 1 0
+            BEGIN
+                # Move to Surface
+                OBJECT (STEM_W/2) 0 0 
+                ROTATION 10 0 1 1
+                SCALE 0.6 0.6 0.6  # Tiny Scale
+                BEGIN
+                    # Branch
+                    CUBOID (BRANCH_L/2) 0 0 BRANCH_L BRANCH_T BRANCH_T
+                    TEXTURE LEAVES
+
+                    # Leaf Pivot
+                    OBJECT BRANCH_L 0 0
+                    # Counter-Rotate Total Tilt (25 deg)
+                    # Since 220 is Back-Left, Front-Tilt lifts it UP.
+                    # We rotate +25 to push it DOWN.
+                    ROTATION 25 1 0 0
+                    BEGIN
+                        # Leaf Base
+                        CUBOID (LEAF_L/2) 0 0 LEAF_L LEAF_T LEAF_W
+                        ROTATION 8 0 0 1
+                        TEXTURE LEAVES
+                        
+                        # Leaf Tip
+                        OBJECT LEAF_L 0 0
+                        ROTATION -16 0 0 1
+                        BEGIN
+                            CUBOID (LEAF_L/2) 0 0 LEAF_L LEAF_T (LEAF_W*0.8)
+                            TEXTURE LEAVES
+                        END
+                    END
+                END
+            END
+        END
+
+        # --- LEAF ASSEMBLY 2 (Left) ---
+        OBJECT 0 (SEG_H) 0
+        BEGIN
+            # ROTATE ALONG Y AXIS (Azimuth)
+            OBJECT 0 0 0
+            ROTATION 60 0 1 0
+            BEGIN
+                # Move to Surface
+                OBJECT (STEM_W/2) 0 0 
+                SCALE 0.7 0.7 0.7
+                BEGIN
+                    # Branch
+                    CUBOID (BRANCH_L/2) 0 0 BRANCH_L BRANCH_T BRANCH_T
+                    TEXTURE LEAVES
+
+                    # Leaf Pivot
+                    OBJECT BRANCH_L 0 0
+                    ROTATION 25 1 0 0
+                    BEGIN
+                        # Leaf Base
+                        CUBOID (LEAF_L/2) 0 0 LEAF_L LEAF_T LEAF_W
+                        ROTATION 8 0 0 1
+                        TEXTURE LEAVES
+                        
+                        # Leaf Tip
+                        OBJECT LEAF_L 0 0
+                        ROTATION -16 0 0 1
+                        BEGIN
+                            CUBOID (LEAF_L/2) 0 0 LEAF_L LEAF_T (LEAF_W*0.8)
+                            TEXTURE LEAVES
+                        END
+                    END
+                END
+            END
+        END
+
+        # ==========================
+        # STEM SEGMENT 3 (Top)
+        # Tilted -20 deg (Total 5 deg)
+        # ==========================
+        OBJECT 0 SEG_H 0
+        ROTATION -20 1 0 0
+        BEGIN
+            CUBOID 0 (SEG_H/2) 0 STEM_W SEG_H STEM_W
+            TEXTURE LEAVES
+            
+            # --- LEAF ASSEMBLY 1 (Top) ---
+            OBJECT 0 (SEG_H*0.4) 0
+            BEGIN
+                # ROTATE ALONG Y AXIS
+                OBJECT 0 0 0
+                ROTATION -60 0 1 0
+                BEGIN
+                    # Move to Surface
+                    OBJECT (STEM_W/2) 0 0
+                    SCALE 0.6 0.6 0.6
+                    BEGIN
+                        # Branch
+                        CUBOID (BRANCH_L/2) 0 0 BRANCH_L BRANCH_T BRANCH_T
+                        TEXTURE LEAVES
+
+                        # Leaf Pivot
+                        OBJECT BRANCH_L 0 0
+                        # Counter-Rotate Stem Tilt (-5 X)
+                        ROTATION -5 1 0 0
+                        BEGIN
+                            # Leaf Base
+                            CUBOID (LEAF_L/2) 0 0 LEAF_L LEAF_T LEAF_W
+                            ROTATION 8 0 0 1
+                            TEXTURE LEAVES
+
+                            # Leaf Tip
+                            OBJECT LEAF_L 0 0
+                            ROTATION -16 0 0 1
+                            BEGIN
+                                 CUBOID (LEAF_L/2) 0 0 LEAF_L LEAF_T (LEAF_W*0.8)
+                                 TEXTURE LEAVES
+                            END
+                        END
+                    END
+                END
+            END
+
+            # --- FLOWER HEAD ---
+            OBJECT 0 SEG_H 0
+            BEGIN
+                CUBE 0 0.1 0 0.3 0.3 0.3
+                ROTATION 90 1 0 0
+                TEXTURE WART_BLOCK
+
+                # LAYER 1: INNER
+                OBJECT 0 0 0
+                ROTATION 0 0 1 0
+                BEGIN
+                    CUBOID 0 0 R_IN P_W P_H P_T
+                    ROTATION 15 1 0 0
+                    TEXTURE WART_BLOCK
+                END
+                OBJECT 0 0 0
+                ROTATION 120 0 1 0
+                BEGIN
+                    CUBOID 0 0 R_IN P_W P_H P_T
+                    ROTATION 15 1 0 0
+                    TEXTURE WART_BLOCK
+                END
+                OBJECT 0 0 0
+                ROTATION 240 0 1 0
+                BEGIN
+                    CUBOID 0 0 R_IN P_W P_H P_T
+                    ROTATION 15 1 0 0
+                    TEXTURE WART_BLOCK
+                END
+
+                # LAYER 2: MIDDLE
+                OBJECT 0 0 0
+                ROTATION 36 0 1 0
+                BEGIN
+                    CUBOID 0 0 R_MID (P_W*1.2) P_H P_T
+                    ROTATION 35 1 0 0
+                    TEXTURE WART_BLOCK
+                END
+                OBJECT 0 0 0
+                ROTATION 108 0 1 0
+                BEGIN
+                    CUBOID 0 0 R_MID (P_W*1.2) P_H P_T
+                    ROTATION 35 1 0 0
+                    TEXTURE WART_BLOCK
+                END
+                OBJECT 0 0 0
+                ROTATION 180 0 1 0
+                BEGIN
+                    CUBOID 0 0 R_MID (P_W*1.2) P_H P_T
+                    ROTATION 35 1 0 0
+                    TEXTURE WART_BLOCK
+                END
+                OBJECT 0 0 0
+                ROTATION 252 0 1 0
+                BEGIN
+                    CUBOID 0 0 R_MID (P_W*1.2) P_H P_T
+                    ROTATION 35 1 0 0
+                    TEXTURE WART_BLOCK
+                END
+                OBJECT 0 0 0
+                ROTATION 324 0 1 0
+                BEGIN
+                    CUBOID 0 0 R_MID (P_W*1.2) P_H P_T
+                    ROTATION 35 1 0 0
+                    TEXTURE WART_BLOCK
+                END
+
+                # LAYER 3: OUTER
+                OBJECT 0 0 0
+                ROTATION 0 0 1 0
+                BEGIN
+                    CUBOID 0 0 R_OUT (P_W*1.5) P_H P_T
+                    ROTATION 60 1 0 0
+                    TEXTURE WART_BLOCK
+                END
+                OBJECT 0 0 0
+                ROTATION 60 0 1 0
+                BEGIN
+                    CUBOID 0 0 R_OUT (P_W*1.5) P_H P_T
+                    ROTATION 60 1 0 0
+                    TEXTURE WART_BLOCK
+                END
+                OBJECT 0 0 0
+                ROTATION 120 0 1 0
+                BEGIN
+                    CUBOID 0 0 R_OUT (P_W*1.5) P_H P_T
+                    ROTATION 60 1 0 0
+                    TEXTURE WART_BLOCK
+                END
+                OBJECT 0 0 0
+                ROTATION 180 0 1 0
+                BEGIN
+                    CUBOID 0 0 R_OUT (P_W*1.5) P_H P_T
+                    ROTATION 60 1 0 0
+                    TEXTURE WART_BLOCK
+                END
+                OBJECT 0 0 0
+                ROTATION 240 0 1 0
+                BEGIN
+                    CUBOID 0 0 R_OUT (P_W*1.5) P_H P_T
+                    ROTATION 60 1 0 0
+                    TEXTURE WART_BLOCK
+                END
+                OBJECT 0 0 0
+                ROTATION 300 0 1 0
+                BEGIN
+                    CUBOID 0 0 R_OUT (P_W*1.5) P_H P_T
+                    ROTATION 60 1 0 0
+                    TEXTURE WART_BLOCK
+                END
+            END
+        END
+    END
+END
