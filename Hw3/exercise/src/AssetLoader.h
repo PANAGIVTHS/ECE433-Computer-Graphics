@@ -107,7 +107,7 @@ public:
             else if (currentObj) {
                 if (cmd == "TEXTURE") {
                     std::string texName; ss >> texName;
-                    currentObj->setTexture(resolveTexture(texName));
+                    currentObj->setTexture(resolveTexture(texName), false);
                 }
                 else if (cmd == "ROTATION") {
                     float angle = getNextFloat(ss, variables);

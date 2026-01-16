@@ -37,11 +37,12 @@ void GameManager::init() {
     // std::cout << house->toString() << "\n";
 
     Garage *garage = new Garage(0.0f, 2.0f, -10.0f);
+    garage->setMaterial(MaterialID::MATTE, true);
     std::cout << garage->toString() << "\n";
 
-    AssetLoader::load("../assets/oaktree.txt", Vec3(7.0f, 0.2f, 7.0f));
-    AssetLoader::load("../assets/pinetree.txt", Vec3(1.0f, 0.2f, 2.0f));
-    AssetLoader::load("../assets/pinetree.txt", Vec3(10.0f, 0.0f, 10.0f));
+    AssetLoader::load("../assets/oaktree.txt", Vec3(7.0f, 0.2f, 7.0f))->optimize();
+    AssetLoader::load("../assets/pinetree.txt", Vec3(1.0f, 0.2f, 2.0f))->optimize();
+    AssetLoader::load("../assets/pinetree.txt", Vec3(10.0f, 0.0f, 10.0f))->optimize();
 
     environment->init();
 }

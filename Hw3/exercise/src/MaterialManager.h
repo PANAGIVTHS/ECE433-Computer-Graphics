@@ -23,9 +23,9 @@ struct Material {
 
 class MaterialManager {
 private:
-    static inline std::map<MaterialID, Material> materials;
 
 public:
+    static inline std::map<MaterialID, Material> materials;
     static void init(); 
     static void bind(MaterialID id);
 };

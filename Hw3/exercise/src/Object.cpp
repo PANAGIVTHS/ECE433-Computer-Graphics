@@ -106,9 +106,33 @@ Object* Object::setRotation(GLfloat angle, Vec3<GLfloat> axis) {
     return this;
 }
 
-Object* Object::setTexture(TextureID id) {
+Object* Object::setTexture(TextureID id, bool recurse) {
     this->texture = id;
-    displayList = 0;
+    if (!recurse)
+        return this;
+
+    for (Object* o : children)
+        o->setTexture(id, recurse);
+    return this;
+}
+
+Object* Object::setColor(Color3f color, bool recurse) {
+    this->color = color;
+    if (!recurse)
+        return this;
+
+    for (Object* o : children)
+        o->setColor(color, recurse);
+    return this;
+}
+
+Object* Object::setMaterial(MaterialID id, bool recurse) {
+    this->material = id;
+    if (!recurse)
+        return this;
+
+    for (Object* o : children)
+        o->setMaterial(id, recurse);
     return this;
 }
 

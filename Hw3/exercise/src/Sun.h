@@ -9,7 +9,7 @@
 
 class Sun : public Object {
 private:
-    static constexpr GLfloat orbitSpeed = 0.0005f;
+    static constexpr GLfloat orbitSpeed = 0.001f;
     static constexpr GLfloat orbitRadius = 100.0f;
     static constexpr GLfloat radius = 13.0f;
     Color3f color;

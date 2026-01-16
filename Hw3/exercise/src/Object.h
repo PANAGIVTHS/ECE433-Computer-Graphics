@@ -40,15 +40,17 @@ public:
     
     void draw();
     virtual void update();
+    void optimize();
+    void invalidateDisplayList();
     Object *addChildren(Object *object);
 
     bool isHidden();
     Object* setHidden(bool hidden);
     bool hasGravity();
     Object* setGravity(bool gravity);
-    Object* setTexture(TextureID id);
-    void optimize();
-    void invalidateDisplayList();
+    Object* setTexture(TextureID id, bool recurse);
+    Object* setMaterial(MaterialID id, bool recurse);
+    Object* setColor(Color3f color, bool recurse);
     Object* setScale(Vec3<GLfloat> scale);
     Object* setScale(GLfloat x, GLfloat y, GLfloat z);
     Object* setRotation(GLfloat angle, Vec3<GLfloat> axis);
