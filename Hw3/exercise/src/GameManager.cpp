@@ -35,10 +35,11 @@ void GameManager::init() {
     // Object *house = AssetLoader::load("../assets/house.txt", Vec3(0.0f, 3.0f, -10.0f));
     // std::cout << house->to_string() << "\n";
 
-    Garage *garage = new Garage(0.0f, 3.0f, -10.0f);
-    std::cout << garage->to_string() << "\n";
+    // Garage *garage = new Garage(0.0f, 3.0f, -10.0f);
+    // std::cout << garage->to_string() << "\n";
 
     AssetLoader::load("../assets/oaktree.txt", Vec3(7.0f, 0.2f, 7.0f));
+    AssetLoader::load("../assets/garage.txt");
     AssetLoader::load("../assets/pinetree.txt", Vec3(1.0f, 0.2f, 2.0f));
     AssetLoader::load("../assets/pinetree.txt", Vec3(10.0f, 0.0f, 10.0f));
 
