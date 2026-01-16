@@ -2,10 +2,10 @@
 #include "GameManager.h"
 #include <algorithm>
 #include "TextureManager.h"
+#include <sstream>
 
 // Object implementation
-
-Object::Object(Vec3<GLfloat> pos, bool gravity, TextureID texture, std::initializer_list<Object*> children) : transform(pos), gravity(gravity), texture(texture) {
+Object::Object(Vec3<GLfloat> pos, bool gravity, TextureID texture, MaterialID material, std::initializer_list<Object*> children) : transform(pos), gravity(gravity), texture(texture), material(material) {
     ObjectHandler::addObject(this);
 
     for (Object* child : children) {
@@ -32,15 +32,10 @@ void Object::optimize() {
     //! Record mode objects arent displayed
     glNewList(displayList, GL_COMPILE); 
 
-    if (texture != TextureID::NONE) {
-        TextureManager::bind(texture);
-    }
+    MaterialManager::bind(material);
+    TextureManager::bind(texture);
 
     drawInternal();
-
-    if (texture != TextureID::NONE) {
-        TextureManager::bind(TextureID::NONE);
-    }
 
     for (Object *o : children) {
         o->draw();
@@ -112,40 +107,83 @@ Object* Object::setRotation(GLfloat angle, Vec3<GLfloat> axis) {
     return this;
 }
 
-void Object::setTexture(TextureID id) {
+Object* Object::setTexture(TextureID id) {
     this->texture = id;
+    displayList = 0;
+    return this;
 }
 
 bool Object::isHidden() {
     return hidden;
 }
 
-void Object::setHidden(bool hidden) {
+Object* Object::setHidden(bool hidden) {
     this->hidden = hidden;
+    return this;
 }
 
 bool Object::hasGravity() {
     return gravity;
 }
 
-void Object::setGravity(bool gravity) {
+Object* Object::setGravity(bool gravity) {
     this->gravity = gravity;
+    return this;
 }
 
 Vec3<GLfloat>& Object::getPosition() {
     return transform.position;
 }
 
-void Object::setPosition(Vec3<GLfloat> position) {
+Object* Object::setPosition(Vec3<GLfloat> position) {
     this->transform.position = position;
+    return this;
 }
 
 Vec3<GLfloat>& Object::getVelocity() {
     return velocity;
 }
 
-void Object::setVelocity(Vec3<GLfloat> velocity) {
+Object* Object::setVelocity(Vec3<GLfloat> velocity) {
     this->velocity = velocity;
+    return this;
+}
+
+std::string Object::to_string() {
+    return to_string(0);
+}
+
+std::string Object::to_string(int depth) {
+    std::stringstream ss;
+    std::string indent(depth * 2, ' '); 
+
+    ss << indent << "Object {\n";
+    
+    // Transform / Position
+    ss << indent << "  Position: (" << transform.position.x << ", " << transform.position.y << ", " << transform.position.z << ")\n";
+    ss << indent << "  Scale: (" << transform.scale.x << ", " << transform.scale.y << ", " << transform.scale.z << ")\n";
+    ss << indent << "  Rotation: " << transform.angle << " deg around (" 
+       << transform.rotateAxis.x << ", " << transform.rotateAxis.y << ", " << transform.rotateAxis.z << ")\n";
+    
+    // State properties
+    ss << indent << "  Velocity: (" << velocity.x << ", " << velocity.y << ", " << velocity.z << ")\n";
+    ss << indent << "  Gravity: " << (gravity ? "enabled" : "disabled") << "\n";
+    ss << indent << "  Hidden: " << (hidden ? "true" : "false") << "\n";
+    ss << indent << "  TextureID: " << static_cast<int>(texture) << "\n";
+
+    // Children recursion
+    if (!children.empty()) {
+        ss << indent << "  Children [" << children.size() << "]:\n";
+        for (Object* child : children) {
+            if (child) {
+                // Recursive call increasing the depth
+                ss << child->to_string(depth + 2);
+            }
+        }
+    }
+
+    ss << indent << "}\n";
+    return ss.str();
 }
 
 // ObjectHandler implementation
@@ -236,13 +274,6 @@ void Cuboid::drawInternal() {
     TextureManager::drawQuadTex(
         Vec3<GLfloat>(-w, -h, -l), Vec3<GLfloat>( w, -h, -l), 
         Vec3<GLfloat>( w, -h,  l), Vec3<GLfloat>(-w, -h,  l), down, uTop, vTop);
-}
-
-// Cube
-Cube::Cube(Vec3<GLfloat> pos, Vec3<GLfloat> dim, Vec3<GLfloat> rotateAxis, float angle, bool gravity, TextureID texture)
-    : Object(pos, gravity, texture) {
-    setScale(dim);
-    setRotation(angle, rotateAxis);
 }
 
 void Cube::drawInternal() {

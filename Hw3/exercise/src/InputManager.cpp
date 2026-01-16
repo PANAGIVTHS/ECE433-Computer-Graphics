@@ -15,18 +15,22 @@ void InputManager::keyboardUp(unsigned char key, int x, int y) {
     switch (key) {
         case 'w':
         case 'W':
+        case 23: 
             pressedKeys[FRONT] = false;
             break; 
         case 'a':
         case 'A':
+        case 1:
             pressedKeys[LEFT] = false;
             break;    
         case 's':
         case 'S':
+        case 19:
             pressedKeys[BACK] = false;
             break;
         case 'd':
         case 'D':
+        case 4:
             pressedKeys[RIGHT] = false;
             break;
         case 'z':
@@ -64,18 +68,22 @@ void InputManager::keyboardDown(unsigned char key, int x, int y) {
     switch (key) {
         case 'w':
         case 'W':
+        case 23: 
             pressedKeys[FRONT] = true;
             break; 
         case 'a':
         case 'A':
+        case 1:
             pressedKeys[LEFT] = true;
             break;    
         case 's':
         case 'S':
+        case 19:
             pressedKeys[BACK] = true;
             break;
         case 'd':
         case 'D':
+        case 4:
             pressedKeys[RIGHT] = true;
             break;
         case 'z':

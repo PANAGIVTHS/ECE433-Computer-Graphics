@@ -13,9 +13,13 @@
 
 class AssetLoader {
 public:
-    static Object* load(const Vec3<float>& spawnPos, const std::string& filename) {
+    static Object* load(const std::string& filename) {
+        return load(filename, Vec3(0.0f, 0.0f, 0.0f));
+    }
+
+    static Object* load(const std::string& filename, const Vec3<float>& offsetPos) {
         
-        Object* anchor = new Object(spawnPos, false); 
+        Object* anchor = new Object(offsetPos, false);
 
         std::stack<Object*> hierarchyStack; 
         std::ifstream file(filename);
@@ -26,7 +30,8 @@ public:
         }
 
         std::string line;
-        Object* currentObj = nullptr;
+        Object* currentObj = anchor;
+        bool rootObjectDefined = false;
 
         while (std::getline(file, line)) {
             if (line.empty() || line[0] == '#') continue; 
@@ -43,8 +48,14 @@ public:
             
             if (cmd == "OBJECT") {
                 ss >> x >> y >> z;
-                currentObj = new Object(Vec3<float>(x, y, z), false); 
-                objectCreated = true;
+                if (!rootObjectDefined) {
+                    anchor->setPosition(offsetPos + Vec3<float>(x, y, z));
+                    rootObjectDefined = true;
+                    continue;
+                } else {
+                    currentObj = new Object(Vec3<float>(x, y, z), false); 
+                    objectCreated = true;
+                }
             }
             else if (cmd == "SPHERE") {
                 ss >> x >> y >> z;
@@ -55,6 +66,12 @@ public:
                 float w, h, l; 
                 ss >> x >> y >> z >> w >> h >> l;
                 currentObj = new Cuboid(x, y, z, w, h, l, false);
+                objectCreated = true;
+            }
+            else if (cmd == "CUBE") {
+                float w, h, l; 
+                ss >> x >> y >> z >> w >> h >> l;
+                currentObj = new Cube(x, y, z, w, h, l, false);
                 objectCreated = true;
             }
 
@@ -104,6 +121,8 @@ public:
                     if (!hierarchyStack.empty()) {
                         currentObj = hierarchyStack.top(); 
                         hierarchyStack.pop();
+                    } else {
+                        currentObj = anchor;
                     }
                 }
             }

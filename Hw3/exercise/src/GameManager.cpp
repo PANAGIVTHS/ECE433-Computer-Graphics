@@ -5,15 +5,6 @@
 #include "AssetLoader.h"
 #include "LightingManager.h"
 
-//TODO idk where to put this (dont say the joke haha we get it)
-void loadGameTextures() {
-    TextureManager::init(TextureID::IRON, "../Texture_Images/LaGioconda.bmp");
-    TextureManager::init(TextureID::GRASS, "../Texture_Images/grass.raw", 256, 256);
-    TextureManager::init(TextureID::WOOD, "../Texture_Images/oak_log.bmp");
-    TextureManager::init(TextureID::WINDOW, "../Texture_Images/ss0052.bmp");
-    TextureManager::init(TextureID::LEAVES, "../Texture_Images/azalea_top.bmp");
-}
-
 //fps related
 
 void GameManager::updateFPS() {
@@ -36,21 +27,20 @@ void GameManager::init() {
     if (environment) delete environment;
     ObjectHandler::clear();
 
-    loadGameTextures();
     oldTime = glutGet(GLUT_ELAPSED_TIME);
     camera = new Camera(initialCameraPos);
     environment = new Environment(skyColor);
     environment->spawn();
     
-    AssetLoader::load(Vec3(0.0f, 4.0f, -5.0f), "../assets/house.txt")
-        ->setRotation(45.0f, Vec3(1.0f, 0.0f, 0.0f))
-        ->optimize();
-    AssetLoader::load(Vec3(7.0f, 0.2f, 7.0f), "../assets/oaktree.txt")
-        ->optimize();
-    AssetLoader::load(Vec3(1.0f, 0.2f, 2.0f), "../assets/pinetree.txt")
-        ->optimize();
-    AssetLoader::load(Vec3(10.0f, 0.0f, 10.0f), "../assets/pinetree.txt")
-        ->optimize();
+    // Object *house = AssetLoader::load("../assets/house.txt", Vec3(0.0f, 3.0f, -10.0f));
+    // std::cout << house->to_string() << "\n";
+
+    Garage *garage = new Garage(0.0f, 3.0f, -10.0f);
+    std::cout << garage->to_string() << "\n";
+
+    AssetLoader::load("../assets/oaktree.txt", Vec3(7.0f, 0.2f, 7.0f));
+    AssetLoader::load("../assets/pinetree.txt", Vec3(1.0f, 0.2f, 2.0f));
+    AssetLoader::load("../assets/pinetree.txt", Vec3(10.0f, 0.0f, 10.0f));
 
     environment->init();
 }
@@ -94,7 +84,7 @@ void GameManager::onWindowUpdate(GLint width, GLint height, bool newContext) {
         TextureManager::clear();
         LightingManager::init();
         ObjectHandler::invalidateListAll();
-        loadGameTextures();
+        TextureManager::init();
     }
 }
 

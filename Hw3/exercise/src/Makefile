@@ -18,7 +18,7 @@ endif
 RM = /bin/rm -f
 
 TARGET = visiting3Dhouse
-SRCS   = visiting3Dhouse.cpp Object.cpp Camera.cpp Environment.cpp GameManager.cpp WindowManager.cpp InputManager.cpp Sun.cpp TextureManager.cpp bmp.cpp LightingManager.cpp
+SRCS   = visiting3Dhouse.cpp Object.cpp Camera.cpp Environment.cpp GameManager.cpp WindowManager.cpp InputManager.cpp Sun.cpp TextureManager.cpp bmp.cpp LightingManager.cpp MaterialManager.cpp
 OBJS   = $(SRCS:.cpp=.o)
 
 USE_MOUSE ?= 1
