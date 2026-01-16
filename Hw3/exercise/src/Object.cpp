@@ -6,7 +6,7 @@
 
 // Object implementation
 
-Object::Object(Vec3<GLfloat> pos, bool gravity, TextureID texture, MaterialID material, std::initializer_list<Object*> children) : transform(pos), gravity(gravity), texture(texture), material(material) {
+Object::Object(Vec3<GLfloat> pos, bool gravity, Color3f color, TextureID texture, MaterialID material, std::initializer_list<Object*> children) : transform(pos), gravity(gravity), color(color), texture(texture), material(material) {
     ObjectHandler::addObject(this);
 
     for (Object* child : children) {
@@ -37,18 +37,22 @@ void Object::draw() {
         glScaled(transform.scale.x, transform.scale.y, transform.scale.z);
     }
 
-    if (displayList == 0) {
-        displayList = glGenLists(1);
-        glNewList(displayList, GL_COMPILE);
+    // if (displayList == 0) {
+    //     displayList = glGenLists(1);
+    //     glNewList(displayList, GL_COMPILE);
 
-        MaterialManager::bind(material);
-        TextureManager::bind(texture);
-        drawInternal();
+    //     MaterialManager::bind(material);
+    //     TextureManager::bind(texture);
+    //     drawInternal();
         
-        glEndList();
-    }
+    //     glEndList();
+    // }
 
-    glCallList(displayList);
+    // glCallList(displayList);
+    
+    MaterialManager::bind(material);
+    TextureManager::bind(texture);
+    drawInternal();
 
     for (Object *o : children)
         o->draw();
@@ -214,7 +218,7 @@ void ObjectHandler::clear() {
 
 // Cuboid
 void Cuboid::drawInternal() {
-    glColor3f(1.0f, 1.0f, 1.0f);
+    glColor3f(color.red, color.green, color.blue);
 
     Vec3<float> front(0.0f, 0.0f, 1.0f), back(0.0f, 0.0f, -1.0f);
     Vec3<float> right(1.0f, 0.0f, 0.0f), left(-1.0f, 0.0f, 0.0f);
@@ -269,7 +273,7 @@ void Cuboid::drawInternal() {
 }
 
 void Cube::drawInternal() {
-    glColor3f(1.0f, 0.0f, 0.0f);
+    glColor3f(color.red, color.green, color.blue);
 
     glEnable(GL_TEXTURE_GEN_S);
     glEnable(GL_TEXTURE_GEN_T);
@@ -284,7 +288,7 @@ void Cube::drawInternal() {
 
 // Sphere
 void Sphere::drawInternal() {
-    glColor3f(1.0f, 0.0f, 1.0f);
+    glColor3f(color.red, color.green, color.blue);
     glEnable(GL_TEXTURE_GEN_S);
     glEnable(GL_TEXTURE_GEN_T);
 
