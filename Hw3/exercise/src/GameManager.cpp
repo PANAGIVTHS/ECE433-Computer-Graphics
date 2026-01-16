@@ -4,10 +4,7 @@
 #include "TextureManager.h"
 #include "AssetLoader.h"
 #include "LightingManager.h"
-<<<<<<< HEAD
 #include <iostream>
-=======
->>>>>>> from-working
 
 //fps related
 
@@ -82,17 +79,13 @@ void GameManager::onWindowUpdate(GLint width, GLint height, bool newContext) {
     // Initialize anything that has a per window context
     if (newContext) {
         //! Delete old unreachable textures
-        ObjectHandler::resetDisplayListAll(false);
         TextureManager::clear();
 
         LightingManager::init();
-<<<<<<< HEAD
+        ObjectHandler::invalidateDisplayListAll();
         TextureManager::init();
+
         if(environment) environment->init();
-=======
-        ObjectHandler::invalidateListAll();
-        TextureManager::init();
->>>>>>> from-working
     }
 }
 

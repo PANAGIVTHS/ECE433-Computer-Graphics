@@ -16,7 +16,6 @@ Object::Object(Vec3<GLfloat> pos, bool gravity, Color3f color, TextureID texture
 
 Object::~Object() {
     ObjectHandler::removeObject(this);
-    resetDisplayList(true);
 
     for (Object *o : children)
         delete o;
@@ -47,7 +46,7 @@ void Object::optimize() {
 }
 
 void Object::draw() {
-    if (hidden) 
+    if (hidden)
         return;
 
     glPushMatrix();
@@ -60,26 +59,19 @@ void Object::draw() {
         glScaled(transform.scale.x, transform.scale.y, transform.scale.z);
     }
 
-    // if (displayList == 0) {
-    //     displayList = glGenLists(1);
-    //     glNewList(displayList, GL_COMPILE);
+    if (displayList != 0) {
+        glCallList(displayList);
+    } else {
+        MaterialManager::bind(material);
+        TextureManager::bind(texture);
 
-    //     MaterialManager::bind(material);
-    //     TextureManager::bind(texture);
-    //     drawInternal();
-        
-    //     glEndList();
-    // }
+        drawInternal();
 
-    // glCallList(displayList);
+        for (Object *o : children) {
+            o->draw();
+        }
+    }
     
-    MaterialManager::bind(material);
-    TextureManager::bind(texture);
-    drawInternal();
-
-    for (Object *o : children)
-        o->draw();
-
     glPopMatrix();
 }
 
@@ -96,18 +88,6 @@ Object *Object::addChildren(Object *o) {
     children.push_back(o);
 
     return this;
-}
-
-void Object::resetDisplayList(bool deleteOld) {
-    for (Object *o : children) {
-        o->resetDisplayList(deleteOld);
-    }
-
-    if (displayList == 0) return;
-
-    if (deleteOld)
-        glDeleteLists(displayList, 1);
-    displayList = 0;
 }
 
 Object* Object::setScale(Vec3<GLfloat> scale) {
@@ -225,9 +205,9 @@ std::vector<Object *> &ObjectHandler::getObjects() {
     return objects;
 }
 
-void ObjectHandler::resetDisplayListAll(bool deleteOld) {
+void ObjectHandler::invalidateDisplayListAll() {
     for (Object *o : objects) {
-        o->resetDisplayList(deleteOld);
+        o->invalidateDisplayList();
     }
 }
 

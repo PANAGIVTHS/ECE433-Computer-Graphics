@@ -18,9 +18,7 @@ private:
     void drawInternal();
     void update() override;
 public:
-    Sun() : Object(0.0f, 0.0f, 0.0f, false, TextureID::WINDOW) {
-        color = { .red = 1.0f, .green = 0.4f, .blue = 0.0f };
-    }
+    Sun() : Object(0.0f, 0.0f, 0.0f, false, { .red = 1.0f, .green = 0.4f, .blue = 0.0f }, TextureID::WINDOW) {}
 };
 
 #endif

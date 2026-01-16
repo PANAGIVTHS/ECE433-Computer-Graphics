@@ -40,7 +40,6 @@ public:
     
     void draw();
     virtual void update();
-    void resetDisplayList(bool deleteOld);
     Object *addChildren(Object *object);
 
     bool isHidden();
@@ -66,7 +65,7 @@ public:
     static void addObject(Object *o);
     static void removeObject(Object *o);
     static std::vector<Object *> &getObjects();
-    static void resetDisplayListAll(bool deleteOld);
+    static void invalidateDisplayListAll();
     static void clear();
 };
 
