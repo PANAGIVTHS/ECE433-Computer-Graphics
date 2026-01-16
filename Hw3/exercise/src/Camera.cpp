@@ -98,8 +98,8 @@ void Camera::update() {
         velocity.y -= GameManager::gravity * GameManager::dt;
     position += velocity * (GLfloat) GameManager::dt;
 
-    if (position.y <= 2) { // Temporary ground collision
-        position.y = 2;
+    if (position.y <= 1.7) { // Temporary ground collision
+        position.y = 1.7;
         velocity.y = 0;
     }
 }

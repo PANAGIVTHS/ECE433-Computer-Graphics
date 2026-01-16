@@ -24,12 +24,12 @@ public:
     static void init() {
         glEnable(GL_TEXTURE_2D);
         
-        TextureManager::init(TextureID::IRON, "../Texture_Images/LaGioconda.bmp");
-        TextureManager::init(TextureID::GRASS, "../Texture_Images/grass.raw", 256, 256);
-        TextureManager::init(TextureID::WOOD, "../Texture_Images/oak_log.bmp");
-        TextureManager::init(TextureID::WINDOW, "../Texture_Images/ss0052.bmp");
-        TextureManager::init(TextureID::LEAVES, "../Texture_Images/azalea_top.bmp");
-        TextureManager::init(TextureID::MYCELIUM, "../Texture_Images/cobblestone.bmp");
+        init(TextureID::IRON, "../Texture_Images/LaGioconda.bmp");
+        init(TextureID::GRASS, "../Texture_Images/grass.raw", 256, 256);
+        init(TextureID::WOOD, "../Texture_Images/oak_log.bmp");
+        init(TextureID::WINDOW, "../Texture_Images/ss0052.bmp");
+        init(TextureID::LEAVES, "../Texture_Images/azalea_top.bmp");
+        init(TextureID::MYCELIUM, "../Texture_Images/diamond_block.bmp");
     }
 };
 

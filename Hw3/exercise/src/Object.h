@@ -162,14 +162,14 @@ public:
         : Object(x, y, z, gravity, color, texture, material) { addAll(); }
 private:
     void addAll() {
-        GLint ridgeCount = 15;
-        GLfloat ridgeThickness = 0.1f;
         GLfloat wallThickness = 0.25f;
         GLfloat width = 7.3152f;
         GLfloat length = 3.8608f;
         GLfloat height = 4.0f;
 
         // RIGHT WALL
+        GLint ridgeCount = 23;
+        GLfloat ridgeThickness = 0.1f;
         Object* rightWall = new RidgedWall(
             Vec3(0.0f, 0.0f, 0.0f),
             Vec3(width, height, wallThickness),
@@ -182,18 +182,20 @@ private:
         addChildren(rightWall);
 
         // LEFT WALL
-        Object* leftWall = new RidgedWall(
-            Vec3(-length, 0.0f, 0.0f),
-            Vec3(width, height, wallThickness),
-            ridgeCount,
-            ridgeThickness,
-            false,
-            color
-        );
-        leftWall->setRotation(-90, Vec3(0.0f, 1.0f, 0.0f));
-        addChildren(leftWall);
+        // Object* leftWall = new RidgedWall(
+        //     Vec3(-length, 0.0f, 0.0f),
+        //     Vec3(width, height, wallThickness),
+        //     ridgeCount,
+        //     ridgeThickness,
+        //     false,
+        //     color
+        // );
+        // leftWall->setRotation(-90, Vec3(0.0f, 1.0f, 0.0f));
+        // addChildren(leftWall);
 
         // BACK WALL
+        ridgeCount = 9;
+        ridgeThickness = 0.1f;
         Object* backWall = new RidgedWall(
             Vec3(-(length+wallThickness)/2, 0.0f, -(width - wallThickness)/2),
             Vec3(length, height, wallThickness),
@@ -218,10 +220,11 @@ private:
         addChildren(frontWall);
 
         // CEILING
-        GLfloat ceilingWidth = width;
-        GLfloat ceilingHeight = height + wallThickness / 2.0f;
+        GLfloat ceilingOffset = 0.6f;
+        GLfloat ceilingWidth = width + 2 * ceilingOffset;
+        GLfloat ceilingHeight = length + wallThickness + ceilingOffset;
         Object* ceiling = new Cube(
-            Vec3(-length/2.0f, (height + wallThickness) / 2.0f, 0.0f),
+            Vec3(-(length - ceilingOffset)/2.0f, (height + wallThickness) / 2.0f, 0.0f),
             Vec3(ceilingHeight, wallThickness, ceilingWidth),
             false,
             color
