@@ -1,6 +1,7 @@
 #ifndef SRC_GARAGE_H
 #define SRC_GARAGE_H
 #include "../Object.h"
+#include "Lantern.h"
 
 class Garage : public Object {
 public:
@@ -9,11 +10,11 @@ public:
 private:
     GLfloat wallThickness = 0.25f;
     GLfloat width = 7.3152f;
-    GLfloat length = 3.8608f;
+    GLfloat length = 1.2 * 3.8608f;
     GLfloat height = 4.0f;
     GLfloat ridgeThickness = 0.1f;
-    GLfloat doorWidth = 3.0f;
-    GLfloat doorHeight = 2.4f;
+    GLfloat doorWidth = 3.2f;
+    GLfloat doorHeight = 2.8f;
     GLfloat sidePanelWidth = (length - doorWidth) / 2.0f;
     GLfloat headerHeight = height - doorHeight;
 

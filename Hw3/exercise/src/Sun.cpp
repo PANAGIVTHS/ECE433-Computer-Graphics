@@ -3,10 +3,20 @@
 #include "LightingManager.h"
 #include <math.h>
 
+LightConfig Sun::getConfig() {
+    LightConfig sun;
+    sun.isDirectional = true;
+    sun.position = Vec3<float>(transform.position.x, transform.position.x, transform.position.z);
+    sun.color = Vec3<float>(color.red, color.green, color.blue);
+    return sun;
+}
+
 void Sun::drawInternal() {
-    LightingManager::startLightSource(0, Vec3<float>(0.0f, 0.0f, 0.0f), Vec3<float>(color.red, color.green, color.blue));
+    LightingManager::updateLight(lightID, getConfig());
+    glDisable(GL_LIGHTING);
+    glColor3f(color.red, color.green, color.blue);
     glutSolidSphere(radius, 20, 20);
-    LightingManager::endLightSource();
+    glEnable(GL_LIGHTING);
 }
 
 void Sun::update() {

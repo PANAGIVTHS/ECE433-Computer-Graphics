@@ -99,11 +99,30 @@ Object *Garage::addFrontSide() {
     );
     frontWallContainer->addChildren(header);
 
+    // LATERNS
+    float lanternHeight = height * 0.4f;
+    float lanternX = 0.6f;
+    float lanternZ = 0.5f;
+
+    Object* leftLantern = new Lantern(lanternX, lanternHeight, lanternZ);
+    leftLantern->setRotation(180.0f, Vec3(0.0f, 1.0f, 0.0f));
+    frontWallContainer->addChildren(leftLantern);
+
+    Object* rightLantern = new Lantern(length - lanternX, lanternHeight, lanternZ);
+    rightLantern->setRotation(180.0f, Vec3(0.0f, 1.0f, 0.0f));
+    frontWallContainer->addChildren(rightLantern);
+
     return frontWallContainer;
 }
 
 Object *Garage::addDoor(Object *frontSide) {
     GLfloat doorThickness = wallThickness * 0.5f;
+    GLint rows = 4;
+    GLint cols = 2;
+    GLfloat padding = 0.1f;
+    GLfloat glassW = (doorWidth  - (padding * (cols + 1))) / cols;
+    GLfloat glassH = (doorHeight - (padding * (rows + 1))) / rows;
+    GLfloat frameZ = 0.0f;
 
     Object* garageDoor = new Object(
         Vec3(sidePanelWidth, 0.0f, 0.0f),
@@ -113,46 +132,59 @@ Object *Garage::addDoor(Object *frontSide) {
     );
     frontSide->addChildren(garageDoor);
 
-    Object* doorFrame = new Cuboid(
-        Vec3(doorWidth / 2.0f, doorHeight / 2.0f, 0.0f),
-        Vec3(doorWidth, doorHeight, doorThickness),
-        gravity,
-        color,
-        TextureID::NONE
-    );
-    garageDoor->addChildren(doorFrame);
+    // ---------------------------------------------------------
+    // FRAME
+    // ---------------------------------------------------------
 
-    Object* glassContainer = new Object(
-        Vec3(0.0f, doorHeight, 0.0f),
-        gravity,
-        color,
-        TextureID::NONE
-    );
-    garageDoor->addChildren(glassContainer);
+    // Vertical
+    for (int i = 0; i <= cols; i++) {
+        GLfloat centerX = (padding / 2.0f) + (i * (glassW + padding));
+        GLfloat centerY = doorHeight / 2.0f;
 
+        Object* vBar = new Cube(
+            Vec3(centerX, centerY, frameZ),
+            Vec3(padding, doorHeight, doorThickness),
+            gravity,
+            color,
+            TextureID::NONE
+        );
+        garageDoor->addChildren(vBar);
+    }
+
+    // Horizontal
+    for (int r = 0; r <= rows; r++) {
+        for (int c = 0; c < cols; c++) {
+            GLfloat centerX = padding + (c * (glassW + padding)) + (glassW / 2.0f);
+            GLfloat centerY = (padding / 2.0f) + (r * (glassH + padding));
+
+            Object* hBar = new Cube(
+                Vec3(centerX, centerY, frameZ),
+                Vec3(glassW, padding, doorThickness),
+                gravity,
+                color,
+                TextureID::NONE
+            );
+            garageDoor->addChildren(hBar);
+        }
+    }
+
+    // ---------------------------------------------------------
     // WINDOWS
-    int rows = 4;
-    int cols = 2;
-    GLfloat padding = 0.1f;
-
-    GLfloat glassW = (doorWidth  - (padding * (cols + 1))) / cols;
-    GLfloat glassH = (doorHeight - (padding * (rows + 1))) / rows;
-    GLfloat glassZ = (doorThickness / 2.0f) + 0.02f;
-
+    // ---------------------------------------------------------
     for (int r = 0; r < rows; r++) {
         for (int c = 0; c < cols; c++) {
             GLfloat centerX = padding + (c * (glassW + padding)) + (glassW / 2.0f);
             GLfloat centerY = padding + (r * (glassH + padding)) + (glassH / 2.0f);
 
             Object* glassPane = new Cuboid(
-                Vec3(centerX, -centerY, glassZ),
-                Vec3(glassW, glassH, 0.05f),
-                false,
+                Vec3(centerX, centerY, 0.0f),
+                Vec3(glassW, glassH, doorThickness * 0.5f),
+                gravity,
                 color,
                 TextureID::WINDOW
             );
 
-            glassContainer->addChildren(glassPane);
+            garageDoor->addChildren(glassPane);
         }
     }
 
