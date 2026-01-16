@@ -50,12 +50,15 @@ void Lantern::setup() {
     );
     this->addChildren(glass);
 
-    // LightConfig lamp;
-    // lamp.isDirectional = false;
-    // lamp.position = glass->getPosition(); // World Position
-    // lamp.color = Vec3<float>(1.0f, 1.0f, 1.0f);    // Green light
-    // lamp.linear = 0.1f;    // Fade over distance
-    // lamp.quadratic = 0.01f;
-    // lamp.spotDirection = Vec3<float>(0.0f, -1.0f, 0.0f);
-    // LightingManager::createLight(lamp);
+    config.isDirectional = false;
+    config.position = Vec3<float>(0.0f, 0.0f, 0.0f);
+    config.color = Vec3<float>(1.0f, 1.0f, 1.0f);
+    config.spotDirection = Vec3<float>(0.0f, -1.0f, 0.0f);
+    config.spotExponent = 0.01f;
+    config.spotCutoff = 20.0f;
+    lightID = LightingManager::createLight(config);
+}
+
+void Lantern::drawInternal() {
+    LightingManager::updateLight(lightID, config);
 }

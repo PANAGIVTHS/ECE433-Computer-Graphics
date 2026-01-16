@@ -85,6 +85,12 @@ Vec3<T> operator+(Vec3<T> lhs, const Vec3<T>& rhs) {
 }
 
 template <typename T>
+Vec3<T> operator-(Vec3<T> lhs, const Vec3<T>& rhs) {
+    lhs -= rhs;
+    return lhs;
+}
+
+template <typename T>
 Vec3<T> operator*(Vec3<T> vec, T scalar) {
     vec *= scalar;
     return vec;

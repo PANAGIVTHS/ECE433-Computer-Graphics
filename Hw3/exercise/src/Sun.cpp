@@ -6,7 +6,7 @@
 LightConfig Sun::getConfig() {
     LightConfig sun;
     sun.isDirectional = true;
-    sun.position = Vec3<float>(transform.position.x, transform.position.x, transform.position.z);
+    sun.position = Vec3<float>(transform.position.x, transform.position.y, transform.position.z);
     sun.color = Vec3<float>(color.red, color.green, color.blue);
     return sun;
 }
@@ -33,17 +33,42 @@ void Sun::update() {
     transform.position += Vec3(xOffset, yOffset, 0.0f);
 
     float heightFactor = yOffset / orbitRadius;
-    if (heightFactor < 0.0f) heightFactor = 0.0f;
+    float colorHeight = heightFactor;
+    if (colorHeight < 0.0f) colorHeight = 0.0f;
 
-    color.red = 1.0f; 
+    float r = 1.0f;
+    float g = 0.0f;
+    float b = 0.0f;
 
-    if (heightFactor < 0.5f) {
-        float t = heightFactor * 2.0f; 
-        color.green = 0.4f + (0.6f * t);
-        color.blue  = 0.0f;
+    if (colorHeight < 0.5f) {
+        // Sunset Gradient: Orange (0.4) -> Yellow (1.0)
+        float t = colorHeight * 2.0f;
+        g = 0.4f + (0.6f * t);
+        b = 0.0f;
     } else {
-        color.green = 1.0f;
-        float t = (heightFactor - 0.5f) * 2.0f;
-        color.blue = 0.0f + (1.0f * t);
+        // Day Gradient: Yellow -> White
+        g = 1.0f;
+        float t = (colorHeight - 0.5f) * 2.0f;
+        b = 0.0f + (1.0f * t);
     }
+
+    // 4. Determine Intensity (Brightness)
+    float intensity = 1.0f;
+    float twilightLimit = -0.25f; // How far down until completely black
+
+    if (heightFactor < 0.0f) {
+        if (heightFactor < twilightLimit) {
+            // Sun is deep underground -> Light is OFF
+            intensity = 0.0f;
+        } else {
+            // Sun is in "Twilight" zone -> Fade from 1.0 to 0.0
+            // Formula maps [0 to -0.25] to [1.0 to 0.0]
+            intensity = 1.0f - (heightFactor / twilightLimit);
+        }
+    }
+
+    // 5. Apply Intensity to Colors
+    color.red   = r * intensity;
+    color.green = g * intensity;
+    color.blue  = b * intensity;
 }
