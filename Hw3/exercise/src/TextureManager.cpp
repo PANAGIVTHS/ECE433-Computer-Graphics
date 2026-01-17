@@ -90,7 +90,6 @@ void TextureManager::clear() {
 
 // This function enables transparency globally
 void TextureManager::init() {
-    transparentTextures.clear();
 
     glEnable(GL_TEXTURE_2D);
     

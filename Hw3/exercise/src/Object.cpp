@@ -24,6 +24,10 @@ Object::~Object() {
 
 void Object::invalidateDisplayList() {
     displayList = 0;
+
+    for (Object *o : children) {
+        o->invalidateDisplayList();
+    }
 }
 
 bool Object::hasTransparency() {
