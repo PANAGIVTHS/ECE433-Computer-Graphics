@@ -26,7 +26,13 @@ void Object::invalidateDisplayList() {
     displayList = 0;
 }
 
+bool Object::hasTransparency() {
+    return TextureManager::isTransparent(this->texture);
+}
+
 void Object::optimize() {
+    isStatic = true;
+    
     if (displayList != 0) return;
 
     displayList = glGenLists(1);
@@ -39,17 +45,43 @@ void Object::optimize() {
     drawInternal();
 
     for (Object *o : children) {
-        o->draw();
+        if (!o->hasTransparency()) 
+            o->draw();
     }
 
     glEndList();
+}
+
+void Object::applyParentTransforms() {
+    if (parent == nullptr) return;
+
+    parent->applyParentTransforms();
+
+    glTranslated(parent->transform.position.x, parent->transform.position.y, parent->transform.position.z);
+    
+    //! Ifs are for performance in case it does the matrix mult when all is 0
+    if (parent->transform.angle != 0.0f) {
+        glRotated(parent->transform.angle, parent->transform.rotateAxis.x, parent->transform.rotateAxis.y, parent->transform.rotateAxis.z);
+    }
+    
+    if (parent->transform.scale.x != 1.0f || parent->transform.scale.y != 1.0f || parent->transform.scale.z != 1.0f) {
+        glScaled(parent->transform.scale.x, parent->transform.scale.y, parent->transform.scale.z);
+    }
 }
 
 void Object::draw() {
     if (hidden)
         return;
 
+    if (isStatic && displayList == 0) {
+        optimize();
+    }
+
     glPushMatrix();
+
+    if (hasTransparency() && parent != nullptr) {
+        applyParentTransforms();
+    }
 
     glTranslated(transform.position.x, transform.position.y, transform.position.z);
     if (transform.angle != 0.0f) {
@@ -68,7 +100,8 @@ void Object::draw() {
         drawInternal();
 
         for (Object *o : children) {
-            o->draw();
+            if (!o->hasTransparency()) 
+                o->draw();
         }
     }
     
@@ -87,6 +120,10 @@ Object *Object::addChildren(Object *o) {
     o->setVelocity(Vec3(0.0f, 0.0f, 0.0f));
     o->parent = this;
     children.push_back(o);
+
+    if (o->hasTransparency()) {
+        ObjectHandler::getTransObjects().push_back(o);
+    }
 
     return this;
 }
@@ -221,9 +258,14 @@ std::string Object::toString(int depth) {
 // ObjectHandler implementation
 
 std::vector<Object *> ObjectHandler::objects;
+std::vector<Object *> ObjectHandler::transObjects;
 
 void ObjectHandler::addObject(Object *o) {
     ObjectHandler::objects.push_back(o);
+
+    if (o->hasTransparency()) {
+        ObjectHandler::transObjects.push_back(o);
+    }
 }
 
 void ObjectHandler::removeObject(Object *o) {
@@ -232,6 +274,18 @@ void ObjectHandler::removeObject(Object *o) {
         std::iter_swap(it, objects.end() - 1);
         objects.pop_back();
     }
+
+    if (o->hasTransparency()) {
+        auto itTrans = std::find(transObjects.begin(), transObjects.end(), o);
+        if (itTrans != transObjects.end()) {
+            std::iter_swap(itTrans, transObjects.end() - 1);
+            transObjects.pop_back();
+        }
+    }
+}
+
+std::vector<Object *> &ObjectHandler::getTransObjects() { 
+    return transObjects;
 }
 
 std::vector<Object *> &ObjectHandler::getObjects() {
@@ -248,6 +302,9 @@ void ObjectHandler::clear() {
     while(!objects.empty()) {
         delete objects.back();
     }
+
+    objects.clear();
+    transObjects.clear();
 }
 
 // Object subclasses implementation

@@ -23,13 +23,15 @@ protected:
 
     Vec3<GLfloat> velocity;
 
+    bool isStatic = false;
     Transform transform;
     GLuint displayList = 0;
     bool gravity, hidden = false;
     Color3f color;
     TextureID texture;
     MaterialID material;
-
+    
+    void applyParentTransforms();
     virtual void drawInternal() {};
     std::string toString(int depth);
 public:
@@ -47,6 +49,7 @@ public:
     void invalidateDisplayList();
     Object *addChildren(Object *object);
 
+    bool hasTransparency();
     bool isHidden();
     Object* setHidden(bool hidden);
     bool hasGravity();
@@ -65,11 +68,14 @@ public:
 };
 
 class ObjectHandler {
+protected:
     static std::vector<Object *> objects;
+    static std::vector<Object *> transObjects;
 public:
     static void addObject(Object *o);
     static void removeObject(Object *o);
     static std::vector<Object *> &getObjects();
+    static std::vector<Object *> &getTransObjects();
     static void invalidateDisplayListAll();
     static void clear();
 };

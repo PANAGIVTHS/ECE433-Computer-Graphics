@@ -76,6 +76,10 @@ public:
         z /= scalar;
         return *this;
     }
+
+    T magSq() const {
+        return x*x + y*y + z*z;
+    }
 };
 
 template <typename T>

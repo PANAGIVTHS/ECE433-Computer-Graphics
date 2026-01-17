@@ -8,6 +8,7 @@
 // TODO Pipelining to ensure objects with transparent textures are drawn last.
 
 std::map<TextureID, GLuint> TextureManager::textures;
+std::set<TextureID> TextureManager::transparentTextures;
 
 // Helper function for linear interpolation (Lerp)
 static Vec3<float> mix(const Vec3<float>& a, const Vec3<float>& b, float t) {
@@ -89,6 +90,8 @@ void TextureManager::clear() {
 
 // This function enables transparency globally
 void TextureManager::init() {
+    transparentTextures.clear();
+
     glEnable(GL_TEXTURE_2D);
     
     // ENABLE BLENDING FOR TRANSPARENCY
@@ -102,8 +105,10 @@ void TextureManager::init() {
     init(TextureID::WINDOW, "../Texture_Images/ss0052.bmp", "../Texture_Images/ss0052_mask.bmp");
     init(TextureID::LEAVES, "../Texture_Images/azalea_top.bmp");
     init(TextureID::MYCELIUM, "../Texture_Images/diamond_block.bmp");
+
 }
 
+//TODO Do No magic color
 bool TextureManager::init(TextureID id, const std::string& path, int width, int height) {
     if (id == TextureID::NONE) return false;
     if (textures.count(id)) return true; // Already loaded
@@ -212,6 +217,11 @@ bool TextureManager::init(TextureID id, const std::string& path, int width, int 
     return true;
 }
 
+bool TextureManager::isTransparent(TextureID id) {
+    // If the ID exists in our set, it is transparent
+    return transparentTextures.find(id) != transparentTextures.end();
+}
+
 bool TextureManager::init(TextureID id, const std::string& bmpPath, const std::string& maskPath) {
     if (id == TextureID::NONE) return false;
     if (textures.count(id)) return true;
@@ -305,6 +315,8 @@ bool TextureManager::init(TextureID id, const std::string& bmpPath, const std::s
     glBindTexture(GL_TEXTURE_2D, 0);
     free(finalData);
 
+    transparentTextures.insert(id);
+    
     textures[id] = texID;
     return true;
 }
