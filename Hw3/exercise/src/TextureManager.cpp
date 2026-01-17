@@ -9,25 +9,59 @@
 
 std::map<TextureID, GLuint> TextureManager::textures;
 
-void TextureManager::drawQuadTex(const Vec3<GLfloat>& p1, const Vec3<GLfloat>& p2, const Vec3<GLfloat>& p3, const Vec3<GLfloat>& p4, const Vec3<GLfloat>& normal, float uMax, float vMax) {
-    
-    glBegin(GL_QUADS); 
-    glNormal3f(normal.x, normal.y, normal.z);
+// Helper function for linear interpolation (Lerp)
+static Vec3<float> mix(const Vec3<float>& a, const Vec3<float>& b, float t) {
+    return a + (b - a) * t;
+}
 
-    //TODO Fix mapping IF wrong IDK
-    //! Set texture positions
-    glTexCoord2f(0.0f, 0.0f);
-    glVertex3f(p4.x, p4.y, p4.z);
+void TextureManager::drawQuadTex(const Vec3<GLfloat>& p1, const Vec3<GLfloat>& p2, const Vec3<GLfloat>& p3, const Vec3<GLfloat>& p4, const Vec3<GLfloat>& normal, float uMax, float vMax, int subdivisions) {
     
-    glTexCoord2f(uMax, 0.0f);
-    glVertex3f(p3.x, p3.y, p3.z);
-    
-    glTexCoord2f(uMax, vMax);
-    glVertex3f(p2.x, p2.y, p2.z);
-    
-    glTexCoord2f(0.0f, vMax);
-    glVertex3f(p1.x, p1.y, p1.z);
-    
+    // Ensure at least 1 subdivision to avoid divide-by-zero or no draw
+    if (subdivisions < 1) subdivisions = 1;
+
+    glNormal3f(normal.x, normal.y, normal.z);
+    glBegin(GL_QUADS); 
+
+    float step = 1.0f / (float)subdivisions;
+
+    for (int i = 0; i < subdivisions; i++) {
+        for (int j = 0; j < subdivisions; j++) {
+            // Calculate grid coordinates (0.0 to 1.0)
+            float u0 = i * step;
+            float u1 = (i + 1) * step;
+            float v0 = j * step;
+            float v1 = (j + 1) * step;
+
+            // Interpolate Positions
+            // p4(BL) -> p3(BR) (Bottom Edge)
+            // p1(TL) -> p2(TR) (Top Edge)
+            
+            Vec3<float> bot0 = mix(p4, p3, u0); 
+            Vec3<float> bot1 = mix(p4, p3, u1);
+            Vec3<float> top0 = mix(p1, p2, u0);
+            Vec3<float> top1 = mix(p1, p2, u1);
+
+            // Final 4 corners of the small sub-quad
+            Vec3<float> q_bl = mix(bot0, top0, v0); // Bottom-Left
+            Vec3<float> q_br = mix(bot1, top1, v0); // Bottom-Right
+            Vec3<float> q_tr = mix(bot1, top1, v1); // Top-Right
+            Vec3<float> q_tl = mix(bot0, top0, v1); // Top-Left
+
+            // Texture Coordinates (scaled by uMax/vMax)
+            float t_u0 = u0 * uMax;
+            float t_u1 = u1 * uMax;
+            float t_v0 = v0 * vMax;
+            float t_v1 = v1 * vMax;
+
+            // Draw the sub-quad
+            // Order matches original: BL -> BR -> TR -> TL
+            glTexCoord2f(t_u0, t_v0); glVertex3f(q_bl.x, q_bl.y, q_bl.z);
+            glTexCoord2f(t_u1, t_v0); glVertex3f(q_br.x, q_br.y, q_br.z);
+            glTexCoord2f(t_u1, t_v1); glVertex3f(q_tr.x, q_tr.y, q_tr.z);
+            glTexCoord2f(t_u0, t_v1); glVertex3f(q_tl.x, q_tl.y, q_tl.z);
+        }
+    }
+
     glEnd();
 }
 
@@ -65,7 +99,7 @@ void TextureManager::init() {
     init(TextureID::IRON, "../Texture_Images/LaGioconda.bmp", "../Texture_Images/LaGioconda_mask.bmp");
     init(TextureID::GRASS, "../Texture_Images/grass.raw", 256, 256);
     init(TextureID::WOOD, "../Texture_Images/oak_log.bmp");
-    init(TextureID::WINDOW, "../Texture_Images/ss0052.bmp");
+    init(TextureID::WINDOW, "../Texture_Images/ss0052.bmp", "../Texture_Images/ss0052_mask.bmp");
     init(TextureID::LEAVES, "../Texture_Images/azalea_top.bmp");
     init(TextureID::MYCELIUM, "../Texture_Images/diamond_block.bmp");
 }

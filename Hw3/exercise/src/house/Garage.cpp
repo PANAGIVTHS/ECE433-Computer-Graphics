@@ -181,8 +181,12 @@ Object *Garage::addDoor(Object *frontSide) {
                 Vec3(glassW, glassH, doorThickness * 0.5f),
                 gravity,
                 color,
-                TextureID::WINDOW
+                TextureID::WINDOW,
+                DEFAULT_MATERIAL,
+                TextureConfig(),
+                10
             );
+            glassPane->optimize();
 
             garageDoor->addChildren(glassPane);
         }

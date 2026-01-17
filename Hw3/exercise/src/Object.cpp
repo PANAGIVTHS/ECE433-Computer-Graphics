@@ -285,27 +285,27 @@ void Cuboid::drawInternal() {
     //! Maybe not clean enough
     TextureManager::drawQuadTex(
         Vec3<GLfloat>(-w, -h,  l), Vec3<GLfloat>( w, -h,  l), 
-        Vec3<GLfloat>( w,  h,  l), Vec3<GLfloat>(-w,  h,  l), front, uFront, vFront);
+        Vec3<GLfloat>( w,  h,  l), Vec3<GLfloat>(-w,  h,  l), front, uFront, vFront, subdivisions);
 
     TextureManager::drawQuadTex(
         Vec3<GLfloat>( w, -h, -l), Vec3<GLfloat>(-w, -h, -l), 
-        Vec3<GLfloat>(-w,  h, -l), Vec3<GLfloat>( w,  h, -l), back, uFront, vFront);
+        Vec3<GLfloat>(-w,  h, -l), Vec3<GLfloat>( w,  h, -l), back, uFront, vFront, subdivisions);
 
     TextureManager::drawQuadTex(
         Vec3<GLfloat>( w, -h, -l), Vec3<GLfloat>( w, -h,  l), 
-        Vec3<GLfloat>( w,  h,  l), Vec3<GLfloat>( w,  h, -l), right, uSide, vSide);
+        Vec3<GLfloat>( w,  h,  l), Vec3<GLfloat>( w,  h, -l), right, uSide, vSide, subdivisions);
 
     TextureManager::drawQuadTex(
         Vec3<GLfloat>(-w, -h,  l), Vec3<GLfloat>(-w, -h, -l), 
-        Vec3<GLfloat>(-w,  h, -l), Vec3<GLfloat>(-w,  h,  l), left, uSide, vSide);
+        Vec3<GLfloat>(-w,  h, -l), Vec3<GLfloat>(-w,  h,  l), left, uSide, vSide, subdivisions);
 
     TextureManager::drawQuadTex(
         Vec3<GLfloat>(-w,  h,  l), Vec3<GLfloat>( w,  h,  l), 
-        Vec3<GLfloat>( w,  h, -l), Vec3<GLfloat>(-w,  h, -l), up, uTop, vTop);
+        Vec3<GLfloat>( w,  h, -l), Vec3<GLfloat>(-w,  h, -l), up, uTop, vTop, subdivisions);
 
     TextureManager::drawQuadTex(
         Vec3<GLfloat>(-w, -h, -l), Vec3<GLfloat>( w, -h, -l), 
-        Vec3<GLfloat>( w, -h,  l), Vec3<GLfloat>(-w, -h,  l), down, uTop, vTop);
+        Vec3<GLfloat>( w, -h,  l), Vec3<GLfloat>(-w, -h,  l), down, uTop, vTop, subdivisions);
 }
 
 void Cube::drawInternal() {
