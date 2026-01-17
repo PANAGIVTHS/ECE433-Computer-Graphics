@@ -4,6 +4,7 @@
 #include "TextureManager.h"
 #include "AssetLoader.h"
 #include "LightingManager.h"
+#include "Model.h"
 #include <iostream>
 
 #include "house/House.h"

@@ -11,6 +11,10 @@
 #include "TextureManager.h"
 #include "MaterialManager.h"
 
+// flashlight
+int flashlightID = -1;
+LightConfig flashlightConfig;
+
 void init(int argc, char *argv[]);
 void display();
 void idle();
@@ -49,12 +53,32 @@ void init(int argc, char *argv[]) {
     MaterialManager::init();
     TextureManager::init();
     GameManager::init();
+
+    // flashlight
+    flashlightConfig.position = Vec3<float>(0.0f, 0.0f, 0.0f); // At the Eye (Origin)
+    flashlightConfig.color    = Vec3<float>(1.0f, 1.0f, 0.9f); // Slightly warm white
+    
+    // Spotlight settings (The cone of light)
+    flashlightConfig.spotCutoff = 20.0f;           // 20 degree beam width
+    flashlightConfig.spotExponent = 15.0f;         // High focus (brighter in center)
+    flashlightConfig.spotDirection = Vec3<float>(0.0f, 0.0f, -1.0f); // Points straight forward
+    
+    // Attenuation (Makes it fade with distance so it looks realistic)
+    flashlightConfig.constant = 1.0f;
+    flashlightConfig.linear = 0.04f;
+    flashlightConfig.quadratic = 0.0f;
+
+    flashlightID = LightingManager::createLight(flashlightConfig);
 }
 
 void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
+    // flashlight
+    if (flashlightID != -1) {
+        LightingManager::updateLight(flashlightID, flashlightConfig);
+    }
     GameManager::getCamera()->set();
     LightingManager::updateAllLights();
     for (Object *o : ObjectHandler::getObjects())
@@ -70,4 +94,3 @@ void idle() {
     GameManager::runGameLoop();
     glutPostRedisplay();
 }
-
