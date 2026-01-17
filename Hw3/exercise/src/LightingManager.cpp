@@ -1,10 +1,27 @@
 #include "LightingManager.h"
+#include "Object.h"
+
+std::map<int, RegisteredLight> LightingManager::registry;
 
 void LightingManager::init() {
     glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
     glEnable(GL_COLOR_MATERIAL);
     glEnable(GL_NORMALIZE);
     glEnable(GL_LIGHTING);
+}
+
+void LightingManager::registerLight(int id, LightConfig* config, Object* owner) {
+    if (id < 0 || id >= MAX_LIGHTS) return;
+    registry[id] = { config, owner };
+}
+
+void LightingManager::updateAllLights() {
+    for (auto const& [id, reg] : registry) {
+        if (reg.owner) {
+             reg.config->position = reg.owner->getWorldPosition();
+        }
+        updateLight(id, *reg.config);
+    }
 }
 
 int LightingManager::createLight(const LightConfig& config) {
@@ -31,6 +48,7 @@ void LightingManager::removeLight(int id) {
 
     glDisable(GL_LIGHT0 + id);
     lightAllocation[id] = false;
+    registry.erase(id);
 }
 
 void LightingManager::updateLight(int id, const LightConfig& config) {

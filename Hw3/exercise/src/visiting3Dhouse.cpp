@@ -56,6 +56,7 @@ void display() {
     glLoadIdentity();
 
     GameManager::getCamera()->set();
+    LightingManager::updateAllLights();
     for (Object *o : ObjectHandler::getObjects())
         o->draw();
 

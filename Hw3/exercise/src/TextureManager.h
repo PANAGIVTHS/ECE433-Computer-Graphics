@@ -19,17 +19,10 @@ public:
                             const Vec3<float>& normal, float uMax, float vMax);
     static void bind(TextureID id);
     static bool init(TextureID id, const std::string& bmpPath, int width = 0, int height = 0);
+    static bool init(TextureID id, const std::string& bmpPath, const std::string& maskPath);
     static void clear();
 
-    static void init() {
-        glEnable(GL_TEXTURE_2D);
-        init(TextureID::IRON, "../Texture_Images/LaGioconda.bmp");
-        init(TextureID::GRASS, "../Texture_Images/grass.raw", 256, 256);
-        init(TextureID::WOOD, "../Texture_Images/oak_log.bmp");
-        init(TextureID::WINDOW, "../Texture_Images/ss0052.bmp");
-        init(TextureID::LEAVES, "../Texture_Images/azalea_top.bmp");
-        init(TextureID::MYCELIUM, "../Texture_Images/diamond_block.bmp");
-    }
+    static void init();
 };
 
 #endif

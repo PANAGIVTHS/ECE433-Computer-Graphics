@@ -19,6 +19,8 @@ protected:
     static constexpr MaterialID DEFAULT_MATERIAL = MaterialID::NONE;
 
     std::vector<Object *> children;
+    Object* parent = nullptr;
+
     Vec3<GLfloat> velocity;
 
     Transform transform;
@@ -37,7 +39,8 @@ public:
     virtual ~Object();
 
     virtual void setTextureConfig(TextureConfig config) {}
-    
+    virtual Vec3<GLfloat> getWorldPosition();
+
     void draw();
     virtual void update();
     void optimize();

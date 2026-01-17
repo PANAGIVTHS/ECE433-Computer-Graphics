@@ -57,8 +57,5 @@ void Lantern::setup() {
     config.spotExponent = 0.01f;
     config.spotCutoff = 20.0f;
     lightID = LightingManager::createLight(config);
-}
-
-void Lantern::drawInternal() {
-    LightingManager::updateLight(lightID, config);
+    LightingManager::registerLight(lightID, &config, this);
 }

@@ -85,9 +85,18 @@ Object *Object::addChildren(Object *o) {
     ObjectHandler::removeObject(o);
     o->setGravity(false);
     o->setVelocity(Vec3(0.0f, 0.0f, 0.0f));
+    o->parent = this;
     children.push_back(o);
 
     return this;
+}
+
+Vec3<GLfloat> Object::getWorldPosition() {
+    if (parent == nullptr) {
+        return transform.position;
+    }
+    // Recursive Step: Parent's World Position + My Local Position
+    return parent->getWorldPosition() + transform.position;
 }
 
 Object* Object::setScale(Vec3<GLfloat> scale) {
