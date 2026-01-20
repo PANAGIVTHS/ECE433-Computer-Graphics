@@ -6,7 +6,7 @@ void Lantern::setup() {
     float d = 0.20f;
     float armLength = 0.30f;
 
-    // 1. THE ARM (Sticks out from the wall behind the lantern)
+    // 1. THE ARM
     Object* arm = new Cube(
         Vec3<float>(0.0f, h/2.0f, 0.15f),
         Vec3<float>(0.05f, 0.05f, 0.30f),
@@ -15,7 +15,7 @@ void Lantern::setup() {
     );
     this->addChildren(arm);
 
-    // 2. THE CAP (Roof)
+    // 2. THE CAP
     Object* cap = new Cube(
         Vec3<float>(0.0f, h/2.0f + 0.02f, 0.0f),
         Vec3<float>(w + 0.05f, 0.05f, d + 0.05f),
@@ -33,22 +33,36 @@ void Lantern::setup() {
     );
     this->addChildren(backPlate);
 
-    // 3. THE BODY (Frame)
-    Object* body = new Cuboid(
+    // 3. THE GLASS
+    Object* glass = new Cuboid(
         Vec3<float>(0.0f, 0.0f, 0.0f),
         Vec3<float>(w, h, d),
         gravity,
         {.red = 0.19140625, .green = 0.19140625, .blue = 0.19140625},
         TextureID::WINDOW
     );
-    this->addChildren(body);
+    this->addChildren(glass);
 
-    // 4. THE GLASS (Inner Glowing Part)
-    Object* glass = new Cube(
+    // 4. THE BODY
+    class GlowingCube : public Cube {
+    public:
+        GlowingCube(Vec3<float> pos, Vec3<float> dim, bool gravity = DEFAULT_GRAVITY, Color3f color = DEFAULT_COLOR, TextureID texture = DEFAULT_TEXTURE,
+            MaterialID material = DEFAULT_MATERIAL)
+            : Cube(pos, dim, gravity, color, texture, material) {
+        }
+
+        void drawInternal() override {
+            glDisable(GL_LIGHTING);
+            Cube::drawInternal();
+            glEnable(GL_LIGHTING);
+        }
+    };
+
+    Object* body = new GlowingCube(
         Vec3<float>(0.0f, 0.0f, 0.0f),
         Vec3<float>(w - 0.04f, h - 0.04f, d - 0.04f)
     );
-    this->addChildren(glass);
+    this->addChildren(body);
 
     config.isDirectional = false;
     config.position = Vec3<float>(0.0f, 0.0f, 0.0f);

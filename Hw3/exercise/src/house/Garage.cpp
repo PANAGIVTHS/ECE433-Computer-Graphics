@@ -1,11 +1,20 @@
 #include "Garage.h"
+#include "House.h"
+#include "Lantern.h"
 
 void Garage::addAll() {
+    addFloor();
     addRightSide();
     addBackSide();
     addCeiling();
     Object *frontSide = addFrontSide();
     addDoor(frontSide);
+}
+
+Object *Garage::addFloor() {
+    Object *floor = new Cube(-(length + wallThickness)/2, 0, -wallThickness/4, length, floorHeight, width - (2.5f * wallThickness), gravity, concreteColor);
+    addChildren(floor);
+    return floor;
 }
 
 Object *Garage::addRightSide() {

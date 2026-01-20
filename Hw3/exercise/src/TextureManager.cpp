@@ -1,11 +1,7 @@
 #include "TextureManager.h"
-#include <stdio.h>
-#include <stdlib.h>
 #include <iostream>
 #include "utilities.h"
 #include "bmp.h"
-
-// TODO Pipelining to ensure objects with transparent textures are drawn last.
 
 std::map<TextureID, GLuint> TextureManager::textures;
 std::set<TextureID> TextureManager::transparentTextures;
@@ -210,14 +206,13 @@ bool TextureManager::init(TextureID id, const std::string& path, int width, int 
     );
 
     glBindTexture(GL_TEXTURE_2D, 0);
-    free(rgbaData); // Free the RGBA buffer
+    free(rgbaData);
 
     textures[id] = texID;
     return true;
 }
 
 bool TextureManager::isTransparent(TextureID id) {
-    // If the ID exists in our set, it is transparent
     return transparentTextures.find(id) != transparentTextures.end();
 }
 
@@ -228,14 +223,12 @@ bool TextureManager::init(TextureID id, const std::string& bmpPath, const std::s
     bitmapFileHeader_t fHeader1, fHeader2;
     bitmapInfoHeader_t iHeader1, iHeader2;
 
-    // 1. Load the Color Map (The actual image)
     unsigned char* colorData = LoadTextureFile(const_cast<char*>(bmpPath.c_str()), &fHeader1, &iHeader1);
     if (!colorData) {
         std::cerr << "Failed to load Color Map: " << bmpPath << "\n";
         return false;
     }
 
-    // 2. Load the Alpha Mask (The grayscale transparency info)
     unsigned char* maskData = LoadTextureFile(const_cast<char*>(maskPath.c_str()), &fHeader2, &iHeader2);
     if (!maskData) {
         std::cerr << "Failed to load Mask Map: " << maskPath << "\n";
@@ -243,7 +236,6 @@ bool TextureManager::init(TextureID id, const std::string& bmpPath, const std::s
         return false;
     }
 
-    // 3. Ensure dimensions match
     if (iHeader1.biWidth != iHeader2.biWidth || iHeader1.biHeight != iHeader2.biHeight) {
         std::cerr << "Texture dimensions do not match for: " << bmpPath << "\n";
         free(colorData);
@@ -254,44 +246,32 @@ bool TextureManager::init(TextureID id, const std::string& bmpPath, const std::s
     int width = iHeader1.biWidth;
     int height = iHeader1.biHeight;
 
-    // 4. Allocate memory for RGBA (4 channels)
     unsigned char* finalData = (unsigned char*)malloc(width * height * 4 * sizeof(unsigned char));
-    
-    // 5. Merge them!
+
     unsigned char* srcColor = colorData;
     unsigned char* srcMask = maskData;
     unsigned char* dst = finalData;
 
     for (int i = 0; i < width * height; i++) {
-        // --- Color from File 1 ---
-        // BMP is stored as BGR, so we flip to RGB for OpenGL if we want, 
-        // or keep BGR and use GL_BGRA_EXT. Let's stick to BGR -> BGRA for simplicity.
         unsigned char b = srcColor[0];
         unsigned char g = srcColor[1];
         unsigned char r = srcColor[2];
 
-        // --- Opacity from File 2 ---
-        // We read the red channel of the mask (since it's grayscale, r=g=b)
-        // If mask pixel is Black (0), Alpha becomes 0 (Transparent)
-        // If mask pixel is White (255), Alpha becomes 255 (Opaque)
-        // If mask pixel is Gray (128), Alpha becomes 128 (See-through glass)
         unsigned char alpha = srcMask[2]; 
 
         dst[0] = b;
         dst[1] = g;
         dst[2] = r;
-        dst[3] = alpha; // The magic happens here
+        dst[3] = alpha;
 
         srcColor += 3;
         srcMask += 3;
         dst += 4;
     }
 
-    // Clean up the raw inputs
     free(colorData);
     free(maskData);
 
-    // 6. Upload to OpenGL
     GLuint texID;
     glGenTextures(1, &texID);
     glBindTexture(GL_TEXTURE_2D, texID);
@@ -305,7 +285,6 @@ bool TextureManager::init(TextureID id, const std::string& bmpPath, const std::s
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 4); 
 
-    // Build Mipmaps with Alpha
     gluBuild2DMipmaps(
         GL_TEXTURE_2D, GL_RGBA, width, height, 
         GL_BGRA_EXT, GL_UNSIGNED_BYTE, finalData

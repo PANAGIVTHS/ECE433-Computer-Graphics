@@ -14,6 +14,7 @@ public:
     Environment(Color3f skyColor);
     void init();
     void spawn();
+    void updateSky(float heightFactor);
 };
 
 #endif

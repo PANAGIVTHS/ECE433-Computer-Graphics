@@ -1,25 +1,45 @@
-#include "Sun.h"
+#include "Celestial.h"
 #include "GameManager.h"
 #include "LightingManager.h"
 #include <math.h>
 
-LightConfig Sun::getConfig() {
-    LightConfig sun;
-    sun.isDirectional = true;
-    sun.position = Vec3<float>(transform.position.x, transform.position.y, transform.position.z);
-    sun.color = Vec3<float>(color.red, color.green, color.blue);
-    return sun;
+LightConfig Celestial::getConfig() {
+    LightConfig moon;
+    moon.isDirectional = true;
+    moon.position = Vec3<float>(transform.position.x, transform.position.y, transform.position.z);
+    moon.color = Vec3<float>(color.red, color.green, color.blue);
+    return moon;
 }
 
-void Sun::drawInternal() {
+LightConfig Moon::getConfig() {
+    LightConfig config;
+    config.isDirectional = true;
+    config.position = transform.position;
+
+    float dimFactor = 0.15f;
+
+    config.color = Vec3<float>(
+        color.red * dimFactor,
+        color.green * dimFactor,
+        color.blue * dimFactor
+    );
+
+    config.ambient = config.color * 0.1f;
+    config.diffuse = config.color;
+    config.specular = {0.1f, 0.1f, 0.1f};
+
+    return config;
+}
+
+void Celestial::drawInternal() {
     LightingManager::updateLight(lightID, getConfig());
     glDisable(GL_LIGHTING);
     glColor3f(color.red, color.green, color.blue);
-    glutSolidSphere(radius, 20, 20);
+    glutSolidSphere(radius, size, 20);
     glEnable(GL_LIGHTING);
 }
 
-void Sun::update() {
+void Celestial::update() {
     Camera* cam = GameManager::getCamera();
     if (!cam) return;
 
@@ -41,34 +61,42 @@ void Sun::update() {
     float b = 0.0f;
 
     if (colorHeight < 0.5f) {
-        // Sunset Gradient: Orange (0.4) -> Yellow (1.0)
         float t = colorHeight * 2.0f;
         g = 0.4f + (0.6f * t);
         b = 0.0f;
     } else {
-        // Day Gradient: Yellow -> White
         g = 1.0f;
         float t = (colorHeight - 0.5f) * 2.0f;
         b = 0.0f + (1.0f * t);
     }
 
-    // 4. Determine Intensity (Brightness)
     float intensity = 1.0f;
-    float twilightLimit = -0.25f; // How far down until completely black
-
+    float twilightLimit = -0.25f;
     if (heightFactor < 0.0f) {
         if (heightFactor < twilightLimit) {
-            // Sun is deep underground -> Light is OFF
             intensity = 0.0f;
         } else {
-            // Sun is in "Twilight" zone -> Fade from 1.0 to 0.0
-            // Formula maps [0 to -0.25] to [1.0 to 0.0]
             intensity = 1.0f - (heightFactor / twilightLimit);
         }
     }
 
-    // 5. Apply Intensity to Colors
     color.red   = r * intensity;
     color.green = g * intensity;
     color.blue  = b * intensity;
+
+    GameManager::getEnvironment()->updateSky(heightFactor);
+}
+
+void Moon::update() {
+    Camera* cam = GameManager::getCamera();
+    if (!cam) return;
+
+    Vec3<GLfloat> camPos = cam->getPosition();
+
+    orbitAngle += orbitSpeed;
+    GLfloat xOffset = cos(orbitAngle) * orbitRadius;
+    GLfloat yOffset = sin(orbitAngle) * orbitRadius;
+
+    transform.position = camPos;
+    transform.position += Vec3(xOffset, yOffset, 0.0f);
 }

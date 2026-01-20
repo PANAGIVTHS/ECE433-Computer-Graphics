@@ -27,7 +27,7 @@ public:
     static constexpr GLfloat gravity = 9.81f; // m/s^2
     static constexpr GLfloat jumpSpeed = 4.0f; // m/s
     static constexpr GLfloat maxPitch = 89.5;
-    static constexpr GLdouble fov = 60.0f;
+    static constexpr GLdouble fov = 80.0f;
     static constexpr GLdouble near = 0.1;
     static constexpr GLdouble far = 2000;
     inline static const Vec3<GLfloat> initialCameraPos = Vec3(0.0f, 0.0f, 0.0f);
