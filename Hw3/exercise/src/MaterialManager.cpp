@@ -13,9 +13,23 @@ void MaterialManager::init() {
     materials[MaterialID::MATTE] = {
         {0.2, 0.2, 0.2, 1.0f},
         {1, 1, 1, 1.0f},
-        {0.6, 0.6, 0.6, 1.0f},
+        {0.0, 0.0, 0.0, 1.0f},
         {0.0f, 0.0f, 0.0f, 1.0f},
-        50.0f
+        0.0f
+    };
+    materials[MaterialID::GLOSSY] = {
+        {0.25f, 0.25f, 0.25f, 1.0f},
+        {1.0f, 1.0f, 1.0f, 1.0f},
+        {1.0f, 1.0f, 1.0f, 1.0f},
+        {0.0f, 0.0f, 0.0f, 1.0f},
+        100.0f
+    };
+    materials[MaterialID::SHINY] = {
+        {0.25f, 0.25f, 0.25f, 1.0f},
+        {0.4f, 0.4f, 0.4f, 1.0f},
+        {0.77f, 0.77f, 0.77f, 1.0f},
+        {0.0f, 0.0f, 0.0f, 1.0f},
+        76.8f
     };
 }
 

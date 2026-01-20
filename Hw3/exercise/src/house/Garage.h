@@ -19,6 +19,8 @@ class Garage : public Object {
     static inline Color3f wallColor = {.red = 0.19140625, .green = 0.19140625, .blue = 0.19140625};
     static inline Color3f concreteColor = {0.55f, 0.57f, 0.58f};
 
+    static inline MaterialID wallMaterial = MaterialID::MATTE;
+
     void addAll();
     Object *addFloor();
     Object *addRightSide();

@@ -25,7 +25,9 @@ Object *Garage::addRightSide() {
         ridgeCount,
         ridgeThickness,
         false,
-        color
+        color,
+        TextureID::NONE,
+        wallMaterial
     );
     rightWall->setRotation(90, Vec3(0.0f, 1.0f, 0.0f));
     addChildren(rightWall);
@@ -42,7 +44,9 @@ Object *Garage::addBackSide() {
         ridgeCount,
         ridgeThickness,
         false,
-        color
+        color,
+        TextureID::NONE,
+        wallMaterial
     );
     backWall->setRotation(180, Vec3(0.0f, 1.0f, 0.0f));
     addChildren(backWall);
@@ -58,7 +62,9 @@ Object *Garage::addCeiling() {
         Vec3(-(length - ceilingOffset)/2.0f, height + wallThickness / 2.0f, 0.0f),
         Vec3(ceilingHeight, wallThickness, ceilingWidth),
         false,
-        color
+        color,
+        TextureID::NONE,
+        wallMaterial
     );
     addChildren(ceiling);
 
@@ -83,7 +89,9 @@ Object *Garage::addFrontSide() {
         ridgeCount,
         ridgeThickness,
         gravity,
-        color
+        color,
+        TextureID::NONE,
+        wallMaterial
     );
     frontWallContainer->addChildren(leftPanel);
 
@@ -93,7 +101,9 @@ Object *Garage::addFrontSide() {
         ridgeCount,
         ridgeThickness,
         gravity,
-        color
+        color,
+        TextureID::NONE,
+        wallMaterial
     );
     frontWallContainer->addChildren(rightPanel);
 
@@ -104,7 +114,9 @@ Object *Garage::addFrontSide() {
         ridgeCount,
         ridgeThickness,
         gravity,
-        color
+        color,
+        TextureID::NONE,
+        wallMaterial
     );
     frontWallContainer->addChildren(header);
 
@@ -155,7 +167,8 @@ Object *Garage::addDoor(Object *frontSide) {
             Vec3(padding, doorHeight, doorThickness),
             gravity,
             color,
-            TextureID::NONE
+            TextureID::NONE,
+            wallMaterial
         );
         garageDoor->addChildren(vBar);
     }
@@ -171,7 +184,8 @@ Object *Garage::addDoor(Object *frontSide) {
                 Vec3(glassW, padding, doorThickness),
                 gravity,
                 color,
-                TextureID::NONE
+                TextureID::NONE,
+                wallMaterial
             );
             garageDoor->addChildren(hBar);
         }

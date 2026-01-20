@@ -10,6 +10,8 @@
 
 enum class MaterialID {
     MATTE,
+    GLOSSY,
+    SHINY,
     NONE
 };
 

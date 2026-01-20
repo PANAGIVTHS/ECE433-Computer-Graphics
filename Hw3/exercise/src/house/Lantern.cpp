@@ -39,7 +39,8 @@ void Lantern::setup() {
         Vec3<float>(w, h, d),
         gravity,
         {.red = 0.19140625, .green = 0.19140625, .blue = 0.19140625},
-        TextureID::WINDOW
+        TextureID::WINDOW,
+        MaterialID::SHINY
     );
     this->addChildren(glass);
 
