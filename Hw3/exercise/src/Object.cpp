@@ -10,7 +10,7 @@ Object::Object(Vec3<GLfloat> pos, bool gravity, Color3f color, TextureID texture
     ObjectHandler::addObject(this);
 
     for (Object* child : children) {
-        this->addChildren(child);
+        this->Object::addChildren(child);
     }
 }
 
@@ -119,6 +119,8 @@ void Object::update() {
 }
 
 Object *Object::addChildren(Object *o) {
+    if (!o) return this;
+
     ObjectHandler::removeObject(o);
     o->setGravity(false);
     o->setVelocity(Vec3(0.0f, 0.0f, 0.0f));
@@ -220,6 +222,10 @@ Vec3<GLfloat>& Object::getVelocity() {
 Object* Object::setVelocity(Vec3<GLfloat> velocity) {
     this->velocity = velocity;
     return this;
+}
+
+std::vector<Object *>& Object::getChildren() {
+    return children;
 }
 
 std::string Object::toString() {

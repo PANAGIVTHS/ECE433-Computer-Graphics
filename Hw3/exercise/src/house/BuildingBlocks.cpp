@@ -83,3 +83,104 @@ void BorderCubes::createCorners(float w, float h, float l) {
         addChildren(corner);
     }
 }
+
+void FramedWindow::addAll() {
+    // Vertical
+    AnchoredCube* firstBar = new AnchoredCube(
+        Vec3(0.0f, 0.0f, 0.0f),
+        Vec3(frameSize, totalHeight, frameSize),
+        gravity,
+        color,
+        texture,
+        material
+    );
+    addChildren(firstBar);
+
+    for (int i = 1; i < columns; i++) {
+        GLfloat centerX = frameSize + i * windowWidth + (i - 1) * spacing;
+        GLfloat centerZ = frameSize * 0.25f;
+
+        AnchoredCube* vBar = new AnchoredCube(
+            Vec3(centerX, frameSize, centerZ),
+            Vec3(spacing, totalHeight - 2 * frameSize, spacing),
+            gravity,
+            color,
+            texture,
+            material
+        );
+        addChildren(vBar);
+    }
+
+    AnchoredCube* lastBar = new AnchoredCube(
+        Vec3(frameSize + columns * windowWidth + (columns - 1) * spacing, 0.f, 0.0f),
+        Vec3(frameSize, totalHeight, frameSize),
+        gravity,
+        color,
+        texture,
+        material
+    );
+    addChildren(lastBar);
+
+    // Horizontal
+    Object* bottomBar = new AnchoredCube(
+        Vec3(frameSize, 0.0f, 0.0f),
+        Vec3(columns * windowWidth + (columns - 1) * spacing, frameSize, frameSize),
+        gravity,
+        color,
+        texture,
+        material
+    );
+    addChildren(bottomBar);
+
+    for (int r = 1; r < rows; r++) {
+        for (int c = 0; c < columns; c++) {
+            GLfloat centerX = frameSize + c * (windowWidth + spacing);
+            GLfloat centerY = frameSize + r * windowHeight + (r - 1) * spacing;
+            GLfloat centerZ = frameSize * 0.25f;
+
+            Object* hBar = new AnchoredCube(
+                Vec3(centerX, centerY, centerZ),
+                Vec3(windowWidth, spacing, spacing),
+                gravity,
+                color,
+                texture,
+                material
+            );
+            addChildren(hBar);
+        }
+    }
+
+    Object* topBar = new AnchoredCube(
+        Vec3(frameSize, totalHeight - frameSize, 0.0f),
+        Vec3(columns * windowWidth + (columns - 1) * spacing, frameSize, frameSize),
+        gravity,
+        color,
+        texture,
+        material
+    );
+    addChildren(topBar);
+
+    // ---------------------------------------------------------
+    // WINDOWS
+    // ---------------------------------------------------------
+    for (int r = 0; r < rows; r++) {
+        for (int c = 0; c < columns; c++) {
+            GLfloat centerX = frameSize + c * (windowWidth + spacing);
+            GLfloat centerY = frameSize + r * (windowHeight + spacing);
+
+            Object* glassPane = new AnchoredCuboid(
+                Vec3(centerX, centerY, frameSize * 0.25f + spacing * 0.25f),
+                Vec3(windowWidth, windowHeight, spacing * 0.5f),
+                gravity,
+                color,
+                TextureID::WINDOW,
+                MaterialID::SHINY,
+                TextureConfig(),
+                10
+            );
+            glassPane->optimize();
+
+            addChildren(glassPane);
+        }
+    }
+}

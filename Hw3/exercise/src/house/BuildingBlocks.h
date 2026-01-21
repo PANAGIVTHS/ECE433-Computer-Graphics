@@ -73,6 +73,44 @@ public:
     }
 };
 
+class FramedWindow : public Block {
+    GLfloat totalWidth;
+    GLfloat totalHeight;
+    GLfloat totalLength;
+
+    GLint rows;
+    GLint columns;
+    GLfloat windowWidth;
+    GLfloat windowHeight;
+    GLfloat frameSize;
+    GLfloat spacing;
+public:
+    FramedWindow(Vec3<GLfloat> pos, GLint rows, GLint colums, GLfloat windowWidth, GLfloat windowHeight, GLfloat frameSize = 0.1f, GLfloat spacing = 0.05f,
+        GLfloat scale = 1.0f, bool gravity = DEFAULT_GRAVITY, Color3f color = DEFAULT_COLOR, TextureID texture = DEFAULT_TEXTURE, MaterialID material = DEFAULT_MATERIAL)
+    : Block(pos, scale, gravity, color, texture, material), rows(rows), columns(colums), windowWidth(windowWidth), windowHeight(windowHeight), frameSize(frameSize), spacing(spacing) { performScaling(); FramedWindow::updateDimensions(); FramedWindow::addAll(); }
+
+    Vec3<GLfloat> getDimensions() override {
+        return {totalWidth, totalHeight, totalLength};
+    }
+protected:
+    void addAll() override;
+
+    std::vector<GLfloat *> getScalableVars() override {
+        return {
+            &windowWidth,
+            &windowHeight,
+            &frameSize,
+            &spacing
+        };
+    }
+
+    void updateDimensions() override {
+        totalWidth = frameSize * 2 + columns * windowWidth + (columns - 1) * spacing;
+        totalHeight = frameSize * 2 + rows * windowHeight + (rows - 1) * spacing;
+        totalLength = frameSize;
+    }
+};
+
 class GlowingCube : public Cube {
 public:
     GlowingCube(Vec3<GLfloat> pos, Vec3<GLfloat> dim, bool gravity = DEFAULT_GRAVITY, Color3f color = DEFAULT_COLOR, TextureID texture = DEFAULT_TEXTURE,
@@ -91,9 +129,9 @@ public:
         : Object(startPos, false, DEFAULT_COLOR, TextureID::NONE, MaterialID::MATTE) {
         createCorners(dimensions.x, dimensions.y, dimensions.z);
     }
-    BorderCubes(Block *block) : BorderCubes(block->getPosition(), block->getDimensions()) {}
-    BorderCubes(AnchoredCube *cube) : BorderCubes(cube->getPosition(), cube->getDimensions()) {}
-    BorderCubes(AnchoredCuboid *cuboid) : BorderCubes(cuboid->getPosition(), cuboid->getDimensions()) {}
+    BorderCubes(Block *block) : BorderCubes(block->getWorldPosition(), block->getDimensions()) {}
+    BorderCubes(AnchoredCube *cube) : BorderCubes(cube->getWorldPosition(), cube->getDimensions()) {}
+    BorderCubes(AnchoredCuboid *cuboid) : BorderCubes(cuboid->getWorldPosition(), cuboid->getDimensions()) {}
 private:
     void createCorners(float w, float h, float l);
     void drawInternal() override {}

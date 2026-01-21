@@ -65,6 +65,7 @@ public:
     Object* setPosition(Vec3<GLfloat> position);
     Vec3<GLfloat>& getVelocity();
     Object* setVelocity(Vec3<GLfloat> velocity);
+    std::vector<Object *>& getChildren();
     std::string toString();
 };
 

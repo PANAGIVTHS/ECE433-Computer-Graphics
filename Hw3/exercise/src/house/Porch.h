@@ -1,11 +1,12 @@
 #ifndef SRC_PORCH_H
 #define SRC_PORCH_H
 #include "BuildingBlocks.h"
+#include "House.h"
 #include "../Object.h"
 
 class Porch : public Block {
 public:
-    static inline GLfloat frontWidth = 5.9182f;
+    static inline GLfloat frontWidth = 6.8182f;
     static inline GLfloat frontLength = 2.33675f;
     static inline GLfloat leftLength = 3.33528f;
 
@@ -16,7 +17,7 @@ public:
     static inline GLfloat secondLayerHeight = 0.17f;
     static inline GLfloat secondLayerSpacing = 0.1f;
 
-    static inline GLfloat pillarHeight = 4 - firstLayerHeight - secondLayerHeight - ceilingHeight;
+    static inline GLfloat pillarHeight = House::height - firstLayerHeight - secondLayerHeight - ceilingHeight;
     static inline GLfloat pillarWidth = 0.2f;
     static inline GLfloat pillarInset = 0.05f;
 
@@ -30,7 +31,11 @@ public:
     static inline GLfloat totalLength = frontLength + leftLength + 2 * (secondLayerSpacing + ceilingSpacing);
     
     Porch(Vec3<GLfloat> pos, GLfloat scale = 1.0f, bool gravity = DEFAULT_GRAVITY, Color3f color = DEFAULT_COLOR, TextureID texture = DEFAULT_TEXTURE, MaterialID material = DEFAULT_MATERIAL)
-        : Block(pos, scale, gravity, color, texture, material) { performScaling(); Porch::updateDimensions(); Porch::addAll(); }
+    : Block(pos, scale, gravity, color, texture, material) { performScaling(); Porch::updateDimensions(); Porch::addAll(); }
+
+    Vec3<GLfloat> getDimensions() override {
+        return {totalWidth, totalHeight, totalLength};
+    }
 protected:
     void addAll() override;
 
@@ -42,6 +47,7 @@ protected:
             &ceilingHeight,
             &ceilingSpacing,
             &pillarHeight,
+            &pillarWidth,
             &pillarInset,
             &secondLayerHeight,
             &secondLayerSpacing,
@@ -53,10 +59,6 @@ protected:
         totalWidth = frontWidth + 2 * (ceilingSpacing + secondLayerSpacing);
         totalHeight = firstLayerHeight + secondLayerHeight + pillarHeight + ceilingHeight;
         totalLength = frontLength + leftLength + 2 * (secondLayerSpacing + ceilingSpacing);
-    }
-    
-    Vec3<GLfloat> getDimensions() override {
-        return {totalWidth, totalHeight, totalLength};
     }
 private:
     Object *addFloor();

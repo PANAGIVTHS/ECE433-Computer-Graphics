@@ -12,7 +12,7 @@ void Garage::addAll() {
 }
 
 Object *Garage::addFloor() {
-    Object *floor = new AnchoredCube(Vec3(0.0f, 0.0f, ceilingOffset + wallThickness), Vec3(width, floorHeight, length - 3 * wallThickness), gravity, concreteColor, TextureID::NONE, wallMaterial);
+    Object *floor = new AnchoredCube(Vec3(0.0f, 0.0f, ceilingOffset + wallThickness), Vec3(width, floorHeight, length - 3 * wallThickness), gravity, House::floorColor, TextureID::NONE, wallMaterial);
     return floor;
 }
 
@@ -131,82 +131,26 @@ Object *Garage::addFrontSide() {
 }
 
 Object *Garage::addDoor() {
-    GLfloat doorThickness = wallThickness * 0.5f;
     GLint rows = 4;
     GLint cols = 2;
     GLfloat padding = 0.1f;
     GLfloat glassW = (doorWidth  - (padding * (cols + 1))) / cols;
     GLfloat glassH = (doorHeight - (padding * (rows + 1))) / rows;
-    GLfloat frameZ = 0.0f;
 
-    Object* garageDoor = new Object(
-        Vec3(sidePanelWidth, 0.0f, 0.0f),
+    FramedWindow *garageDoor = new FramedWindow(
+        Vec3(sidePanelWidth, 0.0f, House::exteriorWallThickness * 0.5f),
+        rows,
+        cols,
+        glassW,
+        glassH,
+        padding,
+        padding,
+        1.0f,
         gravity,
         color,
-        TextureID::NONE
+        texture,
+        material
     );
-
-    // ---------------------------------------------------------
-    // FRAME
-    // ---------------------------------------------------------
-
-    // Vertical
-    for (int i = 0; i <= cols; i++) {
-        GLfloat centerX = i * (glassW + padding);
-        GLfloat centerY = 0.0f;
-
-        Object* vBar = new AnchoredCube(
-            Vec3(centerX, centerY, frameZ),
-            Vec3(padding, doorHeight, doorThickness),
-            gravity,
-            color,
-            TextureID::NONE,
-            wallMaterial
-        );
-        garageDoor->addChildren(vBar);
-    }
-
-    // Horizontal
-    for (int r = 0; r <= rows; r++) {
-        for (int c = 0; c < cols; c++) {
-            GLfloat centerX = padding + c * (glassW + padding);
-            GLfloat centerY = r * (glassH + padding);
-
-            Object* hBar = new AnchoredCube(
-                Vec3(centerX, centerY, frameZ),
-                Vec3(glassW, padding, doorThickness),
-                gravity,
-                color,
-                TextureID::NONE,
-                wallMaterial
-            );
-            garageDoor->addChildren(hBar);
-        }
-    }
-
-    // ---------------------------------------------------------
-    // WINDOWS
-    // ---------------------------------------------------------
-    for (int r = 0; r < rows; r++) {
-        for (int c = 0; c < cols; c++) {
-            GLfloat centerX = padding + c * (glassW + padding);
-            GLfloat centerY = padding + r * (glassH + padding);
-
-            Object* glassPane = new AnchoredCuboid(
-                Vec3(centerX, centerY, 0.0f),
-                Vec3(glassW, glassH, doorThickness * 0.5f),
-                gravity,
-                color,
-                TextureID::WINDOW,
-                MaterialID::SHINY,
-                TextureConfig(),
-                10
-            );
-            glassPane->optimize();
-
-            garageDoor->addChildren(glassPane);
-        }
-    }
 
     return garageDoor;
 }

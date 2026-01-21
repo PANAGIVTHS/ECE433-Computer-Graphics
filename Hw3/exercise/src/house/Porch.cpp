@@ -11,8 +11,16 @@ void Porch::addAll() {
     container->addChildren(addCeiling());
     container->addChildren(addPillars());
 
-    FlowerPot *pot1 = new FlowerPot(Vec3(ceilingSpacing + frontLength + secondLayerSpacing, firstLayerHeight + secondLayerHeight, ceilingSpacing + secondLayerSpacing + leftLength));
-    FlowerPot *pot2 = new FlowerPot(Vec3(ceilingSpacing + frontLength + secondLayerSpacing + FamilyRoom::doorWidth, firstLayerHeight + secondLayerHeight, ceilingSpacing + secondLayerSpacing + leftLength));
+    FlowerPot *pot1 = new FlowerPot(Vec3(
+        ceilingSpacing + frontLength + secondLayerSpacing + House::exteriorWallThickness + House::ridgeThickness + FamilyRoom::frontWallSideWidth,
+        firstLayerHeight + secondLayerHeight,
+        ceilingSpacing + secondLayerSpacing + leftLength + House::exteriorWallThickness + House::ridgeThickness)
+    );
+    FlowerPot *pot2 = new FlowerPot(Vec3(
+        ceilingSpacing + frontLength + secondLayerSpacing + House::exteriorWallThickness + House::ridgeThickness + FamilyRoom::frontWallSideWidth + 2 * FamilyRoom::doorWidth,
+        firstLayerHeight + secondLayerHeight,
+        ceilingSpacing + secondLayerSpacing + leftLength + House::exteriorWallThickness + House::ridgeThickness)
+    );
     container->addChildren(pot1);
     container->addChildren(pot2);
 }
