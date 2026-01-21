@@ -37,7 +37,7 @@ void GameManager::init() {
     environment = new Environment(skyColor);
     environment->spawn();
 
-    House *house = new House(0.0f, 0.0f, -10.0f);
+    House *house = new House(Vec3<GLfloat>(0.0f, 0.0f, -10.0f));
     // std::cout << house->toString() << "\n";
 
 
@@ -51,17 +51,17 @@ void GameManager::init() {
 
     auto doubleTwist = [](float t) -> Vec3<float> {
         return {
-            2.0f * cos(t),
-            0.3f * t + 0.5f * sin(5.0f * t),
-            2.0f * sin(2.0f * t)
+            static_cast<float>(2.0f * std::cos(t)),
+            static_cast<float>(0.3f * t + 0.5f * std::sin(5.0f * t)),
+            static_cast<float>(2.0f * std::sin(2.0f * t))
         };
     };
 
     auto trefoil = [](float t) -> Vec3<float> {
         return {
-            sin(t) + 2.0f * sin(2.0f * t),
-            cos(t) - 2.0f * cos(2.0f * t),
-            -sin(3.0f * t)
+            static_cast<float>(std::sin(t) + 2.0f * std::sin(2.0f * t)),
+            static_cast<float>(std::cos(t) - 2.0f * std::cos(2.0f * t)),
+            static_cast<float>(-std::sin(3.0f * t))
         };
     };
 

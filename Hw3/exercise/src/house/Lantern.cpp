@@ -1,5 +1,5 @@
 #include "Lantern.h"
-#include "House.h"
+#include "BuildingBlocks.h"
 
 void Lantern::setup() {
     float w = 0.20f;

@@ -5,7 +5,7 @@
 #else
 #include <GL/glut.h>
 #endif
-#include <math.h>
+#include <cmath>
 
 inline float toRadians(float degrees) {
     return degrees * (M_PI / 180);
@@ -39,6 +39,14 @@ public:
 
         *this /= length;
         return *this;
+    }
+
+    T dot(const Vec3<T>& other) const {
+        return (x * other.x) + (y * other.y) + (z * other.z);
+    }
+
+    Vec3<T> abs() {
+        return Vec3<T>(std::abs(x), std::abs(y), std::abs(z));
     }
 
     Vec3<T> cross(const Vec3<T>& other) {
@@ -92,6 +100,30 @@ template <typename T>
 Vec3<T> operator-(Vec3<T> lhs, const Vec3<T>& rhs) {
     lhs -= rhs;
     return lhs;
+}
+
+template <typename T>
+Vec3<T> operator*(const Vec3<T>& vec1, const Vec3<T>& vec2) {
+    return Vec3<T>(
+        vec1.x * vec2.x,
+        vec1.y * vec2.y,
+        vec1.z * vec2.z
+    );
+}
+
+template <typename T>
+Vec3<T> operator/(const Vec3<T>& vec1, const Vec3<T>& vec2) {
+    return Vec3<T>(
+        vec1.x / vec2.x,
+        vec1.y / vec2.y,
+        vec1.z / vec2.z
+    );
+}
+
+template <typename T>
+Vec3<T> operator+(Vec3<T> vec, T scalar) {
+    vec += scalar;
+    return vec;
 }
 
 template <typename T>

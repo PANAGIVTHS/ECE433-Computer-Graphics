@@ -1,30 +1,27 @@
 #include "Garage.h"
-#include "House.h"
 #include "Lantern.h"
 
 void Garage::addAll() {
-    Object *container = new Object(xOff, 0, zOff);
-    addChildren(container);
-
-    container->addChildren(addFloor());
-    container->addChildren(addRightSide());
-    container->addChildren(addBackSide());
-    container->addChildren(addCeiling());
+    addChildren(addFloor());
+    addChildren(addRightSide());
+    addChildren(addBackSide());
+    addChildren(addCeiling());
     Object *frontSide = addFrontSide();
-    container->addChildren(frontSide);
+    addChildren(frontSide);
     frontSide->addChildren(addDoor());
 }
 
 Object *Garage::addFloor() {
-    Object *floor = new Cube(-(length + wallThickness)/2, floorHeight/2.0f, -wallThickness/4, length, floorHeight, width - (2.5f * wallThickness), gravity, concreteColor, TextureID::NONE, wallMaterial);
+    Object *floor = new AnchoredCube(Vec3(0.0f, 0.0f, ceilingOffset + wallThickness), Vec3(width, floorHeight, length - 3 * wallThickness), gravity, concreteColor, TextureID::NONE, wallMaterial);
     return floor;
 }
 
 Object *Garage::addRightSide() {
     GLint ridgeCount = 23;
     Object* rightWall = new RidgedWall(
-        Vec3(0.0f, height/2.0f, 0.0f),
-        Vec3(width, height, wallThickness),
+        Vec3(width, 0.0f, ceilingOffset),
+        Vec3(wallThickness, height, length),
+        Vec3<GLfloat>(1.0f, 0.0f, 0.0f),
         ridgeCount,
         ridgeThickness,
         false,
@@ -32,7 +29,6 @@ Object *Garage::addRightSide() {
         TextureID::NONE,
         wallMaterial
     );
-    rightWall->setRotation(90, Vec3(0.0f, 1.0f, 0.0f));
 
     return rightWall;
 }
@@ -40,8 +36,9 @@ Object *Garage::addRightSide() {
 Object *Garage::addBackSide() {
     GLint ridgeCount = 9;
     Object* backWall = new RidgedWall(
-        Vec3(-(length+wallThickness)/2, height/2.0f, -(width - wallThickness)/2),
-        Vec3(length, height, wallThickness),
+        Vec3(0.0f, 0.0f, ceilingOffset),
+        Vec3(width, height, wallThickness),
+        Vec3<GLfloat>(0.0f, 0.0f, -1.0f),
         ridgeCount,
         ridgeThickness,
         false,
@@ -49,16 +46,15 @@ Object *Garage::addBackSide() {
         TextureID::NONE,
         wallMaterial
     );
-    backWall->setRotation(180, Vec3(0.0f, 1.0f, 0.0f));
 
     return backWall;
 }
 
 Object *Garage::addCeiling() {
-    GLfloat ceilingWidth = width + 2 * ceilingOffset;
-    GLfloat ceilingHeight = length + wallThickness + ceilingOffset;
-    Object* ceiling = new Cube(
-        Vec3(-(length - ceilingOffset)/2.0f, height + wallThickness / 2.0f, 0.0f),
+    GLfloat ceilingWidth = length + 2 * ceilingOffset;
+    GLfloat ceilingHeight = width + wallThickness + ceilingOffset;
+    Object* ceiling = new AnchoredCube(
+        Vec3(0.0f, height, 0.0f),
         Vec3(ceilingHeight, wallThickness, ceilingWidth),
         false,
         color,
@@ -73,15 +69,16 @@ Object *Garage::addFrontSide() {
     GLint ridgeCount = 1;
 
     Object* frontWallContainer = new Object(
-        Vec3(-length - wallThickness / 2.0f, 0.0f, width/2.0f-wallThickness),
+        Vec3(0.0f, 0.0f, ceilingOffset + length - 2 * wallThickness),
         gravity,
         color,
         TextureID::NONE
     );
 
-    Object* leftPanel = new RidgedWall(
-        Vec3(sidePanelWidth / 2.0f, height / 2.0f, 0.0f),
+    RidgedWall* leftPanel = new RidgedWall(
+        Vec3(0.0f, 0.0f, 0.0f),
         Vec3(sidePanelWidth, height, wallThickness),
+        Vec3<GLfloat>(0.0f, 0.0f, 1.0f),
         ridgeCount,
         ridgeThickness,
         gravity,
@@ -91,9 +88,10 @@ Object *Garage::addFrontSide() {
     );
     frontWallContainer->addChildren(leftPanel);
 
-    Object* rightPanel = new RidgedWall(
-        Vec3(sidePanelWidth + doorWidth + sidePanelWidth / 2.0f, height / 2.0f, 0.0f),
+    RidgedWall* rightPanel = new RidgedWall(
+        Vec3(sidePanelWidth + doorWidth, 0.0f, 0.0f),
         Vec3(sidePanelWidth, height, wallThickness),
+        Vec3<GLfloat>(0.0f, 0.0f, 1.0f),
         ridgeCount,
         ridgeThickness,
         gravity,
@@ -104,9 +102,10 @@ Object *Garage::addFrontSide() {
     frontWallContainer->addChildren(rightPanel);
 
     ridgeCount = 7;
-    Object* header = new RidgedWall(
-        Vec3(sidePanelWidth + doorWidth / 2.0f, doorHeight + headerHeight / 2.0f, 0.0f),
+    RidgedWall* header = new RidgedWall(
+        Vec3(sidePanelWidth, doorHeight, 0.0f),
         Vec3(doorWidth, headerHeight, wallThickness),
+        Vec3<GLfloat>(0.0f, 0.0f, 1.0f),
         ridgeCount,
         ridgeThickness,
         gravity,
@@ -117,15 +116,14 @@ Object *Garage::addFrontSide() {
     frontWallContainer->addChildren(header);
 
     // LATERNS
-    float lanternHeight = height * 0.4f;
-    float lanternX = 0.6f;
-    float lanternZ = 0.5f;
+    Vec3<GLfloat> laternPos = Vec3(0.6f, height * 0.4f, 0.5f);
 
-    Object* leftLantern = new Lantern(lanternX, lanternHeight, lanternZ);
+    Lantern* leftLantern = new Lantern(laternPos);
     leftLantern->setRotation(180.0f, Vec3(0.0f, 1.0f, 0.0f));
     frontWallContainer->addChildren(leftLantern);
 
-    Object* rightLantern = new Lantern(length - lanternX, lanternHeight, lanternZ);
+    laternPos.x = width - laternPos.x;
+    Lantern* rightLantern = new Lantern(laternPos);
     rightLantern->setRotation(180.0f, Vec3(0.0f, 1.0f, 0.0f));
     frontWallContainer->addChildren(rightLantern);
 
@@ -154,10 +152,10 @@ Object *Garage::addDoor() {
 
     // Vertical
     for (int i = 0; i <= cols; i++) {
-        GLfloat centerX = (padding / 2.0f) + (i * (glassW + padding));
-        GLfloat centerY = doorHeight / 2.0f;
+        GLfloat centerX = i * (glassW + padding);
+        GLfloat centerY = 0.0f;
 
-        Object* vBar = new Cube(
+        Object* vBar = new AnchoredCube(
             Vec3(centerX, centerY, frameZ),
             Vec3(padding, doorHeight, doorThickness),
             gravity,
@@ -171,10 +169,10 @@ Object *Garage::addDoor() {
     // Horizontal
     for (int r = 0; r <= rows; r++) {
         for (int c = 0; c < cols; c++) {
-            GLfloat centerX = padding + (c * (glassW + padding)) + (glassW / 2.0f);
-            GLfloat centerY = (padding / 2.0f) + (r * (glassH + padding));
+            GLfloat centerX = padding + c * (glassW + padding);
+            GLfloat centerY = r * (glassH + padding);
 
-            Object* hBar = new Cube(
+            Object* hBar = new AnchoredCube(
                 Vec3(centerX, centerY, frameZ),
                 Vec3(glassW, padding, doorThickness),
                 gravity,
@@ -191,10 +189,10 @@ Object *Garage::addDoor() {
     // ---------------------------------------------------------
     for (int r = 0; r < rows; r++) {
         for (int c = 0; c < cols; c++) {
-            GLfloat centerX = padding + (c * (glassW + padding)) + (glassW / 2.0f);
-            GLfloat centerY = padding + (r * (glassH + padding)) + (glassH / 2.0f);
+            GLfloat centerX = padding + c * (glassW + padding);
+            GLfloat centerY = padding + r * (glassH + padding);
 
-            Object* glassPane = new Cuboid(
+            Object* glassPane = new AnchoredCuboid(
                 Vec3(centerX, centerY, 0.0f),
                 Vec3(glassW, glassH, doorThickness * 0.5f),
                 gravity,

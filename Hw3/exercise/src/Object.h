@@ -47,7 +47,7 @@ public:
     virtual void update();
     void optimize();
     void invalidateDisplayList();
-    Object *addChildren(Object *object);
+    virtual Object *addChildren(Object *object);
 
     bool hasTransparency();
     bool isHidden();
@@ -60,6 +60,7 @@ public:
     Object* setScale(Vec3<GLfloat> scale);
     Object* setScale(GLfloat x, GLfloat y, GLfloat z);
     Object* setRotation(GLfloat angle, Vec3<GLfloat> axis);
+
     Vec3<GLfloat>& getPosition();
     Object* setPosition(Vec3<GLfloat> position);
     Vec3<GLfloat>& getVelocity();
@@ -83,9 +84,12 @@ public:
 class Cuboid : public Object {
     TextureConfig texConfig;
     int subdivisions;
+    Vec3<GLfloat> dim;
+protected:
+    void drawInternal() override;
 public:
     Cuboid(Vec3<float> pos, Vec3<float> dim, bool gravity = DEFAULT_GRAVITY, Color3f color = DEFAULT_COLOR, TextureID texture = DEFAULT_TEXTURE, MaterialID material = DEFAULT_MATERIAL, TextureConfig config = TextureConfig(), int subdivisions = 1)
-        : Object(pos, gravity, color, texture, material), texConfig(config), subdivisions(subdivisions) { setScale(dim); }
+        : Object(pos, gravity, color, texture, material), texConfig(config), subdivisions(subdivisions) { this->dim = dim; setScale(dim); }
 
 
     Cuboid(float x, float y, float z, float w, float h, float l, bool gravity = DEFAULT_GRAVITY, Color3f color = DEFAULT_COLOR, TextureID texture = DEFAULT_TEXTURE, MaterialID material = DEFAULT_MATERIAL, TextureConfig config = TextureConfig(), int subdivisions = 1)
@@ -102,14 +106,19 @@ public:
     void setTextureConfig(TextureConfig config) override {
         this->texConfig = config;
     }
-protected:
-    void drawInternal() override;
+
+    Vec3<GLfloat> getDimensions() {
+        return dim;
+    }
 };
 
 class Cube : public Object {
+    Vec3<GLfloat> dim;
+protected:
+    void drawInternal() override;
 public:
     Cube(Vec3<float> pos, Vec3<float> dim, bool gravity = DEFAULT_GRAVITY, Color3f color = DEFAULT_COLOR, TextureID texture = DEFAULT_TEXTURE, MaterialID material = DEFAULT_MATERIAL)
-        : Object(pos, gravity, color, texture, material) { setScale(dim); }
+        : Object(pos, gravity, color, texture, material) { this->dim = dim; setScale(dim); }
 
     Cube(float x, float y, float z, float w, float h, float l, bool gravity = DEFAULT_GRAVITY, Color3f color = DEFAULT_COLOR, TextureID texture = DEFAULT_TEXTURE, MaterialID material = DEFAULT_MATERIAL)
         : Cube(Vec3<float>(x, y, z), Vec3<float>(w, h, l), gravity, color, texture, material) {}
@@ -119,8 +128,10 @@ public:
 
     Cube(float x, float y, float z, bool gravity = DEFAULT_GRAVITY, Color3f color = DEFAULT_COLOR, TextureID texture = DEFAULT_TEXTURE, MaterialID material = DEFAULT_MATERIAL)
     : Cube(Vec3<float>(x, y, z), Vec3<float>(1.0f, 1.0f, 1.0f), gravity, color, texture, material) {}
-protected:
-    void drawInternal() override;
+
+    Vec3<GLfloat> getDimensions() {
+        return dim;
+    }
 };
 
 class Sphere : public Object {
