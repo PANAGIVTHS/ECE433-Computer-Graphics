@@ -51,4 +51,19 @@ private:
     }
 };
 
+
+class GlowingCube : public Cube {
+public:
+    GlowingCube(Vec3<float> pos, Vec3<float> dim, bool gravity = DEFAULT_GRAVITY, Color3f color = DEFAULT_COLOR, TextureID texture = DEFAULT_TEXTURE,
+        MaterialID material = DEFAULT_MATERIAL)
+        : Cube(pos, dim, gravity, color, texture, material) {
+    }
+
+    void drawInternal() override {
+        glDisable(GL_LIGHTING);
+        Cube::drawInternal();
+        glEnable(GL_LIGHTING);
+    }
+};
+
 #endif //SRC_HOUSE_H

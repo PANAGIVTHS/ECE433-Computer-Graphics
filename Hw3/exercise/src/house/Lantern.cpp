@@ -1,4 +1,5 @@
 #include "Lantern.h"
+#include "House.h"
 
 void Lantern::setup() {
     float w = 0.20f;
@@ -51,20 +52,6 @@ void Lantern::setup() {
     this->addChildren(glass);
 
     // 4. THE BODY
-    class GlowingCube : public Cube {
-    public:
-        GlowingCube(Vec3<float> pos, Vec3<float> dim, bool gravity = DEFAULT_GRAVITY, Color3f color = DEFAULT_COLOR, TextureID texture = DEFAULT_TEXTURE,
-            MaterialID material = DEFAULT_MATERIAL)
-            : Cube(pos, dim, gravity, color, texture, material) {
-        }
-
-        void drawInternal() override {
-            glDisable(GL_LIGHTING);
-            Cube::drawInternal();
-            glEnable(GL_LIGHTING);
-        }
-    };
-
     Object* body = new GlowingCube(
         Vec3<float>(0.0f, 0.0f, 0.0f),
         Vec3<float>(w - 0.04f, h - 0.04f, d - 0.04f)

@@ -1,19 +1,21 @@
 #include "Porch.h"
 
 void Porch::addAll() {
-    addFloor();
-    addCeiling();
-    addPillars();
+    Object *container = new Object(xOff, 0, zOff);
+    addChildren(container);
+
+    container->addChildren(addFloor());
+    container->addChildren(addCeiling());
+    container->addChildren(addPillars());
 }
 
-void Porch::addFloor() {
+Object *Porch::addFloor() {
     GLfloat fW = frontWidth;
     GLfloat fL = frontLength;
     GLfloat lL = leftLength;
     GLfloat s = secondLayerSpacing;
 
     Object *floorContainer = new Object(0, 0, 0);
-    addChildren(floorContainer);
 
     // --- Bottom ---
     GLfloat l1_Y = firstLayerHeight / 2.0f;
@@ -50,9 +52,11 @@ void Porch::addFloor() {
         gravity, floorColor, texture, floorMaterial
     );
     floorContainer->addChildren(l2_B);
+
+    return floorContainer;
 }
 
-void Porch::addCeiling() {
+Object *Porch::addCeiling() {
     GLfloat fW = frontWidth;
     GLfloat fL = frontLength;
     GLfloat lL = leftLength;
@@ -62,7 +66,6 @@ void Porch::addCeiling() {
     GLfloat yPos = firstLayerHeight + secondLayerHeight + pillarHeight + ceilingHeight / 2.0f;
 
     Object *ceilingContainer = new Object(0, 0, 0);
-    addChildren(ceilingContainer);
 
     Object* ceilA = new Cuboid(
         Vec3(fW / 2.0f, yPos, (fL + sL) / 2.0f),
@@ -77,14 +80,15 @@ void Porch::addCeiling() {
         false, ceilingColor, TextureID::NONE, ceilingMaterial
     );
     ceilingContainer->addChildren(ceilB);
+
+    return ceilingContainer;
 }
 
-void Porch::addPillars() {
+Object *Porch::addPillars() {
     // Pillars sit on the top of the second floor layer
     GLfloat yPos = firstLayerHeight + secondLayerHeight + pillarHeight / 2.0f;
 
     Object *pillarContainer = new Object(0, 0, 0);
-    addChildren(pillarContainer);
 
     TextureID pTex = texture;
     MaterialID pMat = floorMaterial;
@@ -116,4 +120,6 @@ void Porch::addPillars() {
         gravity, floorColor, pTex, pMat
     );
     pillarContainer->addChildren(p4);
+
+    return pillarContainer;
 }

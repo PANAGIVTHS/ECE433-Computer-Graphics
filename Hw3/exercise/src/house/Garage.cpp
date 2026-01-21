@@ -3,17 +3,20 @@
 #include "Lantern.h"
 
 void Garage::addAll() {
-    addFloor();
-    addRightSide();
-    addBackSide();
-    addCeiling();
+    Object *container = new Object(xOff, 0, zOff);
+    addChildren(container);
+
+    container->addChildren(addFloor());
+    container->addChildren(addRightSide());
+    container->addChildren(addBackSide());
+    container->addChildren(addCeiling());
     Object *frontSide = addFrontSide();
-    addDoor(frontSide);
+    container->addChildren(frontSide);
+    frontSide->addChildren(addDoor());
 }
 
 Object *Garage::addFloor() {
     Object *floor = new Cube(-(length + wallThickness)/2, floorHeight/2.0f, -wallThickness/4, length, floorHeight, width - (2.5f * wallThickness), gravity, concreteColor, TextureID::NONE, wallMaterial);
-    addChildren(floor);
     return floor;
 }
 
@@ -30,7 +33,6 @@ Object *Garage::addRightSide() {
         wallMaterial
     );
     rightWall->setRotation(90, Vec3(0.0f, 1.0f, 0.0f));
-    addChildren(rightWall);
 
     return rightWall;
 }
@@ -48,13 +50,11 @@ Object *Garage::addBackSide() {
         wallMaterial
     );
     backWall->setRotation(180, Vec3(0.0f, 1.0f, 0.0f));
-    addChildren(backWall);
 
     return backWall;
 }
 
 Object *Garage::addCeiling() {
-    GLfloat ceilingOffset = 0.6f;
     GLfloat ceilingWidth = width + 2 * ceilingOffset;
     GLfloat ceilingHeight = length + wallThickness + ceilingOffset;
     Object* ceiling = new Cube(
@@ -65,7 +65,6 @@ Object *Garage::addCeiling() {
         TextureID::NONE,
         wallMaterial
     );
-    addChildren(ceiling);
 
     return ceiling;
 }
@@ -79,8 +78,6 @@ Object *Garage::addFrontSide() {
         color,
         TextureID::NONE
     );
-
-    addChildren(frontWallContainer);
 
     Object* leftPanel = new RidgedWall(
         Vec3(sidePanelWidth / 2.0f, height / 2.0f, 0.0f),
@@ -135,7 +132,7 @@ Object *Garage::addFrontSide() {
     return frontWallContainer;
 }
 
-Object *Garage::addDoor(Object *frontSide) {
+Object *Garage::addDoor() {
     GLfloat doorThickness = wallThickness * 0.5f;
     GLint rows = 4;
     GLint cols = 2;
@@ -150,7 +147,6 @@ Object *Garage::addDoor(Object *frontSide) {
         color,
         TextureID::NONE
     );
-    frontSide->addChildren(garageDoor);
 
     // ---------------------------------------------------------
     // FRAME

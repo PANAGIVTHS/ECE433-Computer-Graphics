@@ -10,6 +10,7 @@ public:
     static constexpr GLfloat width = 7.3152f;
     static constexpr GLfloat length = 1.2 * 3.8608f;
     static constexpr GLfloat height = 4.0f;
+    static constexpr GLfloat ceilingOffset = 0.6f;
 
     static constexpr GLfloat ridgeThickness = 0.1f;
     static constexpr GLfloat doorWidth = 3.2f;
@@ -22,9 +23,12 @@ public:
 
     static constexpr MaterialID wallMaterial = MaterialID::MATTE;
 
-    static constexpr GLfloat totalWidth = length;
+    static constexpr GLfloat totalWidth = length + ceilingOffset + wallThickness;
     static constexpr GLfloat totalHeight = height + wallThickness;
-    static constexpr GLfloat totalLength = width;
+    static constexpr GLfloat totalLength = width + 2 * ceilingOffset;
+
+    static constexpr GLfloat xOff = length + wallThickness / 2.0f;
+    static constexpr GLfloat zOff = ceilingOffset + width / 2.0f;
 
 private:
     void addAll();
@@ -33,7 +37,7 @@ private:
     Object *addFrontSide();
     Object *addBackSide();
     Object *addCeiling();
-    Object *addDoor(Object *front);
+    Object *addDoor();
     void drawInternal() override {}
 public:
     Garage(Vec3<GLfloat> pos, bool gravity = DEFAULT_GRAVITY, Color3f color = wallColor, TextureID texture = DEFAULT_TEXTURE, MaterialID material = DEFAULT_MATERIAL)
