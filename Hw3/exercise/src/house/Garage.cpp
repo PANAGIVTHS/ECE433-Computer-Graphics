@@ -12,7 +12,7 @@ void Garage::addAll() {
 }
 
 Object *Garage::addFloor() {
-    Object *floor = new Cube(-(length + wallThickness)/2, 0, -wallThickness/4, length, floorHeight, width - (2.5f * wallThickness), gravity, concreteColor, TextureID::NONE, wallMaterial);
+    Object *floor = new Cube(-(length + wallThickness)/2, floorHeight/2.0f, -wallThickness/4, length, floorHeight, width - (2.5f * wallThickness), gravity, concreteColor, TextureID::NONE, wallMaterial);
     addChildren(floor);
     return floor;
 }

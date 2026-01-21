@@ -22,6 +22,10 @@ public:
 
     static constexpr MaterialID wallMaterial = MaterialID::MATTE;
 
+    static constexpr GLfloat totalWidth = length;
+    static constexpr GLfloat totalHeight = height + wallThickness;
+    static constexpr GLfloat totalLength = width;
+
 private:
     void addAll();
     Object *addFloor();

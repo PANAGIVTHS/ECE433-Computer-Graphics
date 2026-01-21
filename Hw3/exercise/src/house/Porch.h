@@ -24,6 +24,10 @@ public:
     static constexpr Color3f ceilingColor = {.red = 0.19140625, .green = 0.19140625, .blue = 0.19140625};
     static constexpr MaterialID ceilingMaterial = MaterialID::MATTE;
 
+    static constexpr GLfloat totalWidth = frontWidth + 2 * (ceilingWidthSpacing + secondLayerSpacing);
+    static constexpr GLfloat totalHeight = firstLayerHeight + secondLayerHeight + pillarHeight + ceilingHeight;
+    static constexpr GLfloat totalLength = frontLength + leftLength + 2 * ceilingLengthSpacing;
+
 private:
     void addFloor();
     void addCeiling();
