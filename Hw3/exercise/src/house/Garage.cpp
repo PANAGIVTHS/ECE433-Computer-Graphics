@@ -12,7 +12,7 @@ void Garage::addAll() {
 }
 
 Object *Garage::addFloor() {
-    Object *floor = new Cube(-(length + wallThickness)/2, 0, -wallThickness/4, length, floorHeight, width - (2.5f * wallThickness), gravity, concreteColor);
+    Object *floor = new Cube(-(length + wallThickness)/2, 0, -wallThickness/4, length, floorHeight, width - (2.5f * wallThickness), gravity, concreteColor, TextureID::NONE, wallMaterial);
     addChildren(floor);
     return floor;
 }
@@ -37,7 +37,6 @@ Object *Garage::addRightSide() {
 
 Object *Garage::addBackSide() {
     GLint ridgeCount = 9;
-    ridgeThickness = 0.1f;
     Object* backWall = new RidgedWall(
         Vec3(-(length+wallThickness)/2, height/2.0f, -(width - wallThickness)/2),
         Vec3(length, height, wallThickness),
@@ -205,7 +204,7 @@ Object *Garage::addDoor(Object *frontSide) {
                 gravity,
                 color,
                 TextureID::WINDOW,
-                DEFAULT_MATERIAL,
+                MaterialID::SHINY,
                 TextureConfig(),
                 10
             );

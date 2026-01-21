@@ -22,7 +22,8 @@ private:
             dim,
             gravity,
             color,
-            texture
+            texture,
+            material
         );
         this->addChildren(baseWall);
 
@@ -41,7 +42,8 @@ private:
                 Vec3<float>(ridgeWidth, ridgeHeight, ridgeThickness),
                 gravity,
                 color,
-                texture
+                texture,
+                material
             );
 
             this->addChildren(ridge);

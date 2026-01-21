@@ -4,8 +4,6 @@
 std::map<int, RegisteredLight> LightingManager::registry;
 
 void LightingManager::init() {
-    glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
-    glEnable(GL_COLOR_MATERIAL);
     glEnable(GL_NORMALIZE);
     glEnable(GL_LIGHTING);
 }

@@ -11,7 +11,9 @@ void Lantern::setup() {
         Vec3<float>(0.0f, h/2.0f, 0.15f),
         Vec3<float>(0.05f, 0.05f, 0.30f),
         gravity,
-        {.red = 0.19140625, .green = 0.19140625, .blue = 0.19140625}
+        {.red = 0.19140625, .green = 0.19140625, .blue = 0.19140625},
+        TextureID::NONE,
+        MaterialID::MATTE
     );
     this->addChildren(arm);
 
@@ -20,7 +22,9 @@ void Lantern::setup() {
         Vec3<float>(0.0f, h/2.0f + 0.02f, 0.0f),
         Vec3<float>(w + 0.05f, 0.05f, d + 0.05f),
         gravity,
-        {.red = 0.19140625, .green = 0.19140625, .blue = 0.19140625}
+{.red = 0.19140625, .green = 0.19140625, .blue = 0.19140625},
+        TextureID::NONE,
+        MaterialID::MATTE
     );
     this->addChildren(cap);
 
@@ -29,7 +33,9 @@ void Lantern::setup() {
         Vec3<float>(0.0f, h/2.0f, armLength),
         Vec3<float>(0.12f, 0.25f, 0.02f),
         gravity,
-        {.red = 0.19140625, .green = 0.19140625, .blue = 0.19140625}
+{.red = 0.19140625, .green = 0.19140625, .blue = 0.19140625},
+        TextureID::NONE,
+        MaterialID::MATTE
     );
     this->addChildren(backPlate);
 
