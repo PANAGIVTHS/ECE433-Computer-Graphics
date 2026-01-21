@@ -5,40 +5,105 @@
 
 class Porch : public Block {
 public:
-    static constexpr GLfloat frontWidth = 5.9182f;
-    static constexpr GLfloat frontLength = 2.33675f;
-    static constexpr GLfloat leftLength = 3.33528f;
+    static inline GLfloat frontWidth = 5.9182f;
+    static inline GLfloat frontLength = 2.33675f;
+    static inline GLfloat leftLength = 3.33528f;
 
-    static constexpr GLfloat ceilingSpacing = 0.3;
-    static constexpr GLfloat ceilingHeight = 0.25f;
+    static inline GLfloat ceilingSpacing = 0.3;
+    static inline GLfloat ceilingHeight = 0.25f;
 
-    static constexpr GLfloat firstLayerHeight = 0.1f;
-    static constexpr GLfloat secondLayerHeight = 0.17f;
-    static constexpr GLfloat secondLayerSpacing = 0.1f;
+    static inline GLfloat firstLayerHeight = 0.1f;
+    static inline GLfloat secondLayerHeight = 0.17f;
+    static inline GLfloat secondLayerSpacing = 0.1f;
 
-    static constexpr GLfloat pillarHeight = 4 - firstLayerHeight - secondLayerHeight - ceilingHeight;
-    static constexpr GLfloat pillarWidth = 0.2f;
-    static constexpr GLfloat pillarInset = 0.05f;
+    static inline GLfloat pillarHeight = 4 - firstLayerHeight - secondLayerHeight - ceilingHeight;
+    static inline GLfloat pillarWidth = 0.2f;
+    static inline GLfloat pillarInset = 0.05f;
 
-    static constexpr Color3f floorColor = {.red = 1, .green = 1, .blue = 1};
-    static constexpr MaterialID floorMaterial = MaterialID::GLOSSY;
-    static constexpr Color3f ceilingColor = {.red = 0.19140625, .green = 0.19140625, .blue = 0.19140625};
-    static constexpr MaterialID ceilingMaterial = MaterialID::MATTE;
+    static inline Color3f floorColor = {.red = 1, .green = 1, .blue = 1};
+    static inline MaterialID floorMaterial = MaterialID::GLOSSY;
+    static inline Color3f ceilingColor = {.red = 0.19140625, .green = 0.19140625, .blue = 0.19140625};
+    static inline MaterialID ceilingMaterial = MaterialID::MATTE;
 
-    static constexpr GLfloat totalWidth = frontWidth + 2 * (ceilingSpacing + secondLayerSpacing);
-    static constexpr GLfloat totalHeight = firstLayerHeight + secondLayerHeight + pillarHeight + ceilingHeight;
-    static constexpr GLfloat totalLength = frontLength + leftLength + 2 * (secondLayerSpacing + ceilingSpacing);
+    static inline GLfloat totalWidth = frontWidth + 2 * (ceilingSpacing + secondLayerSpacing);
+    static inline GLfloat totalHeight = firstLayerHeight + secondLayerHeight + pillarHeight + ceilingHeight;
+    static inline GLfloat totalLength = frontLength + leftLength + 2 * (secondLayerSpacing + ceilingSpacing);
+    
+    Porch(Vec3<GLfloat> pos, GLfloat scale = 1.0f, bool gravity = DEFAULT_GRAVITY, Color3f color = DEFAULT_COLOR, TextureID texture = DEFAULT_TEXTURE, MaterialID material = DEFAULT_MATERIAL)
+        : Block(pos, scale, gravity, color, texture, material) { performScaling(); Porch::updateDimensions(); Porch::addAll(); }
+protected:
+    void addAll() override;
 
+    std::vector<GLfloat *> getScalableVars() override {
+        return {
+            &frontWidth,
+            &frontLength,
+            &leftLength,
+            &ceilingHeight,
+            &ceilingSpacing,
+            &pillarHeight,
+            &pillarInset,
+            &secondLayerHeight,
+            &secondLayerSpacing,
+            &firstLayerHeight
+        };
+    }
+    
+    void updateDimensions() override {
+        totalWidth = frontWidth + 2 * (ceilingSpacing + secondLayerSpacing);
+        totalHeight = firstLayerHeight + secondLayerHeight + pillarHeight + ceilingHeight;
+        totalLength = frontLength + leftLength + 2 * (secondLayerSpacing + ceilingSpacing);
+    }
+    
+    Vec3<GLfloat> getDimensions() override {
+        return {totalWidth, totalHeight, totalLength};
+    }
 private:
     Object *addFloor();
     Object *addCeiling();
     Object *addPillars();
+};
 
-    void addAll();
-    void drawInternal() override {}
+class FlowerPot : public Block {
 public:
-    Porch(Vec3<GLfloat> pos, bool gravity = DEFAULT_GRAVITY, Color3f color = DEFAULT_COLOR, TextureID texture = DEFAULT_TEXTURE, MaterialID material = DEFAULT_MATERIAL)
-        : Block(pos, Vec3<GLfloat>(totalWidth, totalHeight, totalLength), gravity, color, texture, material) { addAll(); }
+    Color3f flowerColor;
+
+    static inline GLfloat potSize = 0.4f;
+    static inline GLfloat potHeight = 0.4f;
+    static inline GLfloat stemHeight = 0.5f;
+    static inline GLfloat stemThick = 0.05f;
+
+    static inline Color3f clayColor = {0.8f, 0.4f, 0.2f};
+    static inline Color3f soilColor = {0.3f, 0.2f, 0.1f};
+    static inline Color3f stemColor = {0.1f, 0.8f, 0.1f};
+
+    static inline GLfloat totalWidth = 0.0f;
+    static inline GLfloat totalHeight = 0.0f;
+    static inline GLfloat totalLength = 0.0f;
+
+    FlowerPot(Vec3<GLfloat> pos, GLfloat scale = 1.0f, Color3f flowerColor = {1.0f, 0.0f, 0.0f})
+        : flowerColor(flowerColor), Block(pos, scale) { performScaling(); FlowerPot::updateDimensions(); FlowerPot::addAll(); }
+protected:
+    void addAll() override;
+
+    std::vector<GLfloat *> getScalableVars() override {
+        return {
+            &potSize,
+            &potHeight,
+            &stemHeight,
+            &stemThick
+        };
+    }
+
+    void updateDimensions() override {
+        totalWidth = potSize;
+        totalHeight = potHeight + stemHeight;
+        totalLength = potSize;
+    }
+
+    Vec3<GLfloat> getDimensions() override {
+        return {totalWidth, totalHeight, totalLength};
+    }
 };
 
 #endif //SRC_PORCH_H

@@ -1,5 +1,8 @@
 #include "Porch.h"
 
+#include "FamilyRoom.h"
+#include "../AssetLoader.h"
+
 void Porch::addAll() {
     Object *container = new Object(0.0f, 0.0f, 0.0f);
     addChildren(container);
@@ -7,6 +10,11 @@ void Porch::addAll() {
     container->addChildren(addFloor());
     container->addChildren(addCeiling());
     container->addChildren(addPillars());
+
+    FlowerPot *pot1 = new FlowerPot(Vec3(ceilingSpacing + frontLength + secondLayerSpacing, firstLayerHeight + secondLayerHeight, ceilingSpacing + secondLayerSpacing + leftLength));
+    FlowerPot *pot2 = new FlowerPot(Vec3(ceilingSpacing + frontLength + secondLayerSpacing + FamilyRoom::doorWidth, firstLayerHeight + secondLayerHeight, ceilingSpacing + secondLayerSpacing + leftLength));
+    container->addChildren(pot1);
+    container->addChildren(pot2);
 }
 
 Object *Porch::addFloor() {
@@ -101,4 +109,30 @@ Object *Porch::addPillars() {
     pillarContainer->addChildren(p4);
 
     return pillarContainer;
+}
+
+void FlowerPot::addAll() {
+    Object* pot = new AnchoredCuboid(
+        Vec3<GLfloat>(0.0f, 0.0f, 0.0f),
+        Vec3<GLfloat>(potSize, potHeight, potSize),
+        DEFAULT_GRAVITY,
+        clayColor,
+        TextureID::NONE,
+        MaterialID::MATTE
+    );
+    this->addChildren(pot);
+
+    Object* soil = new AnchoredCuboid(
+        Vec3<GLfloat>(potSize * 0.1, potHeight - (0.02f * scale), potSize * 0.1),
+        Vec3<GLfloat>(potSize * 0.8f, 0.05f * scale, potSize * 0.8f),
+        DEFAULT_GRAVITY,
+        soilColor,
+        TextureID::NONE,
+        MaterialID::MATTE
+    );
+    this->addChildren(soil);
+
+    Rose* rose = new Rose(Vec3<GLfloat>(potSize * 0.5f, potHeight - 0.1f, potSize * 0.3f));
+    rose->setScale(Vec3<GLfloat>(scale, scale, scale));
+    this->addChildren(rose);
 }

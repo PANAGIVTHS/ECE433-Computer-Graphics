@@ -3,7 +3,7 @@
 #include "Porch.h"
 
 void House::setup() {
-    Porch *porch = new Porch(Vec3<GLfloat>(0, 4, 0));
+    Porch *porch = new Porch(Vec3<GLfloat>(0, 0, 0));
     addChildren(porch);
 
     BorderCubes *cubes = new BorderCubes(porch);

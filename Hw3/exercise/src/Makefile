@@ -19,7 +19,7 @@ RM = /bin/rm -f
 
 TARGET = visiting3Dhouse
 SRCS   = visiting3Dhouse.cpp Object.cpp Camera.cpp Environment.cpp GameManager.cpp WindowManager.cpp InputManager.cpp Celestial.cpp TextureManager.cpp bmp.cpp LightingManager.cpp MaterialManager.cpp Model.cpp Spline.cpp
-HOUSE_SRCS = house/Garage.cpp house/House.cpp house/Lantern.cpp house/Porch.cpp house/BuildingBlocks.cpp
+HOUSE_SRCS = house/Garage.cpp house/House.cpp house/Lantern.cpp house/Porch.cpp house/BuildingBlocks.cpp house/Bathroom.cpp house/Bedroom1.cpp house/Bedroom2.cpp house/DiningRoom.cpp house/FamilyRoom.cpp house/Hallway.cpp
 SRCS += $(HOUSE_SRCS)
 OBJS   = $(SRCS:.cpp=.o)
 
