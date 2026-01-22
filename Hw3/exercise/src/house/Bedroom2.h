@@ -63,7 +63,7 @@ protected:
     }
 
     void updateDimensions() override {
-        totalWidth = width + House::exteriorWallThickness + House::ridgeThickness + House::interiorWallThickness + wardrobeWidth + House::interiorWallThickness;
+        totalWidth = width + House::exteriorWallThickness + House::ridgeThickness + House::interiorWallThickness + wardrobeLength + House::interiorWallThickness;
         totalHeight = House::height + floorHeight;
         totalLength = length + House::exteriorWallThickness + House::ridgeThickness + House::interiorWallThickness;
     }

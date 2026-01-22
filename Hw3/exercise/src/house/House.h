@@ -20,7 +20,7 @@ class House : public Object {
 
     void setup();
 public:
-    static inline GLfloat scale = 1.3f;
+    static inline GLfloat scale = 1.0f;
     static inline GLfloat height = 3.5f;
     static inline GLfloat interiorWallThickness = .10f;
     static inline GLfloat exteriorWallThickness = .25f;

@@ -1,6 +1,7 @@
 #include "House.h"
 
 #include "Bathroom.h"
+#include "Bedroom1.h"
 #include "Bedroom2.h"
 #include "DiningRoom.h"
 #include "FamilyRoom.h"
@@ -37,6 +38,10 @@ void House::setup() {
     bedroom2->setPosition(bedroom2->getPosition() + Vec3<GLfloat>(0.0f, 0.0f, -Bedroom2::totalLength));
     addChildren(bedroom2);
     bedroom2->optimize();
+
+    Bedroom1 *bedroom1 = new Bedroom1(bedroom2->getPosition() + Vec3<GLfloat>(Bedroom2::totalWidth, 0.0f, 0.0f), House::scale);
+    addChildren(bedroom1);
+    bedroom1->optimize();
 
     // new BorderCubes(porch);
     // new BorderCubes(diningRoom);
