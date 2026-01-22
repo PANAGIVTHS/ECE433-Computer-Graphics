@@ -176,7 +176,7 @@ void FramedWindow::addAll() {
                 TextureID::WINDOW,
                 MaterialID::SHINY,
                 TextureConfig(),
-                10
+                2
             );
             glassPane->optimize();
 
