@@ -108,6 +108,10 @@ public:
         this->texConfig = config;
     }
 
+    void setSubdivisions(int subdivisions) {
+        this->subdivisions = subdivisions;
+    }
+
     Vec3<GLfloat> getDimensions() {
         return dim;
     }

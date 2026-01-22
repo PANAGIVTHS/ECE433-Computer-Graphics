@@ -8,7 +8,8 @@ enum class TextureID {
     IRON,
     WOOD,
     WINDOW,
-    MYCELIUM
+    MYCELIUM,
+    STONE
 };
 
 enum class TextureMode {

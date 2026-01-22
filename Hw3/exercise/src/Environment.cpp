@@ -1,6 +1,8 @@
 #include "Environment.h"
 #include "Object.h"
 #include "Celestial.h"
+#include "Spline.h"
+
 
 Environment::Environment(Color3f skyColor) {
     this->skyColor = skyColor;
@@ -11,11 +13,60 @@ void Environment::init() {
 }
 
 void Environment::spawn() {
+    static const float rockRotations[] = {286, 115, 295, 12, 181, 67};
+
+    auto rockFunc = [](float u, float v) -> Vec3<float> {
+        float r2 = u*u + v*v;
+        
+        float height = exp(-r2 * 4.0f); 
+        
+        height += 0.10f * fabs(sin(u * 10.0f) * cos(v * 10.0f)); 
+        height += 0.05f * fabs(cos(u * 20.0f + v * 20.0f)); 
+
+        if (height < 0) height = 0;
+        return Vec3<float>(u, height, v);
+    };
+    
     new Sun();
     new Moon();
     //TODO add to settings menu
     (new Cuboid(0, -0.05, 0, 100, 0.1, 100, false, {.red = 1.0f, .green = 1.0f, .blue = 1.0f}, TextureID::MYCELIUM, MaterialID::MATTE, TextureConfig(TextureMode::REPEAT_FIT, 100, 100), 300))->optimize();
 
+    //! Generate the Ring of mountains
+    int numSegments = 6;
+    float radius = 200.0f;
+
+    for(int i = 0; i < numSegments; i++) {
+        float angle = (float)i / (float)numSegments * 2.0f * 3.14159f;
+        
+        float x = cos(angle) * radius;
+        float z = sin(angle) * radius;
+
+        float wave = sin(angle * 5.0f); 
+        float baseScale = 150.0f;
+        float variation = 80.0f * wave;
+        
+        float finalScaleY = baseScale + variation + (rand() % 40);
+        float finalScaleXZ = 180.0f;
+
+        NurbsSurface* rock = new NurbsSurface(
+            rockFunc,
+            -1.0f, 1.0f, 6,
+            -1.0f, 1.0f, 6,
+            Vec3<float>(x, -30, z),
+            4,
+            {0.4f, 0.35f, 0.3f},
+            TextureID::NONE, 
+            MaterialID::MATTE
+        );
+
+        rock->setScale(finalScaleXZ, finalScaleY, finalScaleXZ);
+        
+        //! Random Rotation to break repetition
+        rock->setRotation(rockRotations[i], Vec3<float>(0, 1, 0));
+
+        rock->optimize();
+    }
 }
 
 void Environment::updateSky(float heightFactor) {

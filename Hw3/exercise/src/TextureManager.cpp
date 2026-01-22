@@ -99,7 +99,8 @@ void TextureManager::init() {
     init(TextureID::WOOD, "../Texture_Images/oak_log.bmp");
     init(TextureID::WINDOW, "../Texture_Images/ss0052.bmp", "../Texture_Images/ss0052_mask.bmp");
     init(TextureID::LEAVES, "../Texture_Images/azalea_top.bmp");
-    init(TextureID::MYCELIUM, "../Texture_Images/diamond_block.bmp");
+    init(TextureID::MYCELIUM, "../Texture_Images/mycelium_top.bmp");
+    init(TextureID::STONE, "../Texture_Images/cobblestone.bmp");
 
 }
 

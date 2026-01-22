@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <stack>
+#include <stdexcept>
 #include "Object.h"
 #include "TextureEnums.h" 
 #include "utilities.h" 
@@ -22,6 +23,7 @@ public:
         Object* anchor = new Object(offsetPos, false);
 
         std::stack<Object*> hierarchyStack; 
+        std::stack<std::string> typeStack;
         std::ifstream file(filename);
         
         if (!file.is_open()) {
@@ -31,6 +33,7 @@ public:
 
         std::string line;
         Object* currentObj = anchor;
+        std::string currentObjType = "Object";
         bool rootObjectDefined = false;
 
         while (std::getline(file, line)) {
@@ -54,24 +57,28 @@ public:
                     continue;
                 } else {
                     currentObj = new Object(Vec3<float>(x, y, z), false); 
+                    currentObjType = "Object";
                     objectCreated = true;
                 }
             }
             else if (cmd == "SPHERE") {
                 ss >> x >> y >> z;
                 currentObj = new Sphere(x, y, z, false);
+                currentObjType = "Sphere";
                 objectCreated = true;
             }
             else if (cmd == "CUBOID") {
                 float w, h, l; 
                 ss >> x >> y >> z >> w >> h >> l;
                 currentObj = new Cuboid(x, y, z, w, h, l, false);
+                currentObjType = "Cuboid";
                 objectCreated = true;
             }
             else if (cmd == "CUBE") {
                 float w, h, l; 
                 ss >> x >> y >> z >> w >> h >> l;
                 currentObj = new Cube(x, y, z, w, h, l, false);
+                currentObjType = "Cube";
                 objectCreated = true;
             }
 
@@ -104,6 +111,14 @@ public:
                     std::string val; ss >> val;
                     currentObj->setGravity(val == "true");
                 }
+                else if (cmd == "SET_SUBDIVS") {
+                    int sub; ss >> sub;
+                    if (currentObjType == "Cuboid") {
+                        static_cast<Cuboid*>(currentObj)->setSubdivisions(sub);
+                    } else {
+                        throw std::runtime_error("Object of type " + currentObjType + " doenst support SET_SUBDIVS directive");
+                    }
+                }
                 else if (cmd == "TEX_CONFIG") {
                     std::string modeStr;
                     ss >> modeStr;
@@ -116,13 +131,17 @@ public:
                 }
                 else if (cmd == "BEGIN") {
                     hierarchyStack.push(currentObj);
+                    typeStack.push(currentObjType);
                 }
                 else if (cmd == "END") {
                     if (!hierarchyStack.empty()) {
                         currentObj = hierarchyStack.top(); 
                         hierarchyStack.pop();
+                        currentObjType = typeStack.top();
+                        typeStack.pop();
                     } else {
                         currentObj = anchor;
+                        currentObjType = "Object";
                     }
                 }
             }
@@ -138,6 +157,7 @@ private:
         if (name == "GRASS")  return TextureID::GRASS;
         if (name == "WOOD")   return TextureID::WOOD;
         if (name == "LEAVES")   return TextureID::LEAVES;
+        if (name == "STONE")   return TextureID::STONE;
         return TextureID::NONE;
     }
 };
