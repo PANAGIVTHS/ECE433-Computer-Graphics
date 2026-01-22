@@ -49,7 +49,7 @@ void House::setup() {
     GLfloat pathHeight = 0.02f;
 
     GLfloat doorOffsetX = Garage::sidePanelWidth;
-    GLfloat garageFrontZ = Garage::totalLength - Garage::ceilingOffset - House::exteriorWallThickness - House::ridgeThickness;
+    GLfloat garageFrontZ = Garage::ceilingOffset + Garage::length - 2 * House::exteriorWallThickness;
     Vec3<GLfloat> pathPos = garage->getPosition() + Vec3(
         doorOffsetX,
         0.0f,
@@ -62,4 +62,14 @@ void House::setup() {
     pathway->setSubdivisions(10);
     addChildren(pathway);
     pathway->optimize();
+
+    GLfloat branchLength = Garage::doorWidth * 2.5;
+    GLfloat branchWidth = Garage::doorWidth;
+    GLfloat branchZOffset = DiningRoom::totalLength - House::exteriorWallThickness - House::ridgeThickness - (Garage::length - House::garageInset) + Porch::frontLength;
+    AnchoredCuboid *pathway1 = new AnchoredCuboid(pathPos + Vec3<GLfloat>(-branchLength, 0.0f, branchZOffset), Vec3(branchLength, pathHeight, branchWidth), false);
+    pathway1->setTexture(TextureID::STONE, false);
+    pathway1->setTextureConfig(TextureConfig(TextureMode::REPEAT_FIT));
+    pathway1->setSubdivisions(10);
+    addChildren(pathway1);
+    pathway1->optimize();
 }
