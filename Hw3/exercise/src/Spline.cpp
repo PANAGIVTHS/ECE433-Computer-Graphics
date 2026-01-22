@@ -163,7 +163,36 @@ void NurbsSurface::drawInternal() {
     TextureManager::bind(texture); 
     glColor3f(color.red, color.green, color.blue);
 
+    GLfloat texKnots[4] = {0.0, 0.0, 1.0, 1.0};
+    float maxU = 1.0f;
+    float maxV = 1.0f;
+
+    if (texConfig.mode == TextureMode::REPEAT_FIT) {
+        maxU = transform.scale.x;
+        maxV = transform.scale.y;
+    } else if (texConfig.mode == TextureMode::REPEAT_CUSTOM) {
+        maxU = texConfig.uMax;
+        maxV = texConfig.vMax;
+    }
+
+    //! Control points for texture mapping
+    GLfloat texPoints[4][2] = {
+        {0.0f, 0.0f}, {0.0f, maxV},
+        {maxU, 0.0f}, {maxU, maxV}
+    };
+
+    //! Generate texture surface points
     gluBeginSurface(nurbRenderer);
+    gluNurbsSurface(
+        nurbRenderer, 
+        4, texKnots, 
+        4, texKnots, 
+        4, 2, 
+        &texPoints[0][0], 
+        2, 2, 
+        GL_MAP2_TEXTURE_COORD_2
+    );
+
     gluNurbsSurface(
         nurbRenderer,
         uKnots.size(), &uKnots[0],

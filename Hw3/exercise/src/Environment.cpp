@@ -56,10 +56,11 @@ void Environment::spawn() {
             Vec3<float>(x, -30, z),
             4,
             {0.4f, 0.35f, 0.3f},
-            TextureID::NONE, 
+            TextureID::STONE, 
             MaterialID::MATTE
         );
 
+        rock->setTextureConfig(TextureConfig(TextureMode::REPEAT_FIT, 100.0f, 100.0f));
         rock->setScale(finalScaleXZ, finalScaleY, finalScaleXZ);
         
         //! Random Rotation to break repetition

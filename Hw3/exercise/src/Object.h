@@ -132,7 +132,7 @@ public:
         : Cube(pos, Vec3<float>(w, h, l), gravity, color, texture, material) {}
 
     Cube(float x, float y, float z, bool gravity = DEFAULT_GRAVITY, Color3f color = DEFAULT_COLOR, TextureID texture = DEFAULT_TEXTURE, MaterialID material = DEFAULT_MATERIAL)
-    : Cube(Vec3<float>(x, y, z), Vec3<float>(1.0f, 1.0f, 1.0f), gravity, color, texture, material) {}
+        : Cube(Vec3<float>(x, y, z), Vec3<float>(1.0f, 1.0f, 1.0f), gravity, color, texture, material) {}
 
     Vec3<GLfloat> getDimensions() {
         return dim;

@@ -44,6 +44,7 @@ public:
 };
 
 class NurbsSurface : public SplineObject {
+    TextureConfig texConfig;
 private:
     std::vector<GLfloat> controlPointsFlat; 
     std::vector<GLfloat> uKnots;
@@ -58,6 +59,10 @@ public:
 
     NurbsSurface(std::function<Vec3<float>(float, float)> func, float minU, float maxU, int uSteps, float minV, float maxV, int vSteps,
         Vec3<float> pos = Vec3<float>(0,0,0), int order = 4, Color3f color = {1,1,1}, TextureID texture = TextureID::NONE, MaterialID material = MaterialID::NONE);
+    
+    void setTextureConfig(TextureConfig config) override {
+        this->texConfig = config;
+    }
 };
 
 #endif
