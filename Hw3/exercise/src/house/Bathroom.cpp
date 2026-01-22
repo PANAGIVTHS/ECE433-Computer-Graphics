@@ -32,7 +32,7 @@ FramedWindow *Bathroom::addWindows() {
         windowSpacing,
         scale,
         gravity,
-        House::floorColor,
+        House::darkColor,
         texture,
         material
     );

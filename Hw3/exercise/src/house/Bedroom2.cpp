@@ -34,7 +34,7 @@ FramedWindow *Bedroom2::addWindows() {
         windowSpacing,
         scale,
         gravity,
-        House::floorColor,
+        House::darkColor,
         texture,
         material
     );
@@ -165,7 +165,9 @@ Object *Bedroom2::addWalls(FramedWindow *window, FramedWindow *door) {
     ));
 
     wardrobe->addChildren(new AnchoredCube(Vec3(rightWallSideWidth - wardrobeLength - House::interiorWallThickness, 0.0f, 0.0f),
-    Vec3(wardrobeLength, floorHeight,  2 * (wardrobeWidth + rightWallSideWidth))
+    Vec3(wardrobeLength, floorHeight,  2 * (wardrobeWidth + rightWallSideWidth)),
+        gravity,
+        House::floorColor
     ));
 
     wardrobe->addChildren(new AnchoredCube(Vec3(rightWallSideWidth - wardrobeLength - House::interiorWallThickness, floorHeight + wardrobeHeight, 0.0f),

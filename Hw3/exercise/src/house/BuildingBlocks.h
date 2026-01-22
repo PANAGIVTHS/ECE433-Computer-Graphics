@@ -38,6 +38,10 @@ public:
     Vec3<GLfloat> getDimensions() const {
         return cuboid->getDimensions();
     }
+
+    void setSubdivisions(int subdivisions) {
+        cuboid->setSubdivisions(subdivisions);
+    }
 };
 
 class AnchoredCube : public Object {

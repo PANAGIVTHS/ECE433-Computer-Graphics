@@ -20,9 +20,9 @@ public:
     static inline GLint windowRows = 1;
     static inline GLint windowColumns = 2;
 
-    static inline GLfloat wardrobeWidth = 0.9f;
+    static inline GLfloat wardrobeWidth = 0.7f;
     static inline GLfloat wardrobeHeight = 1.8f;
-    static inline GLfloat wardrobeLength = 0.5f;
+    static inline GLfloat wardrobeLength = 0.7f;
 
     static inline GLfloat frontWallInset = 0.1f;
     static inline GLfloat backWallSideWidth = 0.8f;

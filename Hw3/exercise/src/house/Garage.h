@@ -9,7 +9,7 @@ public:
     static inline GLfloat floorHeight = 0.27f;
     static inline GLfloat wallThickness = House::exteriorWallThickness;
 
-    static inline GLfloat length = 7.3152f;
+    static inline GLfloat length = 9.3152f;
     static inline GLfloat width = 1.2 * 3.8608f;
     static inline GLfloat height = House::height;
     static inline GLfloat ceilingOffset = 0.6f;

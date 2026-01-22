@@ -12,8 +12,8 @@
 class Celestial : public Object {
 protected:
     static constexpr GLfloat orbitSpeed = 0.001f;
-    static constexpr GLfloat orbitRadius = 100.0f;
-    static constexpr GLfloat radius = 13.0f;
+    static constexpr GLfloat orbitRadius = 500.0f;
+    static constexpr GLfloat radius = 35.0f;
     GLint size;
     GLint lightID;
     GLfloat orbitAngle = 0;
