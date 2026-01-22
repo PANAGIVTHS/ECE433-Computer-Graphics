@@ -5,8 +5,8 @@
 
 class FamilyRoom : public Block {
 public:
-    static inline GLfloat width = 3.9624f;
-    static inline GLfloat length = 3.3528f;
+    static inline GLfloat width = 4.7624f;
+    static inline GLfloat length = 4.5528f;
     static inline GLfloat floorHeight = 0.27f;
 
     static inline GLfloat doorWidth = 1.2f;

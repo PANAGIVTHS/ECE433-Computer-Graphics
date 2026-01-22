@@ -24,8 +24,8 @@ Object *FamilyRoom::addWalls(FramedWindow *window) {
     Object* walls = new Object(Vec3<GLfloat>(0,0,0));
 
     GLint ridgeCount = 10;
-    walls->addChildren(new RidgedWall(Vec3(House::ridgeThickness, floorHeight, 0.0f),
-    Vec3(House::exteriorWallThickness, House::height, length),
+    walls->addChildren(new RidgedWall(Vec3(House::ridgeThickness, 0.0f, 0.0f),
+    Vec3(House::exteriorWallThickness, House::height + floorHeight, length),
         Vec3(-1.0f, 0.0f, 0.0f),
         ridgeCount,
         House::ridgeThickness)
@@ -39,7 +39,7 @@ Object *FamilyRoom::addWalls(FramedWindow *window) {
         House::ridgeThickness)
     );
 
-    ridgeCount = 1;
+    ridgeCount = 3;
     walls->addChildren(new RidgedWall(Vec3(House::ridgeThickness + House::exteriorWallThickness + frontWallSideWidth + (windowCount + 1) * window->getDimensions().x, floorHeight, length),
     Vec3(width - frontWallSideWidth - (windowCount + 1) * window->getDimensions().x, House::height, House::exteriorWallThickness),
         Vec3(0.0f, 0.0f, 1.0f),

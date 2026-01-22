@@ -48,7 +48,8 @@ protected:
             &windowHeight,
             &windowSpacing,
             &windowHeightOffset,
-            &frontWallSideWidth
+            &frontWallSideWidth,
+            &rightWallSideWidth
         };
     }
 

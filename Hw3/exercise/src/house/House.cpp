@@ -1,5 +1,7 @@
 #include "House.h"
 
+#include "Bathroom.h"
+#include "Bedroom2.h"
 #include "DiningRoom.h"
 #include "FamilyRoom.h"
 #include "Garage.h"
@@ -22,8 +24,17 @@ void House::setup() {
     Garage *garage = new Garage(diningRoom->getPosition() + Vec3<GLfloat>(DiningRoom::totalWidth - House::ridgeThickness, 0, - FamilyRoom::doorWidth * 0.5), scale);
     addChildren(garage);
 
-    new BorderCubes(porch);
-    new BorderCubes(diningRoom);
-    new BorderCubes(familyRoom);
-    new BorderCubes(garage);
+    Bathroom *bathroom = new Bathroom(familyRoom->getPosition(), House::scale);
+    bathroom->setPosition(bathroom->getPosition() + Vec3<GLfloat>(0.0f, 0.0f, -Bathroom::totalLength));
+    addChildren(bathroom);
+
+    Bedroom2 *bedroom2 = new Bedroom2(bathroom->getPosition(), House::scale);
+    bedroom2->setPosition(bedroom2->getPosition() + Vec3<GLfloat>(0.0f, 0.0f, -Bedroom2::totalLength));
+    addChildren(bedroom2);
+
+    // new BorderCubes(porch);
+    // new BorderCubes(diningRoom);
+    // new BorderCubes(familyRoom);
+    // new BorderCubes(garage);
+    new BorderCubes(bedroom2);
 }
