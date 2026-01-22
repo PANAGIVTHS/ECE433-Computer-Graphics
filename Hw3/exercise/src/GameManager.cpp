@@ -38,8 +38,7 @@ void GameManager::init() {
     environment->spawn();
 
     House *house = new House(Vec3<GLfloat>(0.0f, 0.0f, -10.0f));
-    // std::cout << house->toString() << "\n";
-    AssetLoader::load("../assets/forest.txt", Vec3(7.0f, 0.2f, 7.0f))->optimize();
+    // AssetLoader::load("../assets/forest.txt", Vec3(7.0f, 0.2f, 7.0f))->optimize();
 
     environment->init();
 }

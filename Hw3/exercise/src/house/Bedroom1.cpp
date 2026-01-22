@@ -1,6 +1,7 @@
 #include "Bedroom1.h"
 
 #include "Bathroom.h"
+#include "DiningRoom.h"
 
 void Bedroom1::addAll() {
     addChildren(addFloor());
@@ -34,7 +35,7 @@ FramedWindow *Bedroom1::addWindows() {
         windowSpacing,
         scale,
         gravity,
-        House::floorColor,
+        House::darkColor,
         texture,
         material
     );
@@ -47,75 +48,18 @@ Object *Bedroom1::addWalls(FramedWindow *window, FramedWindow *door) {
 
     // RIGHT WALL
     GLint ridgeCount = 7;
-    walls->addChildren(new RidgedWall(Vec3(width, 0.0f, House::ridgeThickness),
-    Vec3(House::exteriorWallThickness, House::height + floorHeight, House::interiorWallThickness + length),
+    walls->addChildren(new RidgedWall(Vec3(width, 0.0f, House::exteriorWallThickness + House::ridgeThickness),
+    Vec3(House::exteriorWallThickness, House::height + floorHeight, 2 * House::interiorWallThickness + length + lavatoryWidth),
         Vec3(1.0f, 0.0f, 0.0f),
         ridgeCount,
         House::ridgeThickness)
     );
 
     // FRONT WALL
-    Object* frontWalls = new Object(Vec3<GLfloat>(House::exteriorWallThickness + House::ridgeThickness,0,House::ridgeThickness + House::exteriorWallThickness + length));
-
-    frontWalls->addChildren(new AnchoredCube(
-        Vec3(0.0f, 0.0f, 0.0f),
-    Vec3(Bathroom::width + House::interiorWallThickness + frontWallInset, House::height + floorHeight, House::interiorWallThickness)
+    walls->addChildren(new AnchoredCube(
+        Vec3(totalWidth - House::exteriorWallThickness - House::ridgeThickness - DiningRoom::width, 0.0f, totalLength - House::interiorWallThickness),
+    Vec3(DiningRoom::width, House::height + floorHeight, House::interiorWallThickness)
     ));
-
-    frontWalls->addChildren(new AnchoredCube(
-        Vec3(Bathroom::width + House::interiorWallThickness + frontWallInset, 0.0f, 0.0f),
-    Vec3(doorWidth, floorHeight, House::interiorWallThickness)
-    ));
-
-    frontWalls->addChildren(new AnchoredCube(
-        Vec3(Bathroom::width + House::interiorWallThickness + frontWallInset, floorHeight + doorHeight, 0.0f),
-    Vec3(doorWidth, totalHeight - floorHeight - doorHeight, House::interiorWallThickness)
-    ));
-
-    frontWalls->addChildren(new AnchoredCube(
-        Vec3(Bathroom::width + House::interiorWallThickness + frontWallInset + doorWidth, 0.0f, 0.0f),
-    Vec3(
-        (House::ridgeThickness + House::exteriorWallThickness + width + House::interiorWallThickness) - (Bathroom::width + House::interiorWallThickness + frontWallInset + doorWidth + House::exteriorWallThickness + House::ridgeThickness),
-        House::height + floorHeight,
-        House::interiorWallThickness)
-    ));
-
-    walls->addChildren(frontWalls);
-
-    // RIGHT WALL
-    // Object* rightWalls = new Object(Vec3<GLfloat>(House::exteriorWallThickness + House::ridgeThickness + width,0,House::ridgeThickness + House::exteriorWallThickness));
-    //
-    // rightWalls->addChildren(new AnchoredCube(
-    //     Vec3(0.0f , 0.0f, 0.0f),
-    // Vec3(House::interiorWallThickness, House::height + floorHeight, rightWallSideWidth)
-    // ));
-    //
-    // rightWalls->addChildren(new AnchoredCube(
-    //     Vec3(0.0f, 0.0f, rightWallSideWidth),
-    // Vec3(House::interiorWallThickness, floorHeight, wardrobeWidth)
-    // ));
-    //
-    // rightWalls->addChildren(new AnchoredCube(
-    //     Vec3(0.0f, floorHeight + wardrobeHeight, rightWallSideWidth),
-    // Vec3(House::interiorWallThickness, totalHeight - floorHeight - wardrobeHeight, wardrobeWidth)
-    // ));
-    //
-    // rightWalls->addChildren(new AnchoredCube(
-    //     Vec3(0.0f, 0.0f, rightWallSideWidth + wardrobeWidth),
-    // Vec3(House::interiorWallThickness, floorHeight, wardrobeWidth)
-    // ));
-    //
-    // rightWalls->addChildren(new AnchoredCube(
-    //     Vec3(0.0f, floorHeight + wardrobeHeight, rightWallSideWidth + wardrobeWidth),
-    // Vec3(House::interiorWallThickness, totalHeight - floorHeight - wardrobeHeight, wardrobeWidth)
-    // ));
-    //
-    // rightWalls->addChildren(new AnchoredCube(
-    //     Vec3(0.0f, 0.0f, rightWallSideWidth + 2 * wardrobeWidth),
-    // Vec3(House::interiorWallThickness, House::height + floorHeight, totalLength - rightWallSideWidth - 2 * wardrobeWidth - House::exteriorWallThickness - House::ridgeThickness - House::interiorWallThickness)
-    // ));
-
-    // walls->addChildren(rightWalls);
 
     // BACK WALL
     Object* backWalls = new Object(Vec3<GLfloat>(0.0f,0,House::ridgeThickness));
@@ -154,25 +98,39 @@ Object *Bedroom1::addWalls(FramedWindow *window, FramedWindow *door) {
     walls->addChildren(backWalls);
 
     // WARDROBE
-    // Object* wardrobe = new Object(Vec3<GLfloat>(House::exteriorWallThickness + House::ridgeThickness + width + House::interiorWallThickness + wardrobeLength,0,House::exteriorWallThickness + House::ridgeThickness));
-    //
-    // wardrobe->addChildren(new AnchoredCube(Vec3(0.0f, 0.0f, 0.0f),
-    // Vec3(House::interiorWallThickness, floorHeight + House::height, 2 * (rightWallSideWidth + wardrobeWidth))
-    // ));
-    //
-    // wardrobe->addChildren(new AnchoredCube(Vec3(-wardrobeLength, 0.0f, 2 * (rightWallSideWidth + wardrobeWidth)),
-    // Vec3(wardrobeLength + House::interiorWallThickness, floorHeight + House::height, House::interiorWallThickness)
-    // ));
-    //
-    // wardrobe->addChildren(new AnchoredCube(Vec3(rightWallSideWidth - wardrobeLength - House::interiorWallThickness, 0.0f, 0.0f),
-    // Vec3(wardrobeLength, floorHeight,  2 * (wardrobeWidth + rightWallSideWidth))
-    // ));
-    //
-    // wardrobe->addChildren(new AnchoredCube(Vec3(rightWallSideWidth - wardrobeLength - House::interiorWallThickness, floorHeight + wardrobeHeight, 0.0f),
-    // Vec3(wardrobeLength, House::interiorWallThickness,  2 * (wardrobeWidth + rightWallSideWidth))
-    // ));
-    //
-    // walls->addChildren(wardrobe);
+    Object* wardrobe = new Object(Vec3<GLfloat>(width - wardrobeWidth, 0.0f, totalLength - wardrobeLength - House::interiorWallThickness));
+
+    wardrobe->addChildren(new AnchoredCube(Vec3(0.0f, 0.0f, -House::interiorWallThickness),
+    Vec3(House::interiorWallThickness, floorHeight + House::height, wardrobeLength + House::interiorWallThickness)
+    ));
+
+    wardrobe->addChildren(new AnchoredCube(Vec3(House::interiorWallThickness, 0.0f, 0.0f),
+    Vec3(wardrobeWidth, floorHeight, wardrobeLength),
+        gravity,
+        House::floorColor
+    ));
+
+    wardrobe->addChildren(new AnchoredCube(Vec3(House::interiorWallThickness, 0.0f, -House::interiorWallThickness),
+    Vec3(wardrobeWallSpacing, floorHeight + House::height, House::interiorWallThickness)
+    ));
+
+    wardrobe->addChildren(new AnchoredCube(Vec3(House::interiorWallThickness + wardrobeWallSpacing + 2 * wardrobeDoorWidth, 0.0f, -House::interiorWallThickness),
+    Vec3(wardrobeWallSpacing, floorHeight + House::height, House::interiorWallThickness)
+    ));
+
+    wardrobe->addChildren(new AnchoredCube(Vec3(House::interiorWallThickness + wardrobeWallSpacing, floorHeight + wardrobeHeight, -House::interiorWallThickness),
+    Vec3(2 * wardrobeDoorWidth, totalHeight - (floorHeight + wardrobeHeight), House::interiorWallThickness)
+    ));
+
+    wardrobe->addChildren(new AnchoredCube(Vec3(House::interiorWallThickness, floorHeight + wardrobeHeight, 0.0f),
+    Vec3(wardrobeWidth, floorHeight, wardrobeLength)
+    ));
+
+    walls->addChildren(wardrobe);
+
+    // LAVATORY
+    // Object* wardrobe = new Object(Vec3<GLfloat>(width - wardrobeWidth, 0.0f, totalLength - wardrobeLength - House::interiorWallThickness));
+
 
     return walls;
 }

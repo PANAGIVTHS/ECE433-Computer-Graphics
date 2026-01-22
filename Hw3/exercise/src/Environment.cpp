@@ -68,6 +68,7 @@ void Environment::spawn() {
 
         rock->optimize();
     }
+
 }
 
 void Environment::updateSky(float heightFactor) {

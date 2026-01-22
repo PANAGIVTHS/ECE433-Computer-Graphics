@@ -5,7 +5,7 @@
 
 class DiningRoom : public Block {
 public:
-    static inline GLfloat width = 2.5908f;
+    static inline GLfloat width = 2.7908f;
     static inline GLfloat length = 7.62f;
     static inline GLfloat floorHeight = 0.27f;
 

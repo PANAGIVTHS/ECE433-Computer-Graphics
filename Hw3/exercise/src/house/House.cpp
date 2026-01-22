@@ -25,7 +25,7 @@ void House::setup() {
     addChildren(diningRoom);
     diningRoom->optimize();
 
-    Garage *garage = new Garage(diningRoom->getPosition() + Vec3<GLfloat>(DiningRoom::totalWidth - House::ridgeThickness, 0, - FamilyRoom::doorWidth * 0.5), scale);
+    Garage *garage = new Garage(diningRoom->getPosition() + Vec3<GLfloat>(DiningRoom::totalWidth - House::ridgeThickness, 0, -House::garageInset), scale);
     addChildren(garage);
     garage->optimize();
 
@@ -43,9 +43,23 @@ void House::setup() {
     addChildren(bedroom1);
     bedroom1->optimize();
 
-    // new BorderCubes(porch);
-    // new BorderCubes(diningRoom);
-    // new BorderCubes(familyRoom);
-    // new BorderCubes(garage);
-    // new BorderCubes(bedroom2);
+    // PATHWAY
+    GLfloat pathWidth = Garage::doorWidth;
+    GLfloat pathLength = 16;
+    GLfloat pathHeight = 0.02f;
+
+    GLfloat doorOffsetX = Garage::sidePanelWidth;
+    GLfloat garageFrontZ = Garage::totalLength - Garage::ceilingOffset - House::exteriorWallThickness - House::ridgeThickness;
+    Vec3<GLfloat> pathPos = garage->getPosition() + Vec3(
+        doorOffsetX,
+        0.0f,
+        garageFrontZ
+    );
+
+    AnchoredCuboid *pathway = new AnchoredCuboid(pathPos, Vec3(pathWidth, pathHeight, pathLength), false);
+    pathway->setTexture(TextureID::STONE, false);
+    pathway->setTextureConfig(TextureConfig(TextureMode::REPEAT_FIT));
+    pathway->setSubdivisions(10);
+    addChildren(pathway);
+    pathway->optimize();
 }
