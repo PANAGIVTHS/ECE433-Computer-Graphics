@@ -1,8 +1,8 @@
 # --- DETAILED IMPERFECT SOFA ---
 # Positioned at (5,0,5) - Move this where you want it
-OBJECT 9.85 0.2 -8 
+OBJECT 0 0 0 
 GRAVITY false
-ROTATION -90 0 1 0
+ROTATION 0 0 0 0
 BEGIN
     # -- FEET --
     # Front Left
