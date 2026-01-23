@@ -1,9 +1,8 @@
 # --- DETAILED INTERIOR DOOR (Fixed Top Gap) ---
 # Positioned at (0, 0, 0)
-OBJECT 7.86 0.2 -14.67
-SCALE 0.65 0.85 0.8
+OBJECT 5.48 0.2 -16.61
 GRAVITY false
-ROTATION -90 0 1 0
+ROTATION 0 0 0 0
 BEGIN
     # -- DOOR FRAME (JAMBS) --
     # Left Jamb
@@ -50,7 +49,7 @@ BEGIN
     # -- DOOR LEAF (Fixed Gap) --
     # Rotated 15 degrees OPEN
     OBJECT -0.4 1.025 0.0
-    ROTATION -96.0 0 1 0
+    ROTATION 87.0 0 1 0
     BEGIN
         # -- STRUCTURAL FRAME (Stiles & Rails) --
         

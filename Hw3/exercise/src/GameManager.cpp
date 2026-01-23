@@ -47,6 +47,7 @@ void GameManager::loadLevelAssets() {
     addAsset("../assets/chair.txt", Vec3(0.0f, 0.0f, 0.0f));
     addAsset("../assets/door.txt", Vec3(0.0f, 0.0f, 0.0f));
     addAsset("../assets/door2.txt", Vec3(0.0f, 0.0f, 0.0f));
+    addAsset("../assets/door3.txt", Vec3(0.0f, 0.0f, 0.0f));
     addAsset("../assets/table.txt", Vec3(0.0f, 0.0f, -0.0f));
     addAsset("../assets/washing_machine.txt", Vec3(0.0f, 0.0f, -0.0f));
     addAsset("../assets/bathtub.txt", Vec3(0.0f, 0.0f, -0.0f));
