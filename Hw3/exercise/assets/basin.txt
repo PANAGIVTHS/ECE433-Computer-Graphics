@@ -23,23 +23,28 @@ BEGIN
     BEGIN
         # 1. Base Slab (Ceramic)
         CUBOID 0.0 0.0 0.0 0.6 0.03 0.4
-        TEXTURE WHITE_WOOL
+        TEXTURE BONE_SIDE
+        TEX_CONFIG REPEAT_FIT
 
         # 2. Front Wall
         CUBOID 0.0 0.08 0.19 0.6 0.13 0.02
-        TEXTURE WHITE_WOOL
+        TEXTURE BONE_SIDE
+        TEX_CONFIG REPEAT_FIT
 
         # 3. Back Wall
         CUBOID 0.0 0.08 -0.19 0.6 0.13 0.02
-        TEXTURE WHITE_WOOL
+        TEXTURE BONE_SIDE
+        TEX_CONFIG REPEAT_FIT
 
         # 4. Left Wall
         CUBOID -0.29 0.08 0.0 0.02 0.13 0.36
-        TEXTURE WHITE_WOOL
+        TEXTURE BONE_SIDE
+        TEX_CONFIG REPEAT_FIT
 
         # 5. Right Wall
         CUBOID 0.29 0.08 0.0 0.02 0.13 0.36
-        TEXTURE WHITE_WOOL
+        TEXTURE BONE_SIDE
+        TEX_CONFIG REPEAT_FIT
 
         # 6. Drain Plug (Chrome)
         CUBOID 0.0 0.02 0.0 0.06 0.01 0.06

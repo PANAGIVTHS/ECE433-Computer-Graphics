@@ -36,7 +36,7 @@ BEGIN
     BEGIN
         # Top Surface
         CUBOID 0.025 0.0 0.0 1.95 0.05 2.4
-        TEXTURE GRAY_WOOL
+        TEXTURE YELLOW_WOOL
         TEX_CONFIG REPEAT_FIT
 
         # Left Side Drop
@@ -44,7 +44,7 @@ BEGIN
         ROTATION 0 0 0 0
         BEGIN
             CUBOID 0.0 0.0 0.0 0.05 0.35 2.4
-            TEXTURE GRAY_WOOL
+            TEXTURE YELLOW_WOOL
             TEX_CONFIG REPEAT_FIT
         END
 
@@ -53,7 +53,7 @@ BEGIN
         ROTATION 0 0 0 0
         BEGIN
             CUBOID 0.0 0.0 0.0 0.05 0.20 2.4
-            TEXTURE GRAY_WOOL
+            TEXTURE YELLOW_WOOL
             TEX_CONFIG REPEAT_FIT
         END
     END
@@ -79,7 +79,7 @@ BEGIN
         ROTATION 0 0 0 0
         BEGIN
             CUBOID 0.0 0.0 0.0 1.9 0.5 0.1
-            TEXTURE GRAY_WOOL
+            TEXTURE YELLOW_WOOL
             TEX_CONFIG REPEAT_FIT
         END
     END
