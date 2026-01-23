@@ -79,5 +79,18 @@ void House::setup() {
     addChildren(pathway1);
     pathway1->optimize();
 
-    new BorderCubes(bedroom1);
+    // ROOF
+    Object *roof = new Object(Vec3<GLfloat>(bedroom2->getPosition().x, 0.0f, bedroom2->getPosition().z), House::scale);
+
+    GLfloat ceilingWidth = FamilyRoom::totalWidth + DiningRoom::totalWidth - 2 * (exteriorWallThickness + ridgeThickness);
+    GLfloat ceilingHeight = 0.2f;
+    GLfloat ceilingLength = DiningRoom::totalLength + Bedroom1::totalLength - 2 * (exteriorWallThickness + ridgeThickness);
+
+    roof->addChildren(new AnchoredCube(Vec3((exteriorWallThickness + ridgeThickness), House::height + House::floorHeight, (exteriorWallThickness + ridgeThickness)),
+    Vec3(ceilingWidth, ceilingHeight,  ceilingLength),
+        gravity,
+        House::darkColor
+    ));
+
+    addChildren(roof);
 }
