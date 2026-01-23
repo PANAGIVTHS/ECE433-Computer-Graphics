@@ -1,8 +1,8 @@
 # --- MODERN TUMBLE DRYER (Heat Pump Model) ---
 # Positioned relative to the scene (e.g., next to a washer)
-OBJECT 3.5 0.3 -12.67
+OBJECT 7 0.3 -12
 GRAVITY false
-ROTATION 135 0 1 0
+ROTATION -90 0 1 0
 BEGIN
     # -- MAIN CHASSIS --
     # Elevated slightly (y=0.44) to allow for feet underneath

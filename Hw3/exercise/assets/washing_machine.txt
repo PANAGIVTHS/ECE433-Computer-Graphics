@@ -1,8 +1,8 @@
 # --- MODERN WASHING MACHINE (Fixed Geometry) ---
 # Positioned at (12, 0, 8)
-OBJECT 3.37 0.3 -14
+OBJECT 7.1 0.3 -13
 GRAVITY false
-ROTATION 90 0 1 0
+ROTATION -90 0 1 0
 BEGIN
     # -- CHASSIS --
     # Base
