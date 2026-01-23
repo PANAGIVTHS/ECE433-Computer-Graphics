@@ -90,6 +90,10 @@ void InputManager::keyboardDown(unsigned char key, int x, int y) {
         case 'Z':
             pressedKeys[DOWN] = true;
             break;
+        case 'r':
+        case 'R':
+            GameManager::reloadAssets();
+            break;
         case 32: // Space
             pressedKeys[UP] = true;
             if (camera->hasGravity()) 

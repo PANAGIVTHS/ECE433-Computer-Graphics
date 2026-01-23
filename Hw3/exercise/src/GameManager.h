@@ -19,7 +19,9 @@ private:
     inline static int frameCount = 0;
     inline static int lastFpsTime = 0;
     inline static float fps = 0.0f;
-
+    inline static std::vector<Object*> levelAssets;
+    static void unloadLevelAssets();
+    static void loadLevelAssets();
     static void updateDeltaTime();
 public:
     static constexpr GLfloat speed = 4.137f; // m/s
@@ -38,6 +40,7 @@ public:
     static void onWindowUpdate(GLint width, GLint height, bool newContext);
     static void runGameLoop();
     static void cleanUp();
+    static void reloadAssets();
 
     //fps related
     static void updateFPS();

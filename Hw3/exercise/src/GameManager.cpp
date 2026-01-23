@@ -27,35 +27,65 @@ float GameManager::getFPS() {
     return fps;
 }
 
-void GameManager::init() {
-    if (camera) delete camera;
-    if (environment) delete environment;
-    ObjectHandler::clear();
+void GameManager::loadLevelAssets() {
+    std::cout << "Loading Dynamic Level Assets..." << std::endl;
 
+    //! Helper function
+    auto addAsset = [&](std::string path, Vec3<GLfloat> pos) {
+        Object* obj = AssetLoader::load(path, pos);
+        if (obj) {
+            obj->optimize();
+            levelAssets.push_back(obj);
+        }
+    };
+
+    addAsset("../assets/forest.txt", Vec3(7.0f, 0.2f, 7.0f));
+    addAsset("../assets/sofa.txt", Vec3(7.0f, 0.2f, 7.0f));
+    addAsset("../assets/stove.txt", Vec3(2.0f, 0.2f, 2.0f));
+    addAsset("../assets/fridge.txt", Vec3(1.0f, 0.2f, 2.5f));
+    addAsset("../assets/bed.txt", Vec3(10.0f, 0.2f, 2.5f));
+    addAsset("../assets/coffee.txt", Vec3(15.0f, 0.2f, 2.5f));
+    addAsset("../assets/chair.txt", Vec3(12.0f, 0.2f, 2.5f));
+    addAsset("../assets/door.txt", Vec3(12.0f, 0.2f, 2.5f));
+    addAsset("../assets/table.txt", Vec3(4.0f, 0.2f, -2.0f));
+    addAsset("../assets/washing_machine.txt", Vec3(4.0f, 0.2f, -4.0f));
+    addAsset("../assets/bathtub.txt", Vec3(4.0f, 0.2f, -6.0f));
+    addAsset("../assets/wardrobe.txt", Vec3(4.0f, 0.2f, -8.0f));
+    addAsset("../assets/bookshelf.txt", Vec3(4.0f, 0.2f, -12.0f));
+}
+
+void GameManager::unloadLevelAssets() {
+    for (Object* obj : levelAssets) {
+        if (obj) {
+            obj->~Object();
+        }
+    }
+    levelAssets.clear();
+}
+
+void GameManager::init() {
     oldTime = glutGet(GLUT_ELAPSED_TIME);
+    
     camera = new Camera(initialCameraPos);
+    
     environment = new Environment(skyColor);
-    environment->spawn();
+    environment->spawn(); 
+    environment->init();
 
     House *house = new House(Vec3<GLfloat>(0.0f, 0.0f, -10.0f));
-    AssetLoader::load("../assets/forest.txt", Vec3(7.0f, 0.2f, 7.0f))->optimize();
-    AssetLoader::load("../assets/sofa.txt", Vec3(7.0f, 0.2f, 7.0f))->optimize();
-    AssetLoader::load("../assets/stove.txt", Vec3(2.0f, 0.2f, 2.0f))->optimize();
-    AssetLoader::load("../assets/fridge.txt", Vec3(1.0f, 0.2f, 2.5f))->optimize();
-    AssetLoader::load("../assets/bed.txt", Vec3(10.0f, 0.2f, 2.5f))->optimize();
-    AssetLoader::load("../assets/coffee.txt", Vec3(15.0f, 0.2f, 2.5f))->optimize();
-    AssetLoader::load("../assets/chair.txt", Vec3(12.0f, 0.2f, 2.5f))->optimize();
-    AssetLoader::load("../assets/door.txt", Vec3(12.0f, 0.2f, 2.5f))->optimize();
-    AssetLoader::load("../assets/table.txt", Vec3(4.0f, 0.2f, -2.0f))->optimize();
-    AssetLoader::load("../assets/washing_machine.txt", Vec3(4.0f, 0.2f, -4.0f))->optimize();
-    AssetLoader::load("../assets/bathtub.txt", Vec3(4.0f, 0.2f, -6.0f))->optimize();
-    AssetLoader::load("../assets/wardrobe.txt", Vec3(4.0f, 0.2f, -8.0f))->optimize();
-    AssetLoader::load("../assets/bookshelf.txt", Vec3(4.0f, 0.2f, -12.0f))->optimize();
-    Object *car = new Model("../assets/Car.obj", Vec3(12.0f, 3.2f, 2.5f), false, {1.0f, 1.0f, 1.0f}, TextureID::NONE, MaterialID::MATTE);
-    //car->setScale(0.1f, 0.1f, 0.1f);
+    Model *car = new Model("../assets/Car.obj", Vec3(12.0f, 3.2f, 2.5f), false, {1.0f, 1.0f, 1.0f}, TextureID::NONE, MaterialID::MATTE);
     car->optimize();
 
-    environment->init();
+    loadLevelAssets(); 
+}
+
+void GameManager::reloadAssets() {
+    std::cout << "--- RELOADING FURNITURE & ITEMS ---" << std::endl;
+
+    unloadLevelAssets();
+    loadLevelAssets();
+
+    std::cout << "--- RELOAD COMPLETE ---" << std::endl;
 }
 
 void GameManager::updateDeltaTime() {
