@@ -49,7 +49,7 @@ BEGIN
     # -- DOOR LEAF (Fixed Gap) --
     # Rotated 15 degrees OPEN
     OBJECT -0.4 1.025 0.0
-    ROTATION 15.0 0 1 0
+    ROTATION 87.0 0 1 0
     BEGIN
         # -- STRUCTURAL FRAME (Stiles & Rails) --
         
