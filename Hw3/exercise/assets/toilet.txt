@@ -1,0 +1,150 @@
+# --- MODERN SKIRTED TOILET (Ceramic / Bone Texture) ---
+# Positioned relative to the scene
+OBJECT 3.5 0.3 -13
+GRAVITY false
+ROTATION 90 0 1 0
+BEGIN
+    # -- SKIRTED BASE (Trapway) --
+    # The sleek bottom section with smooth sides (Skirted design)
+    OBJECT 0.0 0.2 0.0
+    BEGIN
+        # Main vertical mass
+        CUBOID 0.0 0.0 0.0 0.34 0.4 0.55
+        TEXTURE BONE_SIDE
+        TEX_CONFIG REPEAT_FIT
+        
+        # Decorative bolt caps (Side) - blending with the ceramic
+        OBJECT 0.0 -0.15 0.15
+        BEGIN
+            CUBOID -0.175 0.0 0.0 0.02 0.04 0.04
+            TEXTURE BONE_SIDE
+            TEX_CONFIG REPEAT_FIT
+            CUBOID 0.175 0.0 0.0 0.02 0.04 0.04
+            TEXTURE BONE_SIDE
+            TEX_CONFIG REPEAT_FIT
+        END
+    END
+
+    # -- THE BOWL --
+    # Upper section widening out
+    OBJECT 0.0 0.42 0.12
+    BEGIN
+        # Bowl Body
+        CUBOID 0.0 0.0 0.0 0.37 0.15 0.48
+        TEXTURE BONE_SIDE
+        TEX_CONFIG REPEAT_FIT
+
+        # Interior Water
+        OBJECT 0.0 0.02 0.05
+        BEGIN
+            CUBOID 0.0 0.0 0.0 0.25 0.01 0.3
+            TEXTURE BLUE_WOOL
+            TEX_CONFIG REPEAT_FIT
+        END
+    END
+
+    # -- THE TANK --
+    # Sits on the back platform of the base
+    OBJECT 0.0 0.75 -0.22
+    BEGIN
+        # Tank Body
+        CUBOID 0.0 0.0 0.0 0.42 0.38 0.18
+        TEXTURE BONE_SIDE
+        TEX_CONFIG REPEAT_FIT
+
+        # Tank Lid (Slightly larger overhang)
+        OBJECT 0.0 0.2 0.0
+        BEGIN
+            CUBOID 0.0 0.0 0.0 0.44 0.04 0.2
+            TEXTURE BONE_SIDE
+            TEX_CONFIG REPEAT_FIT
+        END
+
+        # Dual Flush Buttons (Chrome)
+        OBJECT 0.0 0.22 0.0
+        BEGIN
+            # Button Bezel
+            CUBOID 0.0 0.0 0.0 0.12 0.01 0.06
+            TEXTURE IRON
+            TEX_CONFIG REPEAT_FIT
+            
+            # Large Button (Full Flush)
+            CUBOID 0.03 0.01 0.0 0.04 0.02 0.04
+            TEXTURE IRON
+            TEX_CONFIG REPEAT_FIT
+            
+            # Small Button (Half Flush)
+            CUBOID -0.03 0.01 0.0 0.03 0.02 0.03
+            TEXTURE IRON
+            TEX_CONFIG REPEAT_FIT
+        END
+    END
+
+    # -- SEAT & COVER ASSEMBLY --
+    # Attached to the bowl
+    OBJECT 0.0 0.5 -0.08
+    BEGIN
+        # Hinge Mechanism (Metal)
+        CUBOID 0.0 0.0 0.0 0.2 0.02 0.05
+        TEXTURE IRON
+        TEX_CONFIG REPEAT_FIT
+
+        # The Seat (Ring) - Resting Down
+        OBJECT 0.0 0.02 0.2
+        BEGIN
+            # Left Side
+            CUBOID -0.16 0.0 0.0 0.06 0.02 0.45
+            TEXTURE BONE_SIDE
+            TEX_CONFIG REPEAT_FIT
+            # Right Side
+            CUBOID 0.16 0.0 0.0 0.06 0.02 0.45
+            TEXTURE BONE_SIDE
+            TEX_CONFIG REPEAT_FIT
+            # Front Connection
+            CUBOID 0.0 0.0 0.2 0.26 0.02 0.06
+            TEXTURE BONE_SIDE
+            TEX_CONFIG REPEAT_FIT
+            # Back Connection
+            CUBOID 0.0 0.0 -0.2 0.26 0.02 0.06
+            TEXTURE BONE_SIDE
+            TEX_CONFIG REPEAT_FIT
+        END
+
+        # The Cover (Lid) - Angled Open
+        OBJECT 0.0 0.05 0.0
+        ROTATION -100 1 0 0 # Tilted back slightly past 90 degrees
+        BEGIN
+            CUBOID 0.0 0.22 0.0 0.37 0.48 0.03
+            TEXTURE BONE_SIDE
+            TEX_CONFIG REPEAT_FIT
+        END
+    END
+
+    # -- EXTERNAL PLUMBING --
+    # Water supply line coming from the wall
+    OBJECT -0.3 0.15 -0.35
+    BEGIN
+        # Angle Stop Valve (Chrome)
+        CUBOID 0.0 0.0 0.0 0.04 0.04 0.08
+        TEXTURE IRON
+        TEX_CONFIG REPEAT_FIT
+
+        # Valve Handle
+        OBJECT -0.03 0.0 0.0
+        ROTATION 0 0 0 90
+        BEGIN
+            CUBOID 0.0 0.0 0.0 0.01 0.05 0.03
+            TEXTURE IRON
+            TEX_CONFIG REPEAT_FIT
+        END
+
+        # Supply Line (Going up to tank)
+        OBJECT 0.05 0.3 0.0
+        ROTATION 0 0 0 -15
+        BEGIN
+            CUBOID 0.0 0.0 0.0 0.01 0.6 0.01
+            TEXTURE IRON
+            TEX_CONFIG REPEAT_FIT
+        END
+    END
+END

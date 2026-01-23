@@ -1,9 +1,9 @@
 # --- SOPHISTICATED MODERN LIBRARY (Fixed Scale) ---
 # Positioned in scene
-OBJECT 9.15 0.3 -13.8
+OBJECT 10.167 0.3 -17
 SCALE 1.3 1 1
 GRAVITY false
-ROTATION 0 0 0 0
+ROTATION -90 0 1 0
 BEGIN
     # -- THE FRAMEWORK --
     # Base
