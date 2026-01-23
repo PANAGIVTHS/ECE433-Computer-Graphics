@@ -16,6 +16,7 @@ void Environment::init() {
 
 void Environment::spawn() {
     AssetLoader::load("../assets/forest.txt", Vec3(7.0f, 0.2f, 7.0f))->optimize();
+    AssetLoader::load("../assets/nether_portal.txt")->optimize();
 
     static const float rockRotations[] = {286, 115, 295, 12, 181, 67};
 
@@ -34,7 +35,7 @@ void Environment::spawn() {
     new Sun();
     new Moon();
     //TODO add to settings menu
-    (new Cuboid(0, -0.05, 0, 100, 0.1, 100, false, {.red = 1.0f, .green = 1.0f, .blue = 1.0f}, TextureID::MYCELIUM, MaterialID::MATTE, TextureConfig(TextureMode::REPEAT_FIT, 100, 100), 300))->optimize();
+    (new Cuboid(0, -0.05, 0, 100, 0.1, 100, false, {.red = 1.0f, .green = 1.0f, .blue = 1.0f}, TextureID::GRASS, MaterialID::MATTE, TextureConfig(TextureMode::REPEAT_FIT, 100, 100), 300))->optimize();
 
     //! Generate the Ring of mountains
     int numSegments = 6;

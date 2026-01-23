@@ -11,6 +11,7 @@
 #include "Object.h"
 #include "TextureEnums.h" 
 #include "utilities.h" 
+#include "house/BuildingBlocks.h"
 #include <string_view>
 
 class AssetLoader {
@@ -79,6 +80,20 @@ public:
                 float w, h, l; 
                 ss >> x >> y >> z >> w >> h >> l;
                 currentObj = new Cube(x, y, z, w, h, l, false);
+                currentObjType = "Cube";
+                objectCreated = true;
+            }
+            else if (cmd == "ACUBOID") {
+                float w, h, l; 
+                ss >> x >> y >> z >> w >> h >> l;
+                currentObj = new AnchoredCuboid(Vec3(x, y, z), Vec3(w, h, l), false);
+                currentObjType = "Cuboid";
+                objectCreated = true;
+            }
+            else if (cmd == "ACUBE") {
+                float w, h, l; 
+                ss >> x >> y >> z >> w >> h >> l;
+                currentObj = new AnchoredCube(Vec3(x, y, z), Vec3(w, h, l), false);
                 currentObjType = "Cube";
                 objectCreated = true;
             }
