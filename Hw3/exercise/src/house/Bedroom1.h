@@ -22,12 +22,15 @@ public:
 
     static inline GLfloat wardrobeWidth = 1.8f;
     static inline GLfloat wardrobeHeight = 1.8f;
-    static inline GLfloat wardrobeLength = 0.7f;
+    static inline GLfloat wardrobeLength = 0.85f;
     static inline GLfloat wardrobeWallSpacing = 0.15f * wardrobeWidth;
     static inline GLfloat wardrobeDoorWidth = (wardrobeWidth - wardrobeWallSpacing * 2) * 0.5f;
 
     static inline GLfloat lavatoryWidth = 2.309601f;
-    static inline GLfloat lavatoryLength = 1.8f;
+    static inline GLfloat lavatoryLength = width - House::interiorWallThickness;
+    static inline GLfloat lavatoryWallSpacing = 0.15f * wardrobeLength;
+    static inline GLfloat lavatoryDoorWidth = (wardrobeLength - lavatoryWallSpacing * 2);
+    static inline GLfloat lavatoryDoorHeight = 1.7f;
     static inline GLfloat lavatoryWallInset = 0.1f;
 
     static inline GLfloat totalWidth = width + House::exteriorWallThickness + House::ridgeThickness;
@@ -59,7 +62,11 @@ protected:
             &wardrobeLength,
             &backWallSideWidth,
             &lavatoryWidth,
-            &lavatoryLength
+            &lavatoryLength,
+            &lavatoryWallInset,
+            &lavatoryDoorWidth,
+            &lavatoryDoorHeight,
+            &lavatoryWallSpacing
         };
     }
 

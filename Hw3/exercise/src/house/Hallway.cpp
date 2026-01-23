@@ -13,7 +13,7 @@ void Hallway::addAll() {
 Object *Hallway::addFloor() {
     Object* floors = new Object(Vec3<GLfloat>(0,0,0));
 
-    // MAIN FLOORw
+    // MAIN FLOOR
     floors->addChildren(new AnchoredCuboid(
         Vec3<GLfloat>(2 * House::interiorWallThickness, 0.0f, House::interiorWallThickness),
         Vec3<GLfloat>(width, House::floorHeight, length),

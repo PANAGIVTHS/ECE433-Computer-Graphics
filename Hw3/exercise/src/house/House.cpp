@@ -79,5 +79,5 @@ void House::setup() {
     addChildren(pathway1);
     pathway1->optimize();
 
-    new BorderCubes(hallway);
+    new BorderCubes(bedroom1);
 }
