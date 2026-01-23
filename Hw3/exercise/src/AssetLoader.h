@@ -11,6 +11,7 @@
 #include "Object.h"
 #include "TextureEnums.h" 
 #include "utilities.h" 
+#include <string_view>
 
 class AssetLoader {
 public:
@@ -116,7 +117,7 @@ public:
                     if (currentObjType == "Cuboid") {
                         static_cast<Cuboid*>(currentObj)->setSubdivisions(sub);
                     } else {
-                        throw std::runtime_error("Object of type " + currentObjType + " doenst support SET_SUBDIVS directive");
+                        throw std::runtime_error("In file: " + filename + "\nObject of type " + currentObjType + " doenst support SET_SUBDIVS directive");
                     }
                 }
                 else if (cmd == "TEX_CONFIG") {
@@ -151,15 +152,13 @@ public:
     }
 
 private:
-    static TextureID resolveTexture(const std::string& name) {
-        if (name == "WINDOW") return TextureID::WINDOW;
-        if (name == "IRON")   return TextureID::IRON;
-        if (name == "GRASS")  return TextureID::GRASS;
-        if (name == "WOOD")   return TextureID::WOOD;
-        if (name == "LEAVES")   return TextureID::LEAVES;
-        if (name == "STONE")   return TextureID::STONE;
+    static TextureID resolveTexture(std::string_view name) {
+    #define X(tex) if (name == #tex) return TextureID::tex;
+        TEXTURE_LIST(X)
+    #undef X
         return TextureID::NONE;
     }
+
 };
 
 #endif

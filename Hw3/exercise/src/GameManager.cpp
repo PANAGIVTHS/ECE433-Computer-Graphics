@@ -38,7 +38,16 @@ void GameManager::init() {
     environment->spawn();
 
     House *house = new House(Vec3<GLfloat>(0.0f, 0.0f, -10.0f));
-    // AssetLoader::load("../assets/forest.txt", Vec3(7.0f, 0.2f, 7.0f))->optimize();
+    AssetLoader::load("../assets/forest.txt", Vec3(7.0f, 0.2f, 7.0f))->optimize();
+    AssetLoader::load("../assets/sofa.txt", Vec3(7.0f, 0.2f, 7.0f))->optimize();
+    AssetLoader::load("../assets/stove.txt", Vec3(2.0f, 0.2f, 2.0f))->optimize();
+    AssetLoader::load("../assets/fridge.txt", Vec3(1.0f, 0.2f, 2.5f))->optimize();
+    AssetLoader::load("../assets/bed.txt", Vec3(10.0f, 0.2f, 2.5f))->optimize();
+    AssetLoader::load("../assets/coffee.txt", Vec3(15.0f, 0.2f, 2.5f))->optimize();
+    AssetLoader::load("../assets/chair.txt", Vec3(12.0f, 0.2f, 2.5f))->optimize();
+    //Object *car = new Model("../assets/car.obj", Vec3(12.0f, 3.2f, 2.5f), false, {1.0f, 1.0f, 1.0f}, TextureID::NONE, MaterialID::MATTE);
+    // car->setScale(0.1f, 0.1f, 0.1f);
+    // car->optimize();
 
     environment->init();
 }

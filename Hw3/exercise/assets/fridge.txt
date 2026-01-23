@@ -1,0 +1,147 @@
+# --- MODERN GLASS-DOOR FRIDGE ---
+# Positioned at (11, 0, 5) - Adjust as needed
+OBJECT 11 0 5
+GRAVITY false
+ROTATION 0 0 0 0
+BEGIN
+    # -- CHASSIS (HOLLOW) --
+    # Main cabinet shell
+    
+    # Base
+    CUBOID 0.0 0.05 0.0 1.0 0.1 0.8
+    TEXTURE BONE_SIDE
+
+    # Top Cap
+    CUBOID 0.0 1.85 0.0 1.0 0.1 0.8
+    TEXTURE BONE_SIDE
+
+    # Left Wall
+    CUBOID -0.475 0.95 0.0 0.05 1.7 0.8
+    TEXTURE BONE_SIDE
+    
+    # Right Wall
+    CUBOID 0.475 0.95 0.0 0.05 1.7 0.8
+    TEXTURE BONE_SIDE
+
+    # Back Wall
+    CUBOID 0.0 0.95 -0.375 1.0 1.7 0.05
+    TEXTURE BONE_SIDE
+
+    # -- INTERIOR (Lining & Shelves) --
+    
+    # Interior Back Lining (To make it look like plastic/white inside, not just metal)
+    CUBOID 0.0 0.95 -0.34 0.9 1.65 0.02
+    TEXTURE STONE
+    TEX_CONFIG REPEAT_FIT
+
+    # Glass Shelf 1 (Top) - Imperfection: Tilted slightly left
+    OBJECT 0.0 1.4 0.0
+    ROTATION 0.5 0 0 1
+    BEGIN
+        CUBOID 0.0 0.0 0.0 0.9 0.02 0.65
+        TEXTURE WINDOW
+    END
+
+    # Glass Shelf 2 (Middle) - Imperfection: Tilted slightly forward
+    OBJECT 0.0 1.0 0.0
+    ROTATION 0.5 1 0 0
+    BEGIN
+        CUBOID 0.0 0.0 0.0 0.9 0.02 0.65
+        TEXTURE WINDOW
+    END
+
+    # Glass Shelf 3 (Bottom) 
+    OBJECT 0.0 0.6 0.0
+    ROTATION -0.2 0 0 1
+    BEGIN
+        CUBOID 0.0 0.0 0.0 0.9 0.02 0.65
+        TEXTURE WINDOW
+    END
+
+    # Crisper Drawers (At bottom of fridge section)
+    # Left Drawer
+    CUBOID -0.23 0.3 0.1 0.44 0.25 0.5
+    TEXTURE STONE
+    # Right Drawer
+    CUBOID 0.23 0.3 0.1 0.44 0.25 0.5
+    TEXTURE STONE
+
+    # -- FREEZER DRAWER (Bottom) --
+    # Slightly pulled out (z + 0.05) and tilted
+    OBJECT 0.0 0.25 0.45
+    ROTATION 1.0 1 0 0
+    BEGIN
+        # Front Panel
+        CUBOID 0.0 0.0 0.0 1.0 0.4 0.05
+        TEXTURE BONE_SIDE
+        
+        # Handle - Imperfection: Slightly crooked
+        OBJECT 0.0 0.15 0.04
+        ROTATION -1.5 0 0 1
+        BEGIN
+            CUBOID 0.0 0.0 0.0 0.6 0.03 0.03
+            TEXTURE STONE
+            TEX_CONFIG REPEAT_FIT
+        END
+    END
+
+    # -- LEFT FRIDGE DOOR (Solid) --
+    # Pivot on Left (-0.5)
+    OBJECT -0.5 1.15 0.42
+    ROTATION -2.0 0 1 0
+    BEGIN
+        # Door Body (Offset so it pivots from edge)
+        CUBOID 0.25 0.0 0.0 0.5 1.4 0.05
+        TEXTURE BONE_SIDE
+
+        # Water/Ice Dispenser Recess
+        CUBOID 0.2 0 0.02 0.3 0.4 0.02
+        TEXTURE NONE
+
+        # Handle - Vertical
+        OBJECT 0.4 0.0 0.04
+        ROTATION 0.5 1 0 0 
+        BEGIN
+            CUBOID 0.0 0.0 0.0 0.03 0.6 0.03
+            TEXTURE STONE
+            TEX_CONFIG REPEAT_FIT
+        END
+    END
+
+    # -- RIGHT FRIDGE DOOR (Glass/Open) --
+    # Pivot on Right (0.5), Rotated -15 degrees (Open)
+    OBJECT 0.5 1.15 0.42
+    ROTATION 15.0 0 1 0
+    BEGIN
+        # Frame Construction for Glass Window
+        
+        # Left Frame Vertical (Moves inward since we are pivoting from right edge 0,0)
+        CUBOID -0.45 0.0 0.0 0.1 1.4 0.05
+        TEXTURE BONE_SIDE
+        
+        # Right Frame Vertical (At the hinge)
+        CUBOID -0.025 0.0 0.0 0.05 1.4 0.05
+        TEXTURE BONE_SIDE
+
+        # Top Frame
+        CUBOID -0.25 0.65 0.0 0.5 0.1 0.05
+        TEXTURE BONE_SIDE
+
+        # Bottom Frame
+        CUBOID -0.25 -0.65 0.0 0.5 0.1 0.05
+        TEXTURE BONE_SIDE
+
+        # The Glass Window (See-through)
+        CUBOID -0.225 0.0 0.0 0.35 1.2 0.04
+        TEXTURE WINDOW
+
+        # Handle - Imperfection: Rotated slightly
+        OBJECT -0.42 0.0 0.04
+        ROTATION -1.0 0 0 1
+        BEGIN
+            CUBOID 0.0 0.0 0.0 0.03 0.6 0.03
+            TEXTURE STONE
+            TEX_CONFIG REPEAT_FIT
+        END
+    END
+END

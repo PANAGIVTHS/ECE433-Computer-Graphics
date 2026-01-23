@@ -1,0 +1,104 @@
+# --- DETAILED COFFEE TABLE (All REPEAT_FIT) ---
+# Positioned at (5, 0, 7.5)
+OBJECT 5 0 7.5
+GRAVITY false
+ROTATION 3.0 0 1 0
+BEGIN
+    # -- LEGS --
+    # Front Left
+    CUBOID -0.55 0.2 0.35 0.08 0.4 0.08
+    TEXTURE WOOD
+    TEX_CONFIG REPEAT_FIT
+
+    # Front Right
+    CUBOID 0.55 0.2 0.35 0.08 0.4 0.08
+    TEXTURE WOOD
+    TEX_CONFIG REPEAT_FIT
+
+    # Back Left
+    CUBOID -0.55 0.2 -0.35 0.08 0.4 0.08
+    TEXTURE WOOD
+    TEX_CONFIG REPEAT_FIT
+
+    # Back Right
+    CUBOID 0.55 0.2 -0.35 0.08 0.4 0.08
+    TEXTURE WOOD
+    TEX_CONFIG REPEAT_FIT
+
+    # -- LOWER SHELF --
+    # Floating shelf for magazines
+    CUBOID 0.0 0.15 0.0 1.0 0.04 0.6
+    TEXTURE STONE
+    TEX_CONFIG REPEAT_FIT
+
+    # -- TABLETOP FRAME --
+    # Long Side Front
+    CUBOID 0.0 0.42 0.35 1.2 0.05 0.1
+    TEXTURE WOOD
+    TEX_CONFIG REPEAT_FIT
+
+    # Long Side Back
+    CUBOID 0.0 0.42 -0.35 1.2 0.05 0.1
+    TEXTURE WOOD
+    TEX_CONFIG REPEAT_FIT
+
+    # Short Side Left
+    CUBOID -0.55 0.42 0.0 0.1 0.05 0.6
+    TEXTURE WOOD
+    TEX_CONFIG REPEAT_FIT
+
+    # Short Side Right
+    CUBOID 0.55 0.42 0.0 0.1 0.05 0.6
+    TEXTURE WOOD
+    TEX_CONFIG REPEAT_FIT
+
+    # -- GLASS TOP --
+    CUBOID 0.0 0.42 0.0 1.0 0.03 0.6
+    TEXTURE WINDOW
+    TEX_CONFIG REPEAT_FIT
+
+    # -- DECOR: STACK OF BOOKS --
+    # Book 1 (Bottom)
+    OBJECT -0.3 0.45 0.15
+    ROTATION 10.0 0 1 0
+    BEGIN
+        CUBOID 0.0 0.0 0.0 0.25 0.03 0.35
+        TEXTURE WOOD
+        TEX_CONFIG REPEAT_FIT
+    END
+
+    OBJECT -0.3 0.45 0.15
+    ROTATION 10.0 0 1 0
+    BEGIN
+        CUBOID 0.0 0.0 -0.2 0.1 0.03 0.05
+        TEXTURE STONE
+        TEX_CONFIG REPEAT_FIT
+    END
+
+    # Book 2 (Top) - Rotated differently
+    OBJECT -0.3 0.48 0.15
+    ROTATION 25.0 0 1 0
+    BEGIN
+        CUBOID 0.0 0.0 0.0 0.22 0.02 0.32
+        TEXTURE BONE_SIDE
+        TEX_CONFIG REPEAT_FIT
+    END
+
+    # -- DECOR: REMOTE CONTROL --
+    OBJECT 0.2 0.44 -0.1
+    ROTATION -15.0 0 1 0
+    BEGIN
+        CUBOID 0.0 0.0 0.0 0.08 0.02 0.25
+        TEXTURE BLACK_WOOL
+        TEX_CONFIG REPEAT_FIT
+    END
+
+    # -- DECOR: COASTER --
+    OBJECT 0.4 0.44 0.2
+    ROTATION 0 0 0 0
+    BEGIN
+        CUBOID 0.0 0.0 0.0 0.1 0.01 0.1
+        TEXTURE STONE
+        TEX_CONFIG REPEAT_FIT
+    END
+END
