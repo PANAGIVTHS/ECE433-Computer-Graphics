@@ -4,6 +4,8 @@
 #define TEXTURE_LIST(X) \
     X(GRASS)            \
     X(LEAVES)           \
+    X(PORTAL)           \
+    X(OBSIDIAN)         \
     X(IRON)             \
     X(WOOD)             \
     X(WINDOW)           \

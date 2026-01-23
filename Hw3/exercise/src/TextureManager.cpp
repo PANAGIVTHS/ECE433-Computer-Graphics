@@ -95,9 +95,11 @@ void TextureManager::init() {
 
     // Load textures
     init(TextureID::IRON, "../Texture_Images/LaGioconda.bmp", "../Texture_Images/LaGioconda_mask.bmp");
-    init(TextureID::GRASS, "../Texture_Images/grass.raw", 256, 256);
+    init(TextureID::GRASS, "../Texture_Images/grass_block_top.bmp");
     init(TextureID::WOOD, "../Texture_Images/oak_log.bmp");
-    init(TextureID::WINDOW, "../Texture_Images/ss0052.bmp", "../Texture_Images/ss0052_mask.bmp");
+    init(TextureID::WINDOW, "../Texture_Images/glass.bmp", "../Texture_Images/glass_mask.bmp");
+    init(TextureID::OBSIDIAN, "../Texture_Images/obsidian.bmp");
+    init(TextureID::PORTAL, "../Texture_Images/nether_portal.bmp", "../Texture_Images/nether_portal_mask.bmp");
     init(TextureID::LEAVES, "../Texture_Images/azalea_top.bmp");
     init(TextureID::MYCELIUM, "../Texture_Images/mycelium_top.bmp");
     init(TextureID::STONE, "../Texture_Images/cobblestone.bmp");
