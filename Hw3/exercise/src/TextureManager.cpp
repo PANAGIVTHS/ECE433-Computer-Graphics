@@ -94,7 +94,7 @@ void TextureManager::init() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // Load textures
-    init(TextureID::IRON, "../Texture_Images/LaGioconda.bmp", "../Texture_Images/LaGioconda_mask.bmp");
+    init(TextureID::IRON, "../Texture_Images/iron022.bmp");
     init(TextureID::GRASS, "../Texture_Images/grass_block_top.bmp");
     init(TextureID::WOOD, "../Texture_Images/oak_log.bmp");
     init(TextureID::WINDOW, "../Texture_Images/glass.bmp", "../Texture_Images/glass_mask.bmp");
@@ -106,6 +106,17 @@ void TextureManager::init() {
     init(TextureID::GRAY_WOOL, "../Texture_Images/gray_wool.bmp");
     init(TextureID::BONE_SIDE, "../Texture_Images/bone_block_side.bmp");
     init(TextureID::BLACK_WOOL, "../Texture_Images/black_wool.bmp");
+    init(TextureID::BLUE_WOOL, "../Texture_Images/blue_wool.bmp");
+    init(TextureID::BROWN_WOOL, "../Texture_Images/brown_wool.bmp");
+    init(TextureID::GREEN_WOOL, "../Texture_Images/green_wool.bmp");
+    init(TextureID::MAGENTA_WOOL, "../Texture_Images/magenta_wool.bmp");
+    init(TextureID::ORANGE_WOOL, "../Texture_Images/orange_wool.bmp");
+    init(TextureID::RED_WOOL, "../Texture_Images/red_wool.bmp");
+    init(TextureID::WHITE_WOOL, "../Texture_Images/white_wool.bmp");
+    init(TextureID::YELLOW_WOOL, "../Texture_Images/yellow_wool.bmp");
+    init(TextureID::SPRUCE_PLANKS, "../Texture_Images/spruce_planks.bmp");
+    init(TextureID::BROWN_CONCRETE, "../Texture_Images/brown_concrete.bmp");
+
 }
 
 //TODO Do No magic color

@@ -48,9 +48,12 @@ void GameManager::init() {
     AssetLoader::load("../assets/door.txt", Vec3(12.0f, 0.2f, 2.5f))->optimize();
     AssetLoader::load("../assets/table.txt", Vec3(4.0f, 0.2f, -2.0f))->optimize();
     AssetLoader::load("../assets/washing_machine.txt", Vec3(4.0f, 0.2f, -4.0f))->optimize();
-    //Object *car = new Model("../assets/car.obj", Vec3(12.0f, 3.2f, 2.5f), false, {1.0f, 1.0f, 1.0f}, TextureID::NONE, MaterialID::MATTE);
-    // car->setScale(0.1f, 0.1f, 0.1f);
-    // car->optimize();
+    AssetLoader::load("../assets/bathtub.txt", Vec3(4.0f, 0.2f, -6.0f))->optimize();
+    AssetLoader::load("../assets/wardrobe.txt", Vec3(4.0f, 0.2f, -8.0f))->optimize();
+    AssetLoader::load("../assets/bookshelf.txt", Vec3(4.0f, 0.2f, -12.0f))->optimize();
+    Object *car = new Model("../assets/Car.obj", Vec3(12.0f, 3.2f, 2.5f), false, {1.0f, 1.0f, 1.0f}, TextureID::NONE, MaterialID::MATTE);
+    //car->setScale(0.1f, 0.1f, 0.1f);
+    car->optimize();
 
     environment->init();
 }

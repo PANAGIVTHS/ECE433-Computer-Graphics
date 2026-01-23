@@ -1,0 +1,215 @@
+# --- SOPHISTICATED MODERN LIBRARY (Fixed Scale) ---
+# Positioned in scene
+OBJECT 8 0 8
+GRAVITY false
+ROTATION 0 0 0 0
+BEGIN
+    # -- THE FRAMEWORK --
+    # Base
+    CUBOID 0.0 0.05 0.0 2.0 0.1 0.4
+    TEXTURE SPRUCE_PLANKS
+    TEX_CONFIG REPEAT_FIT
+
+    # Walls
+    CUBOID -0.95 1.25 0.0 0.05 2.5 0.4
+    TEXTURE SPRUCE_PLANKS
+    CUBOID 0.95 1.25 0.0 0.05 2.5 0.4
+    TEXTURE SPRUCE_PLANKS
+    # Top
+    CUBOID 0.0 2.45 0.0 1.95 0.05 0.4
+    TEXTURE SPRUCE_PLANKS
+    # Backing
+    CUBOID 0.0 1.25 -0.19 1.9 2.4 0.02
+    TEXTURE OAK_PLANKS
+
+    # -- SHELVES (Centers at 0.5, 1.0, 1.5, 2.0) --
+    # Shelf thickness is 0.04.
+    # Surfaces are at: 0.1 (Base), 0.52 (S1), 1.02 (S2), 1.52 (S3), 2.02 (S4)
+    
+    CUBOID 0.0 0.5 0.0 1.85 0.04 0.38
+    TEXTURE SPRUCE_PLANKS
+    CUBOID 0.0 1.0 0.0 1.85 0.04 0.38
+    TEXTURE SPRUCE_PLANKS
+    CUBOID 0.0 1.5 0.0 1.85 0.04 0.38
+    TEXTURE SPRUCE_PLANKS
+    CUBOID 0.0 2.0 0.0 1.85 0.04 0.38
+    TEXTURE SPRUCE_PLANKS
+
+    # Dividers
+    CUBOID -0.3 0.75 0.0 0.02 0.45 0.38
+    TEXTURE SPRUCE_PLANKS
+    CUBOID 0.4 1.25 0.0 0.02 0.45 0.38
+    TEXTURE SPRUCE_PLANKS
+    CUBOID 0.0 1.75 0.0 0.02 0.45 0.38
+    TEXTURE SPRUCE_PLANKS
+
+
+    # ===============================
+    #   THE BOOKS (Rescaled to Fill Gaps)
+    # ===============================
+
+    # --- LEVEL 1: BOTTOM (Gap 0.10 to 0.48) ---
+    # Max height avail: ~0.38
+    
+    # Block A: Tall Encyclopedias
+    # Sitting on Base (Y=0.1) -> Center Y = 0.1 + (0.38/2) = 0.29
+    OBJECT -0.7 0.29 0.05
+    BEGIN
+        CUBOID 0.0 0.0 0.0 0.05 0.38 0.25
+        TEXTURE BLUE_WOOL
+        CUBOID 0.06 0.0 0.01 0.05 0.38 0.25
+        TEXTURE BLACK_WOOL
+        CUBOID 0.12 0.0 -0.01 0.05 0.38 0.25
+        TEXTURE BLUE_WOOL
+        CUBOID 0.18 0.0 0.0 0.05 0.38 0.25
+        TEXTURE RED_WOOL
+    END
+
+    # Block B: Leaning Large Books
+    OBJECT -0.2 0.27 0.05
+    ROTATION -12.0 0 0 1
+    BEGIN
+        CUBOID 0.0 0.0 0.0 0.04 0.36 0.22
+        TEXTURE BROWN_WOOL
+        CUBOID 0.05 0.01 0.0 0.04 0.36 0.22
+        TEXTURE BROWN_CONCRETE
+    END
+
+    # Block C: Horizontal Stack (Scaled Up)
+    OBJECT 0.6 0.2 0.05
+    BEGIN
+        # Bottom
+        CUBOID 0.0 0.0 0.0 0.28 0.08 0.24
+        TEXTURE GREEN_WOOL
+        # Middle
+        CUBOID 0.02 0.08 0.01 0.25 0.07 0.22
+        TEXTURE YELLOW_WOOL
+        # Top
+        OBJECT 0.0 0.15 0.0
+        ROTATION 15.0 0 1 0
+        BEGIN
+             CUBOID 0.0 0.0 0.0 0.22 0.06 0.18
+             TEXTURE RED_WOOL
+        END
+    END
+
+
+    # --- LEVEL 2: LOWER MID (Gap 0.52 to 0.98) ---
+    # Max height avail: ~0.46
+    
+    # Left: Large Art Book lying flat
+    OBJECT -0.6 0.56 0.05
+    BEGIN
+        CUBOID 0.0 0.0 0.0 0.35 0.04 0.28
+        TEXTURE WHITE_WOOL
+    END
+
+    # Right: Tall Reference Books (Height ~0.42)
+    # Sitting on Shelf 1 (Y=0.52) -> Center Y = 0.52 + 0.21 = 0.73
+    OBJECT 0.3 0.73 0.0
+    BEGIN
+        CUBOID -0.4 0.0 0.02 0.03 0.42 0.22
+        TEXTURE ORANGE_WOOL
+        CUBOID -0.36 0.0 -0.01 0.04 0.40 0.22
+        TEXTURE CYAN_WOOL
+        CUBOID -0.31 0.0 0.01 0.03 0.41 0.22
+        TEXTURE MAGENTA_WOOL
+        # Leaning book
+        OBJECT -0.2 0.0 0.0
+        ROTATION 15.0 0 0 1
+        BEGIN
+            CUBOID 0.0 0.0 0.0 0.03 0.40 0.22
+            TEXTURE YELLOW_WOOL
+        END
+        # More vertical books
+        CUBOID 0.1 0.0 0.0 0.05 0.42 0.22
+        TEXTURE BLACK_WOOL
+        CUBOID 0.16 0.0 0.01 0.04 0.41 0.22
+        TEXTURE GREEN_WOOL
+    END
+
+
+    # --- LEVEL 3: EYE LEVEL (Gap 1.02 to 1.48) ---
+    # Max height avail: ~0.46
+    
+    # Left: Messy Pile (Scaled)
+    # Sitting on Shelf 2 (Y=1.02) -> Center Y = 1.02 + 0.21 = 1.23
+    OBJECT -0.3 1.23 0.05
+    BEGIN
+        # Vertical group
+        CUBOID -0.4 0.0 0.0 0.05 0.42 0.24
+        TEXTURE BROWN_CONCRETE
+        CUBOID -0.34 0.0 0.0 0.06 0.42 0.24
+        TEXTURE BROWN_CONCRETE
+        
+        # Horizontal stack jammed in
+        OBJECT -0.15 -0.2 0.0
+        BEGIN
+            CUBOID 0.0 0.0 0.0 0.22 0.06 0.22
+            TEXTURE BLUE_WOOL
+            CUBOID 0.01 0.07 0.0 0.20 0.06 0.20
+            TEXTURE WHITE_WOOL
+            # Book leaning ON TOP
+            OBJECT -0.11 0.17 0.0
+            ROTATION -10.0 0 0 1
+            BEGIN
+                CUBOID 0.0 0.0 0.0 0.04 0.35 0.20
+                TEXTURE RED_WOOL
+            END
+        END
+    END
+    
+    # Right: Tidy Row (Height ~0.40)
+    OBJECT 0.7 1.22 0.0
+    BEGIN
+         CUBOID 0.0 0.0 0.0 0.06 0.40 0.22
+         TEXTURE BLACK_WOOL
+         CUBOID 0.07 0.0 0.0 0.06 0.40 0.22
+         TEXTURE BLACK_WOOL
+         CUBOID 0.14 0.0 0.0 0.06 0.40 0.22
+         TEXTURE BLACK_WOOL
+    END
+
+    # Right: Horizontal Filler
+    # Sitting on Shelf 3 (Y=1.52)
+    OBJECT 0.5 1.56 0.0
+    BEGIN
+        CUBOID 0.0 0.0 0.0 0.35 0.08 0.25
+        TEXTURE BROWN_WOOL
+        CUBOID 0.0 0.09 0.0 0.32 0.08 0.24
+        TEXTURE BROWN_CONCRETE
+        CUBOID 0.0 0.18 0.0 0.28 0.08 0.22
+        TEXTURE ORANGE_WOOL
+    END
+
+
+    # --- LEVEL 5: TOP SHELF (Gap 2.02 to 2.40) ---
+    # Max height avail: ~0.38
+    
+    # Sitting on Shelf 4 (Y=2.02) -> Center Y = 2.02 + 0.18 = 2.20
+    OBJECT 0.0 2.20 0.0
+    BEGIN
+        # Far Left Stack
+        OBJECT -0.7 -0.05 0.0
+        BEGIN
+            CUBOID 0.0 -0.1 0.0 0.25 0.06 0.2
+            TEXTURE GRAY_WOOL
+            CUBOID 0.0 -0.03 0.0 0.25 0.06 0.2
+            TEXTURE GRAY_WOOL
+        END
+        
+        # Center Row (Height ~0.35)
+        CUBOID 0.0 0.0 0.0 0.05 0.35 0.22
+        TEXTURE CYAN_WOOL
+        CUBOID 0.06 0.0 0.0 0.05 0.35 0.22
+        TEXTURE MAGENTA_WOOL
+        
+        # Far Right (Fallen over)
+        OBJECT 0.6 -0.15 0.0
+        ROTATION 90.0 0 0 1
+        BEGIN
+            CUBOID 0.0 0.0 0.0 0.05 0.35 0.22
+            TEXTURE YELLOW_WOOL
+        END
+    END
+END

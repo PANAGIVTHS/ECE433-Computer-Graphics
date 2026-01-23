@@ -7,27 +7,28 @@ BEGIN
     # -- CHASSIS --
     # Base
     CUBOID 0.0 0.05 0.0 0.8 0.1 0.7
-    TEXTURE IRON
+    TEXTURE BONE_SIDE
     TEX_CONFIG REPEAT_FIT
 
     # Top Lid
+    # Bottom edge of lid is at Y = 1.025
     CUBOID 0.0 1.05 0.0 0.8 0.05 0.7
-    TEXTURE IRON
+    TEXTURE BONE_SIDE
     TEX_CONFIG REPEAT_FIT
 
     # Left Wall
     CUBOID -0.375 0.55 0.0 0.05 0.95 0.7
-    TEXTURE IRON
+    TEXTURE BONE_SIDE
     TEX_CONFIG REPEAT_FIT
 
     # Right Wall
     CUBOID 0.375 0.55 0.0 0.05 0.95 0.7
-    TEXTURE IRON
+    TEXTURE BONE_SIDE
     TEX_CONFIG REPEAT_FIT
 
     # Back Wall
     CUBOID 0.0 0.55 -0.325 0.8 0.95 0.05
-    TEXTURE IRON
+    TEXTURE BONE_SIDE
     TEX_CONFIG REPEAT_FIT
 
     # -- INTERNAL DRUM --
@@ -59,33 +60,34 @@ BEGIN
     
     # Bottom Strip (Top edge is at Y=0.30)
     CUBOID 0.0 0.2 0.325 0.7 0.2 0.05
-    TEXTURE IRON
+    TEXTURE BONE_SIDE
     TEX_CONFIG REPEAT_FIT
 
-    # Top Strip (Bottom edge is at Y=0.75)
+    # Top Strip (Bottom edge is at Y=0.75, Top edge at Y=0.85)
     CUBOID 0.0 0.8 0.325 0.7 0.1 0.05
-    TEXTURE IRON
+    TEXTURE BONE_SIDE
     TEX_CONFIG REPEAT_FIT
 
-    # Left Strip (Fixed)
-    # Height increased to 0.45, Center Y at 0.525 to fill the gap
+    # Left Strip
     CUBOID -0.3 0.525 0.325 0.1 0.45 0.05
-    TEXTURE IRON
+    TEXTURE BONE_SIDE
     TEX_CONFIG REPEAT_FIT
 
-    # Right Strip (Fixed)
-    # Height increased to 0.45, Center Y at 0.525 to fill the gap
+    # Right Strip
     CUBOID 0.3 0.525 0.325 0.1 0.45 0.05
-    TEXTURE IRON
+    TEXTURE BONE_SIDE
     TEX_CONFIG REPEAT_FIT
 
     # -- DETERGENT DRAWER --
-    OBJECT -0.24 0.925 0.35
+    # FIX: Moved Z to 0.45 to draw it outwards
+    # FIX: Moved Y to 0.9375 to align with new panel height
+    OBJECT -0.24 0.9375 0.45
     ROTATION 0 0 0 0
     BEGIN
         # Faceplate
-        CUBOID 0.0 0.0 0.0 0.22 0.12 0.02
-        TEXTURE IRON
+        # FIX: Height increased to 0.175 to reach Top Lid
+        CUBOID 0.0 0.0 0.0 0.22 0.175 0.02
+        TEXTURE BONE_SIDE
         TEX_CONFIG REPEAT_FIT
         # Handle
         CUBOID 0.0 -0.03 0.015 0.15 0.02 0.01
@@ -97,14 +99,16 @@ BEGIN
         TEX_CONFIG REPEAT_FIT
     END
 
-    # -- CONTROL PANEL (Fixed Protrusion) --
-    # Reduced width to 0.5 and shifted X to 0.15 so it ends exactly at 0.40 (Machine Edge)
-    CUBOID 0.15 0.925 0.325 0.5 0.15 0.05
-    TEXTURE IRON
+    # -- CONTROL PANEL --
+    # FIX: Width reduced to 0.46 to prevent overlap with right wall
+    # FIX: Height increased to 0.175 and Y moved to 0.9375 to close gap with Top Lid
+    CUBOID 0.12 0.9375 0.325 0.46 0.175 0.05
+    TEXTURE BONE_SIDE
     TEX_CONFIG REPEAT_FIT
 
     # Digital Display
-    OBJECT 0.25 0.925 0.355
+    # FIX: Y moved to 0.9375 to match panel
+    OBJECT 0.2 0.9375 0.355
     ROTATION 0 0 0 0
     BEGIN
         CUBOID 0.0 0.0 0.0 0.25 0.08 0.01
@@ -116,7 +120,8 @@ BEGIN
     END
 
     # Rotary Dial
-    OBJECT -0.05 0.925 0.36
+    # FIX: Y moved to 0.9375 to match panel
+    OBJECT -0.05 0.9375 0.36
     ROTATION 0 0 1 0
     BEGIN
         # Knob Base
@@ -129,7 +134,7 @@ BEGIN
         ROTATION -35.0 0 0 1
         BEGIN
             CUBOID 0.0 0.0 0.0 0.01 0.04 0.01
-            TEXTURE IRON
+            TEXTURE BONE_SIDE
             TEX_CONFIG REPEAT_FIT
         END
     END
@@ -137,7 +142,7 @@ BEGIN
     # -- THE DOOR --
     # Ajar by 15 degrees
     OBJECT -0.35 0.5 0.38
-    ROTATION 15.0 0 1 0
+    ROTATION -20.0 0 1 0
     BEGIN
         # Left Rim
         CUBOID 0.05 0.0 0.0 0.1 0.6 0.04
@@ -166,7 +171,7 @@ BEGIN
         ROTATION 0 0 0 0
         BEGIN
             CUBOID 0.0 0.0 0.0 0.02 0.15 0.02
-            TEXTURE IRON
+            TEXTURE BONE_SIDE
             TEX_CONFIG REPEAT_FIT
         END
     END

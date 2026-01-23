@@ -11,9 +11,19 @@
     X(WINDOW)           \
     X(MYCELIUM)         \
     X(STONE)            \
+    X(BONE_SIDE)        \
     X(GRAY_WOOL)        \
     X(BLACK_WOOL)       \
-    X(BONE_SIDE)
+    X(BLUE_WOOL)        \
+    X(RED_WOOL)        \
+    X(BROWN_WOOL)       \
+    X(GREEN_WOOL)       \
+    X(MAGENTA_WOOL)     \
+    X(ORANGE_WOOL)      \
+    X(WHITE_WOOL)       \
+    X(YELLOW_WOOL)      \
+    X(BROWN_CONCRETE)   \
+    X(SPRUCE_PLANKS)    \
 
 
 enum class TextureID {
