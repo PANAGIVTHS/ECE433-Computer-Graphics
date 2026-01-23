@@ -1,0 +1,132 @@
+# --- DETAILED HOLLOW ELECTRIC STOVE (Fixed Door) ---
+# Positioned at (8,0,5)
+OBJECT 8 0 5
+GRAVITY false
+ROTATION 0 0 0 0
+BEGIN
+    # -- BASE / KICK PLATE --
+    CUBOID 0.0 0.05 0.0 0.82 0.1 0.82
+    TEXTURE STONE
+    TEX_CONFIG REPEAT_FIT
+
+    # -- HOLLOW OVEN CHASSIS --
+    # Left Wall
+    CUBOID -0.37 0.5 0.0 0.05 0.8 0.8
+    TEXTURE BONE_SIDE
+    
+    # Right Wall
+    CUBOID 0.37 0.5 0.0 0.05 0.8 0.8
+    TEXTURE BONE_SIDE
+
+    # Oven Floor
+    CUBOID 0.0 0.12 0.0 0.75 0.04 0.8
+    TEXTURE BONE_SIDE 
+
+    # Oven Ceiling
+    CUBOID 0.0 0.88 0.0 0.75 0.04 0.8
+    TEXTURE BONE_SIDE
+
+    # Oven Back Wall
+    CUBOID 0.0 0.5 -0.38 0.75 0.8 0.04
+    TEXTURE BONE_SIDE
+
+    # -- INTERIOR SHELF --
+    CUBOID 0.0 0.5 0.0 0.72 0.02 0.7
+    TEXTURE STONE
+    TEX_CONFIG CUSTOM 0.5 0.5
+
+    # -- COOKTOP --
+    CUBOID 0.0 0.92 0.0 0.85 0.05 0.85
+    TEXTURE BONE_SIDE
+
+    # -- BACK PILLARS --
+    # Left Pillar
+    CUBOID -0.4 1.05 -0.35 0.08 0.4 0.15
+    TEXTURE BONE_SIDE
+    # Right Pillar
+    CUBOID 0.4 1.05 -0.35 0.08 0.4 0.15
+    TEXTURE BONE_SIDE
+
+    # -- CONTROL PANEL --
+    CUBOID 0.0 1.1 -0.35 0.7 0.3 0.1
+    TEXTURE BONE_SIDE
+
+    # -- KNOBS --
+    OBJECT -0.2 1.15 -0.3
+    ROTATION 10 0 0 1
+    BEGIN
+        CUBOID 0.0 0.0 0.0 0.05 0.05 0.05
+        TEXTURE STONE
+    END
+    
+    OBJECT -0.07 1.15 -0.3
+    ROTATION -12 0 0 1
+    BEGIN
+        CUBOID 0.0 0.0 0.0 0.05 0.05 0.05
+        TEXTURE STONE
+    END
+
+    OBJECT 0.07 1.15 -0.3
+    ROTATION 5 0 0 1
+    BEGIN
+        CUBOID 0.0 0.0 0.0 0.05 0.05 0.05
+        TEXTURE STONE
+    END
+
+    OBJECT 0.2 1.15 -0.3
+    ROTATION 0 0 0 1
+    BEGIN
+        CUBOID 0.0 0.0 0.0 0.05 0.05 0.05
+        TEXTURE STONE
+    END
+
+    # -- OVEN DOOR (Reconstructed) --
+    # Pivot at bottom
+    OBJECT 0.0 0.15 0.42
+    ROTATION 7.0 1 0 0
+    BEGIN
+        # 1. Bottom Frame Piece
+        CUBOID 0.0 0.1 0.0 0.75 0.2 0.05
+        TEXTURE BONE_SIDE
+
+        # 2. Top Frame Piece
+        CUBOID 0.0 0.65 0.0 0.75 0.1 0.05
+        TEXTURE BONE_SIDE
+
+        # 3. Left Frame Piece
+        CUBOID -0.3125 0.4 0.0 0.125 0.4 0.05
+        TEXTURE BONE_SIDE
+
+        # 4. Right Frame Piece
+        CUBOID 0.3125 0.4 0.0 0.125 0.4 0.05
+        TEXTURE BONE_SIDE
+
+        # 5. Glass Window (Sits in the hole defined above)
+        # 0.04 thickness to differentiate from frame
+        CUBOID 0.0 0.4 0.0 0.5 0.4 0.04
+        TEXTURE WINDOW
+
+        # 6. Handle (Pulled back to Z=0.06)
+        CUBOID 0.0 0.65 0.03 0.5 0.04 0.04
+        TEX_CONFIG REPEAT_FIT
+        TEXTURE STONE
+    END
+
+    # -- BURNERS --
+    # Front Left
+    CUBOID -0.2 0.95 0.2 0.18 0.02 0.18
+    TEXTURE STONE
+    TEX_CONFIG CUSTOM 0.1 0.1
+    # Front Right
+    CUBOID 0.2 0.95 0.2 0.18 0.02 0.18
+    TEXTURE STONE
+    TEX_CONFIG CUSTOM 0.1 0.1
+    # Back Left
+    CUBOID -0.2 0.95 -0.2 0.18 0.02 0.18
+    TEXTURE STONE
+    TEX_CONFIG CUSTOM 0.1 0.1
+    # Back Right
+    CUBOID 0.2 0.95 -0.2 0.18 0.02 0.18
+    TEXTURE STONE
+    TEX_CONFIG CUSTOM 0.1 0.1
+END

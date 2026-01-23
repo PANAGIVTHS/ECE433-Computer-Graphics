@@ -1,15 +1,24 @@
 #ifndef TEXTURE_ENUMS_H
 #define TEXTURE_ENUMS_H
 
+#define TEXTURE_LIST(X) \
+    X(GRASS)            \
+    X(LEAVES)           \
+    X(IRON)             \
+    X(WOOD)             \
+    X(WINDOW)           \
+    X(MYCELIUM)         \
+    X(STONE)            \
+    X(GRAY_WOOL)        \
+    X(BLACK_WOOL)       \
+    X(BONE_SIDE)
+
+
 enum class TextureID {
-    NONE = 0,
-    GRASS,
-    LEAVES,
-    IRON,
-    WOOD,
-    WINDOW,
-    MYCELIUM,
-    STONE
+#define X(name) name,
+    TEXTURE_LIST(X)
+#undef X
+    NONE
 };
 
 enum class TextureMode {

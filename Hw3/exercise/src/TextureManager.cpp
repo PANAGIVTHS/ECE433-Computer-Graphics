@@ -101,7 +101,9 @@ void TextureManager::init() {
     init(TextureID::LEAVES, "../Texture_Images/azalea_top.bmp");
     init(TextureID::MYCELIUM, "../Texture_Images/mycelium_top.bmp");
     init(TextureID::STONE, "../Texture_Images/cobblestone.bmp");
-
+    init(TextureID::GRAY_WOOL, "../Texture_Images/gray_wool.bmp");
+    init(TextureID::BONE_SIDE, "../Texture_Images/bone_block_side.bmp");
+    init(TextureID::BLACK_WOOL, "../Texture_Images/black_wool.bmp");
 }
 
 //TODO Do No magic color

@@ -159,7 +159,21 @@ Object* Object::setRotation(GLfloat angle, Vec3<GLfloat> axis) {
 }
 
 Object* Object::setTexture(TextureID id, bool recurse) {
+    
+    ObjectHandler::removeObject(this);
+
     this->texture = id;
+
+    //! I am the parent, add to global objects
+    if (parent == nullptr) {
+        ObjectHandler::addObject(this);
+    } else {
+        //! I am a child, only add to transparent vector
+        if (hasTransparency()) {
+            ObjectHandler::getTransObjects().push_back(this);
+        }
+    }
+    
     if (!recurse)
         return this;
 
