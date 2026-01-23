@@ -1,6 +1,6 @@
 # --- MODERN SKIRTED TOILET (Ceramic / Bone Texture) ---
 # Positioned relative to the scene
-OBJECT 3.5 0.3 -13
+OBJECT 3.34 0.3 -13
 GRAVITY false
 ROTATION 90 0 1 0
 BEGIN
@@ -112,7 +112,7 @@ BEGIN
 
         # The Cover (Lid) - Angled Open
         OBJECT 0.0 0.05 0.0
-        ROTATION -100 1 0 0 # Tilted back slightly past 90 degrees
+        ROTATION -5 1 0 0 # Tilted back slightly past 90 degrees
         BEGIN
             CUBOID 0.0 0.22 0.0 0.37 0.48 0.03
             TEXTURE BONE_SIDE

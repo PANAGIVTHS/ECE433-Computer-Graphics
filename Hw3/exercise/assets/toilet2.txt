@@ -112,7 +112,7 @@ BEGIN
 
         # The Cover (Lid) - Angled Open
         OBJECT 0.0 0.05 0.0
-        ROTATION -100 1 0 0 # Tilted back slightly past 90 degrees
+        ROTATION -5 1 0 0 # Tilted back slightly past 90 degrees
         BEGIN
             CUBOID 0.0 0.22 0.0 0.37 0.48 0.03
             TEXTURE BONE_SIDE

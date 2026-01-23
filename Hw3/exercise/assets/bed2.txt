@@ -1,6 +1,6 @@
 # --- MODERN IMPERFECT BED (Final) ---
 # Positioned at (5, 0, 10)
-OBJECT 8 0.3 -17.967
+OBJECT 8.2 0.3 -18.2
 SCALE 0.67 0.67 0.67 
 GRAVITY false
 ROTATION 0 0 0 0

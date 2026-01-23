@@ -65,6 +65,7 @@ void GameManager::loadLevelAssets() {
     addAsset("../assets/wardrobe2.txt", Vec3(0.0f, 0.0f, -0.0f));
     addAsset("../assets/kitchensink.txt", Vec3(0.0f, 0.0f, -0.0f));
     addAsset("../assets/toilet2.txt", Vec3(0.0f, 0.0f, -0.0f));
+    addAsset("../assets/fence.txt", Vec3(0.0f, 0.0f, -0.0f));
     
     
 }
@@ -88,7 +89,7 @@ void GameManager::init() {
     environment->init();
 
     House *house = new House(Vec3<GLfloat>(0.0f, 0.0f, -10.0f));
-    Model *car = new Model("../assets/Car.obj", Vec3(12.0f, 3.2f, 2.5f), false, {1.0f, 1.0f, 1.0f}, TextureID::NONE, MaterialID::MATTE);
+    Model *car = new Model("../assets/Car.obj", Vec3(13.0f, 0.2f, -13.0f), false, {1.0f, 1.0f, 1.0f}, TextureID::NONE, MaterialID::MATTE);
     car->optimize();
 
     loadLevelAssets(); 
