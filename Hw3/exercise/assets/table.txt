@@ -1,6 +1,6 @@
 # --- DETAILED DINING TABLE (Fixed Z-Fighting) ---
 # Positioned at (8, 0, 8)
-OBJECT 8 0 8
+OBJECT 5 0 -10
 GRAVITY false
 ROTATION 0 0 0 0
 BEGIN

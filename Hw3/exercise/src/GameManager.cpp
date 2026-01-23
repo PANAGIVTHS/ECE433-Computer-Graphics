@@ -40,18 +40,18 @@ void GameManager::loadLevelAssets() {
     };
 
     addAsset("../assets/forest.txt", Vec3(7.0f, 0.2f, 7.0f));
-    addAsset("../assets/sofa.txt", Vec3(7.0f, 0.2f, 7.0f));
-    addAsset("../assets/stove.txt", Vec3(2.0f, 0.2f, 2.0f));
-    addAsset("../assets/fridge.txt", Vec3(1.0f, 0.2f, 2.5f));
-    addAsset("../assets/bed.txt", Vec3(10.0f, 0.2f, 2.5f));
-    addAsset("../assets/coffee.txt", Vec3(15.0f, 0.2f, 2.5f));
-    addAsset("../assets/chair.txt", Vec3(12.0f, 0.2f, 2.5f));
-    addAsset("../assets/door.txt", Vec3(12.0f, 0.2f, 2.5f));
-    addAsset("../assets/table.txt", Vec3(4.0f, 0.2f, -2.0f));
-    addAsset("../assets/washing_machine.txt", Vec3(4.0f, 0.2f, -4.0f));
-    addAsset("../assets/bathtub.txt", Vec3(4.0f, 0.2f, -6.0f));
-    addAsset("../assets/wardrobe.txt", Vec3(4.0f, 0.2f, -8.0f));
-    addAsset("../assets/bookshelf.txt", Vec3(4.0f, 0.2f, -12.0f));
+    addAsset("../assets/sofa.txt", Vec3(0.0f, 0.0f, 0.0f));
+    addAsset("../assets/stove.txt", Vec3(0.0f, 0.0f, 0.0f));
+    addAsset("../assets/fridge.txt", Vec3(0.0f, 0.0f, 0.0f));
+    addAsset("../assets/bed.txt", Vec3(0.0f, 0.0f, 0.0f));
+    addAsset("../assets/coffee.txt", Vec3(0.0f, 0.0f, 0.0f));
+    addAsset("../assets/chair.txt", Vec3(0.0f, 0.0f, 0.0f));
+    addAsset("../assets/door.txt", Vec3(0.0f, 0.0f, 0.0f));
+    addAsset("../assets/table.txt", Vec3(0.0f, 0.0f, -0.0f));
+    addAsset("../assets/washing_machine.txt", Vec3(0.0f, 0.0f, -0.0f));
+    addAsset("../assets/bathtub.txt", Vec3(0.0f, 0.0f, -0.0f));
+    addAsset("../assets/wardrobe.txt", Vec3(0.0f, 0.0f, -0.0f));
+    addAsset("../assets/bookshelf.txt", Vec3(0.0f, 0.0f, -0.0f));
 }
 
 void GameManager::unloadLevelAssets() {
