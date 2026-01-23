@@ -38,7 +38,6 @@ void GameManager::init() {
     environment->spawn();
 
     House *house = new House(Vec3<GLfloat>(0.0f, 0.0f, -10.0f));
-    // AssetLoader::load("../assets/forest.txt", Vec3(7.0f, 0.2f, 7.0f))->optimize();
 
     environment->init();
 }

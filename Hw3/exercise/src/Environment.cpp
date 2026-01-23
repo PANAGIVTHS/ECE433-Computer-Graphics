@@ -1,4 +1,6 @@
 #include "Environment.h"
+
+#include "AssetLoader.h"
 #include "Object.h"
 #include "Celestial.h"
 #include "Spline.h"
@@ -13,6 +15,8 @@ void Environment::init() {
 }
 
 void Environment::spawn() {
+    AssetLoader::load("../assets/forest.txt", Vec3(7.0f, 0.2f, 7.0f))->optimize();
+
     static const float rockRotations[] = {286, 115, 295, 12, 181, 67};
 
     auto rockFunc = [](float u, float v) -> Vec3<float> {
