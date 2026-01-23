@@ -1,0 +1,148 @@
+# --- DETAILED INTERIOR DOOR (Fixed Top Gap) ---
+# Positioned at (0, 0, 0)
+OBJECT 0 0 0
+GRAVITY false
+ROTATION 0 0 0 0
+BEGIN
+    # -- DOOR FRAME (JAMBS) --
+    # Left Jamb
+    CUBOID -0.45 1.05 0.0 0.05 2.1 0.15
+    TEXTURE WOOD
+    TEX_CONFIG REPEAT_FIT
+
+    # Right Jamb
+    CUBOID 0.45 1.05 0.0 0.05 2.1 0.15
+    TEXTURE WOOD
+    TEX_CONFIG REPEAT_FIT
+
+    # Top Jamb
+    CUBOID 0.0 2.075 0.0 0.85 0.05 0.15
+    TEXTURE WOOD
+    TEX_CONFIG REPEAT_FIT
+
+    # -- ARCHITRAVE / TRIM --
+    # Left Trim
+    CUBOID -0.45 1.05 0.08 0.08 2.15 0.02
+    TEXTURE WOOD
+    TEX_CONFIG REPEAT_FIT
+
+    # Right Trim
+    CUBOID 0.45 1.05 0.08 0.08 2.15 0.02
+    TEXTURE WOOD
+    TEX_CONFIG REPEAT_FIT
+
+    # Top Trim
+    CUBOID 0.0 2.1 0.08 0.98 0.08 0.02
+    TEXTURE WOOD
+    TEX_CONFIG REPEAT_FIT
+
+    # -- HINGES --
+    # Top Hinge
+    CUBOID -0.42 1.7 0.0 0.02 0.1 0.02
+    TEXTURE BLACK_WOOL
+    TEX_CONFIG REPEAT_FIT
+    # Bottom Hinge
+    CUBOID -0.42 0.4 0.0 0.02 0.1 0.02
+    TEXTURE BLACK_WOOL
+    TEX_CONFIG REPEAT_FIT
+
+    # -- DOOR LEAF (Fixed Gap) --
+    # Rotated 15 degrees OPEN
+    OBJECT -0.4 1.025 0.0
+    ROTATION 15.0 0 1 0
+    BEGIN
+        # -- STRUCTURAL FRAME (Stiles & Rails) --
+        
+        # Left Stile (Hinge side)
+        CUBOID 0.05 0.0 0.0 0.1 2.0 0.04
+        TEXTURE BONE_SIDE
+        TEX_CONFIG REPEAT_FIT
+        SET_SUBDIVS 2
+
+        # Right Stile (Lock side)
+        CUBOID 0.75 0.0 0.0 0.1 2.0 0.04
+        TEXTURE BONE_SIDE
+        TEX_CONFIG REPEAT_FIT
+        SET_SUBDIVS 2
+
+        # Top Rail (FIXED)
+        # Moved UP to 0.925 so the top edge hits 1.0 (flush with stiles)
+        CUBOID 0.4 0.925 0.0 0.6 0.15 0.04
+        TEXTURE BONE_SIDE
+        TEX_CONFIG REPEAT_FIT
+        SET_SUBDIVS 2
+
+        # Middle Rail
+        CUBOID 0.4 0.0 0.0 0.6 0.15 0.04
+        TEXTURE BONE_SIDE
+        TEX_CONFIG REPEAT_FIT
+        SET_SUBDIVS 2
+
+        # Bottom Rail
+        CUBOID 0.4 -0.85 0.0 0.6 0.25 0.04
+        TEXTURE BONE_SIDE
+        TEX_CONFIG REPEAT_FIT
+        SET_SUBDIVS 2
+
+        # -- RECESSED PANELS --
+        
+        # Top Panel (FIXED)
+        # Stretched height (0.775) and moved center up (0.4625) to meet the new Top Rail
+        CUBOID 0.4 0.4625 0.0 0.6 0.775 0.015
+        TEXTURE BONE_SIDE
+        TEX_CONFIG REPEAT_FIT
+        SET_SUBDIVS 2
+
+        # Bottom Panel
+        CUBOID 0.4 -0.425 0.0 0.6 0.7 0.015
+        TEXTURE BONE_SIDE
+        TEX_CONFIG REPEAT_FIT
+        SET_SUBDIVS 2
+
+        # -- DOOR HANDLE --
+        OBJECT 0.73 0.0 0.04
+        ROTATION 0 0 0 0
+        BEGIN
+            # Base Plate
+            CUBOID 0.0 0.0 0.0 0.04 0.12 0.01
+            TEXTURE BLACK_WOOL
+            TEX_CONFIG REPEAT_FIT
+            
+            # Neck
+            CUBOID 0.0 0.0 0.02 0.02 0.02 0.04
+            TEXTURE BLACK_WOOL
+            TEX_CONFIG REPEAT_FIT
+
+            # Lever (Tilted)
+            OBJECT 0.0 0.0 0.04
+            ROTATION -5.0 0 0 1
+            BEGIN
+                CUBOID -0.06 0.0 0.0 0.14 0.02 0.02
+                TEXTURE BLACK_WOOL
+                TEX_CONFIG REPEAT_FIT
+            END
+        END
+        
+        # -- BACK HANDLE --
+        OBJECT 0.73 0.0 -0.04
+        ROTATION 0 1 0 0
+        BEGIN
+             # Base Plate
+            CUBOID 0.0 0.0 0.0 0.04 0.12 0.01
+            TEXTURE BLACK_WOOL
+            TEX_CONFIG REPEAT_FIT
+            
+            # Neck & Lever
+            OBJECT 0.0 0.0 0.02
+            ROTATION 0 0 0 0
+            BEGIN
+                CUBOID 0.0 0.0 0.0 0.02 0.02 0.04
+                TEXTURE BLACK_WOOL
+                TEX_CONFIG REPEAT_FIT
+                CUBOID -0.06 0.0 0.02 0.14 0.02 0.02
+                TEXTURE BLACK_WOOL
+                TEX_CONFIG REPEAT_FIT
+            END
+        END
+    END
+END

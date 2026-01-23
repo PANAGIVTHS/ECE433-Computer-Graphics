@@ -1,0 +1,173 @@
+# --- MODERN WASHING MACHINE (Fixed Geometry) ---
+# Positioned at (12, 0, 8)
+OBJECT 12 0 8
+GRAVITY false
+ROTATION 0 0 0 0
+BEGIN
+    # -- CHASSIS --
+    # Base
+    CUBOID 0.0 0.05 0.0 0.8 0.1 0.7
+    TEXTURE IRON
+    TEX_CONFIG REPEAT_FIT
+
+    # Top Lid
+    CUBOID 0.0 1.05 0.0 0.8 0.05 0.7
+    TEXTURE IRON
+    TEX_CONFIG REPEAT_FIT
+
+    # Left Wall
+    CUBOID -0.375 0.55 0.0 0.05 0.95 0.7
+    TEXTURE IRON
+    TEX_CONFIG REPEAT_FIT
+
+    # Right Wall
+    CUBOID 0.375 0.55 0.0 0.05 0.95 0.7
+    TEXTURE IRON
+    TEX_CONFIG REPEAT_FIT
+
+    # Back Wall
+    CUBOID 0.0 0.55 -0.325 0.8 0.95 0.05
+    TEXTURE IRON
+    TEX_CONFIG REPEAT_FIT
+
+    # -- INTERNAL DRUM --
+    OBJECT 0.0 0.5 0.0
+    ROTATION 0 0 0 0
+    BEGIN
+        # Drum Back
+        CUBOID 0.0 0.0 -0.25 0.6 0.6 0.02
+        TEXTURE STONE
+        TEX_CONFIG REPEAT_FIT
+        
+        # Drum Left
+        CUBOID -0.3 0.0 0.0 0.02 0.6 0.5
+        TEXTURE STONE
+        TEX_CONFIG REPEAT_FIT
+        
+        # Drum Right
+        CUBOID 0.3 0.0 0.0 0.02 0.6 0.5
+        TEXTURE STONE
+        TEX_CONFIG REPEAT_FIT
+        
+        # Drum Bottom
+        CUBOID 0.0 -0.3 0.0 0.6 0.02 0.5
+        TEXTURE STONE
+        TEX_CONFIG REPEAT_FIT
+    END
+
+    # -- FRONT PANEL (Fixed Gaps) --
+    
+    # Bottom Strip (Top edge is at Y=0.30)
+    CUBOID 0.0 0.2 0.325 0.7 0.2 0.05
+    TEXTURE IRON
+    TEX_CONFIG REPEAT_FIT
+
+    # Top Strip (Bottom edge is at Y=0.75)
+    CUBOID 0.0 0.8 0.325 0.7 0.1 0.05
+    TEXTURE IRON
+    TEX_CONFIG REPEAT_FIT
+
+    # Left Strip (Fixed)
+    # Height increased to 0.45, Center Y at 0.525 to fill the gap
+    CUBOID -0.3 0.525 0.325 0.1 0.45 0.05
+    TEXTURE IRON
+    TEX_CONFIG REPEAT_FIT
+
+    # Right Strip (Fixed)
+    # Height increased to 0.45, Center Y at 0.525 to fill the gap
+    CUBOID 0.3 0.525 0.325 0.1 0.45 0.05
+    TEXTURE IRON
+    TEX_CONFIG REPEAT_FIT
+
+    # -- DETERGENT DRAWER --
+    OBJECT -0.24 0.925 0.35
+    ROTATION 0 0 0 0
+    BEGIN
+        # Faceplate
+        CUBOID 0.0 0.0 0.0 0.22 0.12 0.02
+        TEXTURE IRON
+        TEX_CONFIG REPEAT_FIT
+        # Handle
+        CUBOID 0.0 -0.03 0.015 0.15 0.02 0.01
+        TEXTURE STONE
+        TEX_CONFIG REPEAT_FIT
+        # Body
+        CUBOID 0.0 0.0 -0.15 0.2 0.1 0.3
+        TEXTURE STONE
+        TEX_CONFIG REPEAT_FIT
+    END
+
+    # -- CONTROL PANEL (Fixed Protrusion) --
+    # Reduced width to 0.5 and shifted X to 0.15 so it ends exactly at 0.40 (Machine Edge)
+    CUBOID 0.15 0.925 0.325 0.5 0.15 0.05
+    TEXTURE IRON
+    TEX_CONFIG REPEAT_FIT
+
+    # Digital Display
+    OBJECT 0.25 0.925 0.355
+    ROTATION 0 0 0 0
+    BEGIN
+        CUBOID 0.0 0.0 0.0 0.25 0.08 0.01
+        TEXTURE BLACK_WOOL
+        TEX_CONFIG REPEAT_FIT
+        # Green "On" Light
+        CUBOID 0.1 0.0 0.005 0.02 0.01 0.01
+        TEXTURE WINDOW
+    END
+
+    # Rotary Dial
+    OBJECT -0.05 0.925 0.36
+    ROTATION 0 0 1 0
+    BEGIN
+        # Knob Base
+        CUBOID 0.0 0.0 0.0 0.06 0.06 0.02
+        TEXTURE STONE
+        TEX_CONFIG REPEAT_FIT
+        
+        # Selector Line
+        OBJECT 0.0 0.0 0.015
+        ROTATION -35.0 0 0 1
+        BEGIN
+            CUBOID 0.0 0.0 0.0 0.01 0.04 0.01
+            TEXTURE IRON
+            TEX_CONFIG REPEAT_FIT
+        END
+    END
+
+    # -- THE DOOR --
+    # Ajar by 15 degrees
+    OBJECT -0.35 0.5 0.38
+    ROTATION 15.0 0 1 0
+    BEGIN
+        # Left Rim
+        CUBOID 0.05 0.0 0.0 0.1 0.6 0.04
+        TEXTURE STONE
+        TEX_CONFIG REPEAT_FIT
+        # Right Rim
+        CUBOID 0.55 0.0 0.0 0.1 0.6 0.04
+        TEXTURE STONE
+        TEX_CONFIG REPEAT_FIT
+        # Top Rim
+        CUBOID 0.3 0.25 0.0 0.4 0.1 0.04
+        TEXTURE STONE
+        TEX_CONFIG REPEAT_FIT
+        # Bottom Rim
+        CUBOID 0.3 -0.25 0.0 0.4 0.1 0.04
+        TEXTURE STONE
+        TEX_CONFIG REPEAT_FIT
+
+        # Glass Window
+        CUBOID 0.3 0.0 0.0 0.4 0.4 0.03
+        TEXTURE WINDOW
+        TEX_CONFIG REPEAT_FIT
+
+        # Handle
+        OBJECT 0.58 0.0 0.03
+        ROTATION 0 0 0 0
+        BEGIN
+            CUBOID 0.0 0.0 0.0 0.02 0.15 0.02
+            TEXTURE IRON
+            TEX_CONFIG REPEAT_FIT
+        END
+    END
+END

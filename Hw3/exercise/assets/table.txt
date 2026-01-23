@@ -1,0 +1,235 @@
+# --- DETAILED DINING TABLE (Fixed Z-Fighting) ---
+# Positioned at (8, 0, 8)
+OBJECT 8 0 8
+GRAVITY false
+ROTATION 0 0 0 0
+BEGIN
+    # -- LEGS --
+    CUBOID -0.8 0.35 0.35 0.1 0.7 0.1
+    TEXTURE WOOD
+    TEX_CONFIG REPEAT_FIT
+
+    CUBOID 0.8 0.35 0.35 0.1 0.7 0.1
+    TEXTURE WOOD
+    TEX_CONFIG REPEAT_FIT
+
+    CUBOID -0.8 0.35 -0.35 0.1 0.7 0.1
+    TEXTURE WOOD
+    TEX_CONFIG REPEAT_FIT
+
+    CUBOID 0.8 0.35 -0.35 0.1 0.7 0.1
+    TEXTURE WOOD
+    TEX_CONFIG REPEAT_FIT
+
+    # -- STRUCTURAL BEAMS --
+    CUBOID -0.8 0.15 0.0 0.05 0.08 0.6
+    TEXTURE WOOD
+    TEX_CONFIG REPEAT_FIT
+    
+    CUBOID 0.8 0.15 0.0 0.05 0.08 0.6
+    TEXTURE WOOD
+    TEX_CONFIG REPEAT_FIT
+
+    CUBOID 0.0 0.15 0.0 1.6 0.05 0.05
+    TEXTURE WOOD
+    TEX_CONFIG REPEAT_FIT
+
+    # -- APRON (WIDENED) --
+    # Increased to 1.71 x 0.81 to overlap leg edges and stop z-fighting
+    CUBOID 0.0 0.65 0.0 1.71 0.1 0.81
+    TEXTURE WOOD
+    TEX_CONFIG REPEAT_FIT
+
+    # -- TABLETOP --
+    # Top surface is at Y = 0.75
+    CUBOID 0.0 0.725 0.0 2.0 0.05 1.0
+    TEXTURE BONE_SIDE
+    TEX_CONFIG REPEAT_FIT
+    SET_SUBDIVS 2
+
+    # -- DECOR: MINIMALIST RUNNER --
+    OBJECT 0.0 0.755 0.0
+    ROTATION 1.0 0 1 0
+    BEGIN
+        CUBOID 0.0 0.0 0.0 1.4 0.01 0.35
+        TEXTURE GRAY_WOOL
+        TEX_CONFIG REPEAT_FIT
+    END
+
+    # -- CENTERPIECE: CANDLE TRIO --
+    OBJECT 0.0 0.765 0.0
+    ROTATION 5.0 0 1 0
+    BEGIN
+        # Wooden Tray
+        CUBOID 0.0 0.0 0.0 0.4 0.02 0.2
+        TEXTURE WOOD
+        TEX_CONFIG REPEAT_FIT
+
+        # Candle 1 (Tall)
+        OBJECT -0.1 0.1 0.0
+        ROTATION 0 0 0 0
+        BEGIN
+            CUBOID 0.0 0.0 0.0 0.08 0.2 0.08
+            TEXTURE BONE_SIDE
+            TEX_CONFIG REPEAT_FIT
+            # Wick
+            CUBOID 0.0 0.11 0.0 0.01 0.02 0.01
+            TEXTURE BLACK_WOOL
+        END
+
+        # Candle 2 (Medium)
+        OBJECT 0.08 0.07 0.05
+        ROTATION 0 0 0 0
+        BEGIN
+            CUBOID 0.0 0.0 0.0 0.08 0.14 0.08
+            TEXTURE BONE_SIDE
+            TEX_CONFIG REPEAT_FIT
+            # Wick
+            CUBOID 0.0 0.08 0.0 0.01 0.02 0.01
+            TEXTURE BLACK_WOOL
+        END
+
+        # Candle 3 (Short/Fat)
+        OBJECT 0.1 0.04 -0.05
+        ROTATION 0 0 0 0
+        BEGIN
+            CUBOID 0.0 0.0 0.0 0.1 0.08 0.1
+            TEXTURE BONE_SIDE
+            TEX_CONFIG REPEAT_FIT
+             # Wick
+            CUBOID 0.0 0.05 0.0 0.01 0.02 0.01
+            TEXTURE BLACK_WOOL
+        END
+    END
+
+    # -- SETTING 1 (Left - Neat) --
+    OBJECT -0.8 0.76 0.0
+    ROTATION 90 0 1 0
+    BEGIN
+        # 1. Placemat (Black)
+        CUBOID 0.0 0.0 0.0 0.45 0.01 0.35
+        TEXTURE BLACK_WOOL
+        TEX_CONFIG REPEAT_FIT
+
+        # 2. CHOPSTICKS
+        # Stick 1
+        OBJECT -0.28 0.015 0.0
+        ROTATION 0 0 0 0
+        BEGIN
+            CUBOID 0.0 0.0 0.0 0.01 0.005 0.24
+            TEXTURE WOOD
+            TEX_CONFIG REPEAT_FIT
+        END
+        # Stick 2
+        OBJECT -0.25 0.015 0.0
+        ROTATION 0 0 0 0
+        BEGIN
+            CUBOID 0.0 0.0 0.0 0.01 0.005 0.24
+            TEXTURE WOOD
+            TEX_CONFIG REPEAT_FIT
+        END
+
+        # 3. COMPLICATED BOWL (Empty/Hollow)
+        OBJECT 0.05 0.015 0.0
+        ROTATION 0 0 0 0
+        BEGIN
+            # Bowl Base
+            CUBOID 0.0 0.0 0.0 0.14 0.02 0.14
+            TEXTURE STONE
+            TEX_CONFIG REPEAT_FIT
+            
+            # Left Wall
+            CUBOID -0.08 0.04 0.0 0.02 0.06 0.18
+            TEXTURE STONE
+            TEX_CONFIG REPEAT_FIT
+            # Right Wall
+            CUBOID 0.08 0.04 0.0 0.02 0.06 0.18
+            TEXTURE STONE
+            TEX_CONFIG REPEAT_FIT
+            # Front Wall
+            CUBOID 0.0 0.04 0.08 0.14 0.06 0.02
+            TEXTURE STONE
+            TEX_CONFIG REPEAT_FIT
+            # Back Wall
+            CUBOID 0.0 0.04 -0.08 0.14 0.06 0.02
+            TEXTURE STONE
+            TEX_CONFIG REPEAT_FIT
+        END
+
+        # 4. Wine Glass
+        OBJECT 0.22 0.0 0.25
+        ROTATION 0 0 0 0
+        BEGIN
+            CUBOID 0.0 0.0 0.0 0.06 0.005 0.06
+            TEXTURE WINDOW
+            CUBOID 0.0 0.04 0.0 0.01 0.08 0.01
+            TEXTURE WINDOW
+            CUBOID 0.0 0.11 0.0 0.07 0.06 0.07
+            TEXTURE WINDOW
+        END
+    END
+
+    # -- SETTING 2 (Right - Imperfect) --
+    OBJECT 0.8 0.76 0.0
+    ROTATION -90.0 0 1 0
+    BEGIN
+        # 1. Placemat
+        CUBOID 0.0 0.0 0.0 0.45 0.01 0.35
+        TEXTURE BLACK_WOOL
+        TEX_CONFIG REPEAT_FIT
+
+        # 2. CHOPSTICKS
+        # Stick 1
+        OBJECT -0.28 0.015 0.0
+        ROTATION 2.0 0 1 0
+        BEGIN
+            CUBOID 0.0 0.0 0.0 0.01 0.005 0.24
+            TEXTURE WOOD
+            TEX_CONFIG REPEAT_FIT
+        END
+        # Stick 2
+        OBJECT -0.25 0.015 0.0
+        ROTATION -3.0 0 1 0
+        BEGIN
+            CUBOID 0.0 0.0 0.0 0.01 0.005 0.24
+            TEXTURE WOOD
+            TEX_CONFIG REPEAT_FIT
+        END
+
+        # 3. COMPLICATED BOWL
+        OBJECT 0.05 0.015 0.0
+        ROTATION 10.0 0 1 0
+        BEGIN
+            # Bowl Base
+            CUBOID 0.0 0.0 0.0 0.14 0.02 0.14
+            TEXTURE STONE
+            TEX_CONFIG REPEAT_FIT
+            
+            # Walls
+            CUBOID -0.08 0.04 0.0 0.02 0.06 0.18
+            TEXTURE STONE
+            TEX_CONFIG REPEAT_FIT
+            CUBOID 0.08 0.04 0.0 0.02 0.06 0.18
+            TEXTURE STONE
+            TEX_CONFIG REPEAT_FIT
+            CUBOID 0.0 0.04 0.08 0.14 0.06 0.02
+            TEXTURE STONE
+            TEX_CONFIG REPEAT_FIT
+            CUBOID 0.0 0.04 -0.08 0.14 0.06 0.02
+            TEXTURE STONE
+            TEX_CONFIG REPEAT_FIT
+        END
+
+        # 4. Wine Glass
+        OBJECT 0.22 0.0 0.25
+        ROTATION 0 0 0 0
+        BEGIN
+            CUBOID 0.0 0.0 0.0 0.06 0.005 0.06
+            TEXTURE WINDOW
+            CUBOID 0.0 0.04 0.0 0.01 0.08 0.01
+            TEXTURE WINDOW
+            CUBOID 0.0 0.11 0.0 0.07 0.06 0.07
+            TEXTURE WINDOW
+        END
+    END
+END

@@ -94,7 +94,7 @@ void TextureManager::init() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // Load textures
-    init(TextureID::IRON, "../Texture_Images/LaGioconda.bmp", "../Texture_Images/LaGioconda_mask.bmp");
+    init(TextureID::IRON, "../Texture_Images/bone_block_side.bmp");
     init(TextureID::GRASS, "../Texture_Images/grass.raw", 256, 256);
     init(TextureID::WOOD, "../Texture_Images/oak_log.bmp");
     init(TextureID::WINDOW, "../Texture_Images/ss0052.bmp", "../Texture_Images/ss0052_mask.bmp");
