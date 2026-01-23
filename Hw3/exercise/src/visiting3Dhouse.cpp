@@ -112,6 +112,9 @@ void display() {
 }
 
 void idle() {
+    #if defined(MODEL)
+    GameManager::reloadAssets();
+    #endif
     GameManager::runGameLoop();
     glutPostRedisplay();
 }

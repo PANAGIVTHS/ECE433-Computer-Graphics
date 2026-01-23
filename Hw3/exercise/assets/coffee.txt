@@ -1,6 +1,6 @@
 # --- DETAILED COFFEE TABLE (All REPEAT_FIT) ---
 # Positioned at (5, 0, 7.5)
-OBJECT 5 0 7.5
+OBJECT 5 5 7.5
 GRAVITY false
 ROTATION 3.0 0 1 0
 BEGIN

@@ -28,8 +28,6 @@ float GameManager::getFPS() {
 }
 
 void GameManager::loadLevelAssets() {
-    std::cout << "Loading Dynamic Level Assets..." << std::endl;
-
     //! Helper function
     auto addAsset = [&](std::string path, Vec3<GLfloat> pos) {
         Object* obj = AssetLoader::load(path, pos);
@@ -80,12 +78,8 @@ void GameManager::init() {
 }
 
 void GameManager::reloadAssets() {
-    std::cout << "--- RELOADING FURNITURE & ITEMS ---" << std::endl;
-
     unloadLevelAssets();
     loadLevelAssets();
-
-    std::cout << "--- RELOAD COMPLETE ---" << std::endl;
 }
 
 void GameManager::updateDeltaTime() {

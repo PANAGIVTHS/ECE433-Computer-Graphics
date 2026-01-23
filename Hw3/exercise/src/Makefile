@@ -33,6 +33,11 @@ ifeq ($(VSYNC), 1)
     CFLAGS += -DVSYNC
 endif
 
+MODEL ?= 0
+ifeq ($(MODEL), 1)
+    CFLAGS += -DMODEL
+endif
+
 .PHONY: all clean
 
 all: $(TARGET)
