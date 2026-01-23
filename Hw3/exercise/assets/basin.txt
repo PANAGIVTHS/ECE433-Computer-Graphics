@@ -1,0 +1,55 @@
+# --- MODERN FLOATING HAND BASIN (Vessel Style) ---
+# Positioned relative to the scene
+OBJECT 3.26 0.67 -16
+GRAVITY false
+ROTATION 90 0 1 0
+BEGIN
+    # -- VANITY CABINET (Floating Drawer Unit) --
+    # Main wooden body
+    CUBOID 0.0 0.0 0.0 1.0 0.35 0.55
+    TEXTURE SPRUCE_PLANKS
+    TEX_CONFIG REPEAT_FIT
+
+    # Drawer Handle (Front)
+    OBJECT 0.0 0.1 0.285
+    BEGIN
+        CUBOID 0.0 0.0 0.0 0.4 0.02 0.02
+        TEXTURE IRON
+    END
+
+    # -- THE VESSEL SINK --
+    # Sits on top of the cabinet
+    OBJECT 0.0 0.275 0.0
+    BEGIN
+        # 1. Base Slab (Ceramic)
+        CUBOID 0.0 0.0 0.0 0.6 0.03 0.4
+        TEXTURE WHITE_WOOL
+
+        # 2. Front Wall
+        CUBOID 0.0 0.08 0.19 0.6 0.13 0.02
+        TEXTURE WHITE_WOOL
+
+        # 3. Back Wall
+        CUBOID 0.0 0.08 -0.19 0.6 0.13 0.02
+        TEXTURE WHITE_WOOL
+
+        # 4. Left Wall
+        CUBOID -0.29 0.08 0.0 0.02 0.13 0.36
+        TEXTURE WHITE_WOOL
+
+        # 5. Right Wall
+        CUBOID 0.29 0.08 0.0 0.02 0.13 0.36
+        TEXTURE WHITE_WOOL
+
+        # 6. Drain Plug (Chrome)
+        CUBOID 0.0 0.02 0.0 0.06 0.01 0.06
+        TEXTURE IRON
+    END
+
+    # -- HIGH-RISE MIXER TAP --
+    # Positioned behind the vessel sink
+    OBJECT 0.0 0.2 0.22
+    ROTATION 0 180 0 0
+    BEGIN
+        # Base Plinth
+        CUBOID 0.0 0.0 0.0 0.06 0.01 0.0

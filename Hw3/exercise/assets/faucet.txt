@@ -1,0 +1,102 @@
+# --- MODERN CHROME BASIN FAUCET (Fixed Geometry) ---
+# Positioned at origin (0,0,0)
+OBJECT 3.0067 1.067 -16
+SCALE 1.2 1.2 1.2 
+GRAVITY false
+ROTATION 90 0 1 0
+BEGIN
+    # -- BASE ESCUTCHEON --
+    # Sits flush on the counter
+    CUBOID 0.0 0.005 0.0 0.08 0.01 0.08
+    TEXTURE IRON
+    TEX_CONFIG REPEAT_FIT
+
+    # -- MAIN CYLINDRICAL BODY --
+    # Lower Section
+    OBJECT 0.0 0.01 0.0
+    BEGIN
+        CUBOID 0.0 0.06 0.0 0.06 0.12 0.06
+        TEXTURE IRON
+
+        # Upper Section (Housing the cartridge)
+        # Positioned to overlap perfectly with the lower section
+        OBJECT 0.0 0.12 0.0
+        BEGIN
+            CUBOID 0.0 0.03 0.0 0.055 0.06 0.055
+            TEXTURE IRON
+            
+            # -- SPOUT ASSEMBLY --
+            # Moved back slightly to embed into the main body
+            OBJECT 0.0 -0.01 0.0
+            BEGIN
+                # 1. Rear Spout Segment (Angled Up)
+                # Origin is inside the main body
+                OBJECT 0.0 0.0 0.0
+                ROTATION -15 1 0 0
+                BEGIN
+                    # Length extended backward to ensure no gap at the base
+                    CUBOID 0.0 0.0 0.04 0.04 0.03 0.10
+                    TEXTURE IRON
+                END
+                
+                # 2. Main Horizontal Reach
+                # Positioned closer (Z=0.08) to overlap with the rear segment (which ends approx Z=0.09)
+                OBJECT 0.0 0.025 0.08
+                BEGIN
+                    CUBOID 0.0 0.0 0.05 0.035 0.025 0.12
+                    TEXTURE IRON
+                    
+                    # 3. Downward Dispenser Tip
+                    # Overlaps with the end of the horizontal reach
+                    OBJECT 0.0 -0.01 0.09
+                    BEGIN
+                         CUBOID 0.0 -0.01 0.0 0.03 0.05 0.03
+                         TEXTURE IRON
+                         
+                         # Aerator Mesh
+                         CUBOID 0.0 -0.036 0.0 0.02 0.002 0.02
+                         TEXTURE BLACK_WOOL
+                    END
+                END
+            END
+
+            # -- SINGLE LEVER HANDLE --
+            # Mounted on top of the upper section
+            OBJECT 0.0 0.06 0.0
+            ROTATION 0 15 0 0 
+            BEGIN
+                 # Dome Cap (Pivot point)
+                 CUBOID 0.0 0.01 0.0 0.05 0.02 0.05
+                 TEXTURE IRON
+                 
+                 # The Lever Arm
+                 OBJECT 0.0 0.02 0.0
+                 ROTATION -25 1 0 0
+                 BEGIN
+                     # Handle blade
+                     CUBOID 0.0 0.02 0.05 0.045 0.01 0.14
+                     TEXTURE IRON
+                     
+                     # Indicators
+                     OBJECT 0.0 0.026 0.02
+                     BEGIN
+                        CUBOID -0.01 0.0 0.0 0.006 0.001 0.006
+                        TEXTURE RED_WOOL
+                        CUBOID 0.01 0.0 0.0 0.006 0.001 0.006
+                        TEXTURE BLUE_WOOL
+                     END
+                 END
+            END
+            
+            # -- POP-UP DRAIN ROD --
+            OBJECT 0.0 0.0 -0.035
+            ROTATION 5 1 0 0
+            BEGIN
+                CUBOID 0.0 0.05 0.0 0.005 0.12 0.005
+                TEXTURE IRON
+                CUBOID 0.0 0.11 0.0 0.012 0.012 0.012
+                TEXTURE IRON
+            END
+        END
+    END
+END
