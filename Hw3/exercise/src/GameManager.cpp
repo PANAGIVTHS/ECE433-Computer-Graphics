@@ -55,7 +55,7 @@ void GameManager::loadLevelAssets() {
 void GameManager::unloadLevelAssets() {
     for (Object* obj : levelAssets) {
         if (obj) {
-            obj->~Object();
+            delete obj;
         }
     }
     levelAssets.clear();

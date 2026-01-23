@@ -15,6 +15,11 @@ Object::Object(Vec3<GLfloat> pos, bool gravity, Color3f color, TextureID texture
 }
 
 Object::~Object() {
+    if (displayList != 0) {
+        glDeleteLists(displayList, 1);
+        displayList = 0;
+    }
+    
     ObjectHandler::removeObject(this);
 
     for (Object *o : children)
