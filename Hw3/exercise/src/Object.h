@@ -61,7 +61,7 @@ public:
     Object* setScale(GLfloat x, GLfloat y, GLfloat z);
     Object* setRotation(GLfloat angle, Vec3<GLfloat> axis);
 
-    Vec3<GLfloat>& getPosition();
+    virtual Vec3<GLfloat> getPosition() const;
     Object* setPosition(Vec3<GLfloat> position);
     Vec3<GLfloat>& getVelocity();
     Object* setVelocity(Vec3<GLfloat> velocity);
@@ -85,8 +85,8 @@ public:
 class Cuboid : public Object {
     TextureConfig texConfig;
     int subdivisions;
-    Vec3<GLfloat> dim;
 protected:
+    Vec3<GLfloat> dim;
     void drawInternal() override;
 public:
     Cuboid(Vec3<float> pos, Vec3<float> dim, bool gravity = DEFAULT_GRAVITY, Color3f color = DEFAULT_COLOR, TextureID texture = DEFAULT_TEXTURE, MaterialID material = DEFAULT_MATERIAL, TextureConfig config = TextureConfig(), int subdivisions = 1)
@@ -118,8 +118,8 @@ public:
 };
 
 class Cube : public Object {
-    Vec3<GLfloat> dim;
 protected:
+    Vec3<GLfloat> dim;
     void drawInternal() override;
 public:
     Cube(Vec3<float> pos, Vec3<float> dim, bool gravity = DEFAULT_GRAVITY, Color3f color = DEFAULT_COLOR, TextureID texture = DEFAULT_TEXTURE, MaterialID material = DEFAULT_MATERIAL)

@@ -25,37 +25,23 @@ public:
         : Object(pos, gravity, color, texture, material), scale(scale) { }
 };
 
-class AnchoredCuboid : public Object {
-protected:
-    Cuboid *cuboid = nullptr;
+class AnchoredCuboid : public Cuboid {
 public:
     AnchoredCuboid(Vec3<GLfloat> pos, Vec3<GLfloat> dim, bool gravity = DEFAULT_GRAVITY, Color3f color = DEFAULT_COLOR, TextureID texture = DEFAULT_TEXTURE, MaterialID material = DEFAULT_MATERIAL, TextureConfig config = TextureConfig(), int subdivisions = 1)
-        : Object(pos, gravity, color, texture, material) {
-        cuboid = new Cuboid(dim / 2.0f, dim, gravity, color, texture, material, config, subdivisions);
-        Object::addChildren(cuboid);
-    }
+        : Cuboid(pos, dim, gravity, color, texture, material, config, subdivisions) { }
 
-    Vec3<GLfloat> getDimensions() const {
-        return cuboid->getDimensions();
-    }
-
-    void setSubdivisions(int subdivisions) {
-        cuboid->setSubdivisions(subdivisions);
+    Vec3<GLfloat> getPosition() const {
+        return transform.position + dim / 2.0f;
     }
 };
 
-class AnchoredCube : public Object {
-protected:
-    Cube *cube = nullptr;
+class AnchoredCube : public Cube {
 public:
     AnchoredCube(Vec3<GLfloat> pos, Vec3<GLfloat> dim, bool gravity = DEFAULT_GRAVITY, Color3f color = DEFAULT_COLOR, TextureID texture = DEFAULT_TEXTURE, MaterialID material = DEFAULT_MATERIAL)
-        : Object(pos, gravity, color, texture, material) {
-        cube = new Cube(dim / 2.0f, dim, gravity, color, texture, material);
-        Object::addChildren(cube);
-    }
+        : Cube(pos, dim, gravity, color, texture, material) { }
 
-    Vec3<GLfloat> getDimensions() const {
-        return cube->getDimensions();
+    Vec3<GLfloat> getPosition() const {
+        return transform.position + dim / 2.0f;
     }
 };
 

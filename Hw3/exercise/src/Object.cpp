@@ -87,7 +87,7 @@ void Object::draw() {
         applyParentTransforms();
     }
 
-    glTranslated(transform.position.x, transform.position.y, transform.position.z);
+    glTranslated(getPosition().x, getPosition().y, getPosition().z);
     if (transform.angle != 0.0f) {
         glRotated(transform.angle, transform.rotateAxis.x, transform.rotateAxis.y, transform.rotateAxis.z);
     }
@@ -206,7 +206,7 @@ Object* Object::setGravity(bool gravity) {
     return this;
 }
 
-Vec3<GLfloat>& Object::getPosition() {
+Vec3<GLfloat> Object::getPosition() const{
     return transform.position;
 }
 
