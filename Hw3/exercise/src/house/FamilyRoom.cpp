@@ -12,7 +12,7 @@ void FamilyRoom::addAll() {
 Object *FamilyRoom::addFloor() {
     return new AnchoredCuboid(
             Vec3<GLfloat>(House::exteriorWallThickness + House::ridgeThickness, 0.0f, 0.0f),
-            Vec3<GLfloat>(width, floorHeight, length + House::exteriorWallThickness),
+            Vec3<GLfloat>(width, House::floorHeight, length),
             gravity,
             House::floorColor,
             TextureID::NONE,
@@ -25,41 +25,48 @@ Object *FamilyRoom::addWalls(FramedWindow *window) {
 
     GLint ridgeCount = 10;
     walls->addChildren(new RidgedWall(Vec3(House::ridgeThickness, 0.0f, 0.0f),
-    Vec3(House::exteriorWallThickness, House::height + floorHeight, length),
+    Vec3(House::exteriorWallThickness, House::height + House::floorHeight, length),
         Vec3(-1.0f, 0.0f, 0.0f),
         ridgeCount,
         House::ridgeThickness)
     );
 
     ridgeCount = 2;
-    walls->addChildren(new RidgedWall(Vec3(House::ridgeThickness, floorHeight, length),
-    Vec3(House::exteriorWallThickness + frontWallSideWidth, House::height, House::exteriorWallThickness),
+    walls->addChildren(new RidgedWall(Vec3(House::ridgeThickness, 0.0f, length),
+    Vec3(House::exteriorWallThickness + frontWallSideWidth, House::height + House::floorHeight, House::exteriorWallThickness),
         Vec3(0.0f, 0.0f, 1.0f),
         ridgeCount,
         House::ridgeThickness)
     );
 
     ridgeCount = 3;
-    walls->addChildren(new RidgedWall(Vec3(House::ridgeThickness + House::exteriorWallThickness + frontWallSideWidth + (windowCount + 1) * window->getDimensions().x, floorHeight, length),
-    Vec3(width - frontWallSideWidth - (windowCount + 1) * window->getDimensions().x, House::height, House::exteriorWallThickness),
+    walls->addChildren(new RidgedWall(Vec3(House::ridgeThickness + House::exteriorWallThickness + frontWallSideWidth + (windowCount + 1) * window->getDimensions().x, 0.0f, length),
+    Vec3(width - frontWallSideWidth - (windowCount + 1) * window->getDimensions().x, House::height + House::floorHeight, House::exteriorWallThickness),
         Vec3(0.0f, 0.0f, 1.0f),
         ridgeCount,
         House::ridgeThickness)
     );
 
     ridgeCount = 7;
-    walls->addChildren(new RidgedWall(Vec3(House::ridgeThickness + House::exteriorWallThickness + frontWallSideWidth, floorHeight + window->getDimensions().y, length),
-    Vec3((windowCount + 1) * window->getDimensions().x, totalHeight - window->getDimensions().y - floorHeight, House::exteriorWallThickness),
+    walls->addChildren(new RidgedWall(Vec3(House::ridgeThickness + House::exteriorWallThickness + frontWallSideWidth, House::floorHeight + window->getDimensions().y, length),
+    Vec3((windowCount + 1) * window->getDimensions().x, totalHeight - window->getDimensions().y - House::floorHeight, House::exteriorWallThickness),
         Vec3(0.0f, 0.0f, 1.0f),
         ridgeCount,
         House::ridgeThickness)
     );
 
+    walls->addChildren(new AnchoredCuboid(
+            Vec3<GLfloat>(House::exteriorWallThickness + House::ridgeThickness + frontWallSideWidth, 0.0f, length),
+            Vec3<GLfloat>(window->getDimensions().x * 4, House::floorHeight, House::exteriorWallThickness),
+            gravity,
+            House::floorColor
+    ));
+
     return walls;
 }
 
 Object *FamilyRoom::addWindows() {
-    Object* windows = new Object(Vec3<GLfloat>(House::exteriorWallThickness + House::ridgeThickness + frontWallSideWidth,floorHeight,length));
+    Object* windows = new Object(Vec3<GLfloat>(House::exteriorWallThickness + House::ridgeThickness + frontWallSideWidth,House::floorHeight,length));
 
     FramedWindow *first = new FramedWindow(
         Vec3<GLfloat>(0.0f, 0.0f, House::exteriorWallThickness * 0.5f),
@@ -120,7 +127,7 @@ Object *FamilyRoom::addDoor(FramedWindow *window) {
 
     GLfloat doorTotalWidth = door->getDimensions().x;
     Object* hingePivot = new Object(
-        Vec3<GLfloat>(doorLeftX + doorTotalWidth, floorHeight, length + House::exteriorWallThickness)
+        Vec3<GLfloat>(doorLeftX + doorTotalWidth, House::floorHeight, length + House::exteriorWallThickness)
     );
     door->setPosition(Vec3<GLfloat>(-doorTotalWidth, 0.0f, 0.0f));
     hingePivot->addChildren(door);

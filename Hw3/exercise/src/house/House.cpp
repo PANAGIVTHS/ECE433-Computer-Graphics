@@ -6,6 +6,7 @@
 #include "DiningRoom.h"
 #include "FamilyRoom.h"
 #include "Garage.h"
+#include "Hallway.h"
 #include "Porch.h"
 
 void House::setup() {
@@ -43,6 +44,11 @@ void House::setup() {
     addChildren(bedroom1);
     bedroom1->optimize();
 
+    Hallway *hallway = new Hallway(diningRoomPosition, scale);
+    Vec3<GLfloat> hallwayPosition = hallway->getPosition() + Vec3<GLfloat>(-Hallway::totalWidth, 0, -House::interiorWallThickness);
+    hallway->setPosition(hallwayPosition);
+    addChildren(hallway);
+
     // PATHWAY
     GLfloat pathWidth = Garage::doorWidth;
     GLfloat pathLength = 16;
@@ -72,4 +78,6 @@ void House::setup() {
     pathway1->setSubdivisions(10);
     addChildren(pathway1);
     pathway1->optimize();
+
+    new BorderCubes(hallway);
 }

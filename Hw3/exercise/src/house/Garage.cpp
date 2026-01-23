@@ -12,7 +12,7 @@ void Garage::addAll() {
 }
 
 Object *Garage::addFloor() {
-    Object *floor = new AnchoredCube(Vec3(0.0f, 0.0f, ceilingOffset + wallThickness), Vec3(width, floorHeight, length - 3 * wallThickness), gravity, House::floorColor, TextureID::NONE, wallMaterial);
+    Object *floor = new AnchoredCube(Vec3(0.0f, 0.0f, ceilingOffset + wallThickness), Vec3(width, House::floorHeight, length - 3 * wallThickness), gravity, House::floorColor, TextureID::NONE, wallMaterial);
     return floor;
 }
 

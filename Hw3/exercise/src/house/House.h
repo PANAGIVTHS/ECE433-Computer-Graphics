@@ -5,7 +5,7 @@
 class House : public Object {
     static std::vector<GLfloat *> getScalableVars() {
         return {
-            &height, &interiorWallThickness, &exteriorWallThickness, &ridgeThickness
+            &height, &floorHeight, &interiorWallThickness, &exteriorWallThickness, &ridgeThickness, &garageInset
         };
     }
 
@@ -22,6 +22,7 @@ class House : public Object {
 public:
     static inline GLfloat scale = 1.0f;
     static inline GLfloat height = 3.5f;
+    static inline GLfloat floorHeight = 0.27f;
     static inline GLfloat interiorWallThickness = .10f;
     static inline GLfloat exteriorWallThickness = .25f;
     static inline GLfloat ridgeThickness = 0.1f;

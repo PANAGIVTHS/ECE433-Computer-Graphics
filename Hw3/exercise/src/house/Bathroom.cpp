@@ -13,7 +13,7 @@ void Bathroom::addAll() {
 Object *Bathroom::addFloor() {
     return new AnchoredCuboid(
             Vec3<GLfloat>(House::exteriorWallThickness + House::ridgeThickness, 0.0f, 0.0f),
-            Vec3<GLfloat>(width, floorHeight, length),
+            Vec3<GLfloat>(width, House::floorHeight, length),
             gravity,
             House::floorColor,
             TextureID::NONE,
@@ -48,7 +48,7 @@ Object *Bathroom::addWalls(FramedWindow *window, FramedWindow *door) {
     // RIGHT WINDOW WALL
     GLint ridgeCount = 7;
     walls->addChildren(new RidgedWall(Vec3(House::ridgeThickness, 0.0f, 0.0f),
-    Vec3(House::exteriorWallThickness, House::height + floorHeight, leftWallSideWidth),
+    Vec3(House::exteriorWallThickness, House::height + House::floorHeight, leftWallSideWidth),
         Vec3(-1.0f, 0.0f, 0.0f),
         ridgeCount,
         House::ridgeThickness)
@@ -70,7 +70,7 @@ Object *Bathroom::addWalls(FramedWindow *window, FramedWindow *door) {
 
 
     walls->addChildren(new RidgedWall(Vec3(House::ridgeThickness, 0.0f, leftWallSideWidth + window->getDimensions().x),
-    Vec3(House::exteriorWallThickness, House::height + floorHeight, totalLength - leftWallSideWidth - window->getDimensions().x),
+    Vec3(House::exteriorWallThickness, House::height + House::floorHeight, totalLength - leftWallSideWidth - window->getDimensions().x),
         Vec3(-1.0f, 0.0f, 0.0f),
         ridgeCount,
         House::ridgeThickness)
@@ -79,28 +79,28 @@ Object *Bathroom::addWalls(FramedWindow *window, FramedWindow *door) {
     // FRONT WALL
     walls->addChildren(new AnchoredCube(
         Vec3(House::exteriorWallThickness + House::ridgeThickness, 0.0f, length),
-    Vec3(width + rightWallInset + House::interiorWallThickness, House::height + floorHeight, House::interiorWallThickness)
+    Vec3(width + rightWallInset + House::interiorWallThickness, House::height + House::floorHeight, House::interiorWallThickness)
     ));
 
     // RIGHT WALL
     walls->addChildren(new AnchoredCube(
         Vec3(House::exteriorWallThickness + House::ridgeThickness + width , 0.0f, 0.0f),
-    Vec3(House::interiorWallThickness, House::height + floorHeight, rightWallSideWidth)
+    Vec3(House::interiorWallThickness, House::height + House::floorHeight, rightWallSideWidth)
     ));
 
     walls->addChildren(new AnchoredCube(
         Vec3(House::exteriorWallThickness + House::ridgeThickness + width, 0.0f, rightWallSideWidth),
-    Vec3(House::interiorWallThickness, floorHeight, doorWidth)
+    Vec3(House::interiorWallThickness, House::floorHeight, doorWidth)
     ));
 
     walls->addChildren(new AnchoredCube(
-        Vec3(House::exteriorWallThickness + House::ridgeThickness + width, floorHeight + doorHeight, rightWallSideWidth),
-    Vec3(House::interiorWallThickness, totalHeight - floorHeight - doorHeight, doorWidth)
+        Vec3(House::exteriorWallThickness + House::ridgeThickness + width, House::floorHeight + doorHeight, rightWallSideWidth),
+    Vec3(House::interiorWallThickness, totalHeight - House::floorHeight - doorHeight, doorWidth)
     ));
 
     walls->addChildren(new AnchoredCube(
         Vec3(House::exteriorWallThickness + House::ridgeThickness + width, 0.0f, rightWallSideWidth + doorWidth),
-    Vec3(House::interiorWallThickness, House::height + floorHeight, length - rightWallSideWidth - doorWidth)
+    Vec3(House::interiorWallThickness, House::height + House::floorHeight, length - rightWallSideWidth - doorWidth)
     ));
 
     return walls;

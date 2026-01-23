@@ -7,7 +7,6 @@ class Bedroom2 : public Block {
 public:
     static inline GLfloat width = 3.0432f;
     static inline GLfloat length = 2.6416f;
-    static inline GLfloat floorHeight = 0.27f;
 
     static inline GLfloat doorWidth = 0.9f;
     static inline GLfloat doorHeight = 2.0f;
@@ -29,7 +28,7 @@ public:
     static inline GLfloat rightWallSideWidth = 0.1f;
 
     static inline GLfloat totalWidth = width + House::exteriorWallThickness + House::ridgeThickness + House::interiorWallThickness + wardrobeWidth + House::interiorWallThickness;
-    static inline GLfloat totalHeight = House::height + floorHeight;
+    static inline GLfloat totalHeight = House::height + House::floorHeight;
     static inline GLfloat totalLength = length + House::exteriorWallThickness + House::ridgeThickness + House::interiorWallThickness;
 
     Bedroom2(Vec3<GLfloat> pos, GLfloat scale = 1.0f, bool gravity = DEFAULT_GRAVITY, Color3f color = DEFAULT_COLOR, TextureID texture = DEFAULT_TEXTURE, MaterialID material = DEFAULT_MATERIAL)
@@ -45,7 +44,6 @@ protected:
         return {
             &width,
             &length,
-            &floorHeight,
             &doorWidth,
             &doorHeight,
             &windowFrame,
@@ -64,7 +62,7 @@ protected:
 
     void updateDimensions() override {
         totalWidth = width + House::exteriorWallThickness + House::ridgeThickness + House::interiorWallThickness + wardrobeLength + House::interiorWallThickness;
-        totalHeight = House::height + floorHeight;
+        totalHeight = House::height + House::floorHeight;
         totalLength = length + House::exteriorWallThickness + House::ridgeThickness + House::interiorWallThickness;
     }
 private:

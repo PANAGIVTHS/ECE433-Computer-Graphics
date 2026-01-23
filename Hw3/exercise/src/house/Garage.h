@@ -6,7 +6,6 @@
 
 class Garage : public Block {
 public:
-    static inline GLfloat floorHeight = 0.27f;
     static inline GLfloat wallThickness = House::exteriorWallThickness;
 
     static inline GLfloat length = 9.3152f;
@@ -37,7 +36,6 @@ protected:
 
     std::vector<GLfloat *> getScalableVars() override {
         return {
-            &floorHeight,
             &wallThickness,
             &length,
             &width,
