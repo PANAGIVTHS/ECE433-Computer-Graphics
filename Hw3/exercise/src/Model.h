@@ -12,10 +12,8 @@ public:
           MaterialID material = DEFAULT_MATERIAL);
     
 private:
-    // We override optimize because we do it automatically in the constructor
-    // and we don't have data to re-optimize later.
-    void drawInternal() override; // Will basically be empty or error handling
-    
+    std::string modelPath;
+    void drawInternal() override;
     void loadAndCompile(const std::string& filename);
 };
 

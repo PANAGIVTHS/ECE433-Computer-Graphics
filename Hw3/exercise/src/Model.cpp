@@ -15,7 +15,17 @@ struct VertexIndex {
 
 Model::Model(std::string filename, Vec3<float> pos, bool gravity, Color3f color, TextureID texture, MaterialID material)
     : Object(pos, gravity, color, texture, material) {
-    loadAndCompile(filename);
+    this->modelPath = filename;
+}
+
+void Model::drawInternal() {
+    // Debug
+    if (displayList == 0) {
+        glColor3f(1.0f, 0.0f, 0.0f);
+        glutWireCube(1.0f);
+    }
+
+    loadAndCompile(modelPath);
 }
 
 void Model::loadAndCompile(const std::string& filename) {
@@ -33,14 +43,8 @@ void Model::loadAndCompile(const std::string& filename) {
     std::vector<Vec3<float>> temp_texCoords;
     std::vector<Vec3<float>> temp_normals;
 
-    // Start recording GPU commands
-    this->displayList = glGenLists(1);
-    glNewList(this->displayList, GL_COMPILE);
-
     // Apply settings
     glDisable(GL_CULL_FACE); // Draw both sides of faces
-    MaterialManager::bind(material);
-    TextureManager::bind(texture);
     glColor3f(color.red, color.green, color.blue);
 
     glBegin(GL_TRIANGLES);
@@ -119,13 +123,4 @@ void Model::loadAndCompile(const std::string& filename) {
         }
     }
     glEnd();
-    glEndList();
-}
-
-void Model::drawInternal() {
-    // Debug box if model fails to load
-    if (displayList == 0) {
-        glColor3f(1.0f, 0.0f, 0.0f);
-        glutWireCube(1.0f);
-    }
 }
