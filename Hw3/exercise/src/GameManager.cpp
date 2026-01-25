@@ -90,7 +90,7 @@ void GameManager::init() {
     environment->spawn(); 
     environment->init();
 
-    house = new House(Vec3<GLfloat>(0.0f, 0.0f, -10.0f));
+    house = new House(Vec3<GLfloat>(0.0f, 0.0f, 0.0f));
     Model *car = new Model("../assets/Car.obj", Vec3(13.0f, 0.2f, -3.0f), false, {1.0f, 1.0f, 1.0f}, TextureID::NONE, MaterialID::MATTE);
     car->optimize();
     house->addChildren(car);

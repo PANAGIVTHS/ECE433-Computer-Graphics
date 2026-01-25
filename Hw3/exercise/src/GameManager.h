@@ -34,7 +34,7 @@ public:
     static constexpr GLdouble fov = 80.0f;
     static constexpr GLdouble near = 0.1;
     static constexpr GLdouble far = 2000;
-    inline static const Vec3<GLfloat> initialCameraPos = Vec3(0.0f, 0.0f, 0.0f);
+    inline static const Vec3<GLfloat> initialCameraPos = Vec3(13.323354f, 1.700000f, 17.628853f);
     inline static const Color3f skyColor = {.red = 0.3828125f, .green = 0.75390625f, .blue = 0.89453125f};
     inline static GLdouble dt;
 
