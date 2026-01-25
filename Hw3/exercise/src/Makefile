@@ -17,11 +17,21 @@ LDFLAGS = -L/usr/X11R6/lib -L/sw/lib -L/usr/sww/lib \
 endif
 RM = /bin/rm -f
 
-TARGET = visiting3Dhouse
-SRCS   = visiting3Dhouse.cpp Object.cpp Camera.cpp Environment.cpp GameManager.cpp WindowManager.cpp InputManager.cpp Celestial.cpp TextureManager.cpp bmp.cpp LightingManager.cpp MaterialManager.cpp Model.cpp Spline.cpp
-HOUSE_SRCS = house/Garage.cpp house/House.cpp house/Lantern.cpp house/Porch.cpp house/BuildingBlocks.cpp house/Bathroom.cpp house/Bedroom1.cpp house/Bedroom2.cpp house/DiningRoom.cpp house/FamilyRoom.cpp house/Hallway.cpp
-SRCS += $(HOUSE_SRCS)
-OBJS   = $(SRCS:.cpp=.o)
+TARGET1 = visiting3Dhouse
+TARGET2 = views
+
+HOUSE_SRCS = house/Garage.cpp house/House.cpp house/Lantern.cpp house/Porch.cpp \
+            house/BuildingBlocks.cpp house/Bathroom.cpp house/Bedroom1.cpp \
+            house/Bedroom2.cpp house/DiningRoom.cpp house/FamilyRoom.cpp house/Hallway.cpp
+
+COMMON_SRCS = Object.cpp Camera.cpp Environment.cpp GameManager.cpp WindowManager.cpp \
+            InputManager.cpp Celestial.cpp TextureManager.cpp bmp.cpp \
+            LightingManager.cpp MaterialManager.cpp Model.cpp Spline.cpp \
+            $(HOUSE_SRCS)
+			
+COMMON_OBJS = $(COMMON_SRCS:.cpp=.o)
+OBJS1       = visiting3Dhouse.o $(COMMON_OBJS)
+OBJS2       = views.o $(COMMON_OBJS)
 
 USE_MOUSE ?= 1
 ifeq ($(USE_MOUSE), 1)
@@ -40,9 +50,12 @@ endif
 
 .PHONY: all clean
 
-all: $(TARGET)
+all: $(TARGET1) $(TARGET2)
 
-$(TARGET): $(OBJS)
+$(TARGET1): $(OBJS1)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+
+$(TARGET2): $(OBJS2)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 %.o: %.cpp %.h
@@ -51,6 +64,9 @@ $(TARGET): $(OBJS)
 visiting3Dhouse.o: visiting3Dhouse.cpp
 	$(CC) $(CFLAGS) $(INCFLAGS) -c $< -o $@
 
+views.o: views.cpp
+	$(CC) $(CFLAGS) $(INCFLAGS) -c $< -o $@
+
 clean:
-	rm -f $(OBJS) $(TARGET)
+	rm -f $(ALL) $(OBJS1) $(OBJS2) $(COMMON_OBJS)
  

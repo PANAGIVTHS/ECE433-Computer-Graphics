@@ -26,12 +26,13 @@ public:
     Camera(const Vec3<GLfloat> &position, bool gravity): position(position), gravity(gravity) {
         flashlightConfig.position = Vec3<float>(0.0f, 0.0f, 0.0f);
         flashlightConfig.color    = Vec3<float>(1.0f, 1.0f, 0.8f);
-        // flashlightConfig.spotCutoff = 20.0f;
-        // flashlightConfig.spotExponent = 15.0f;
-        // flashlightConfig.spotDirection = Vec3<float>(0.0f, 0.0f, -1.0f);
+        flashlightConfig.ambient  = Vec3<float>(0.5f, 0.5f, 0.4f);
+        flashlightConfig.diffuse  = Vec3<float>(0.6f, 0.6f, 0.5f);
+        flashlightConfig.specular = Vec3<float>(0.0f, 0.0f, 0.0f);
+        flashlightConfig.spotCutoff = 180.0f;
         flashlightConfig.constant = 1.0f;
-        flashlightConfig.linear = 0.04f;
-        flashlightConfig.quadratic = 0.0f;
+        flashlightConfig.linear = 0.2f;
+        flashlightConfig.quadratic = 0.06f;
 
         flashlightID = LightingManager::createLight(flashlightConfig);
     }
