@@ -8,6 +8,7 @@
 
 Object::Object(Vec3<GLfloat> pos, bool gravity, Color3f color, TextureID texture, MaterialID material, std::initializer_list<Object*> children) : transform(pos), gravity(gravity), color(color), texture(texture), material(material) {
     ObjectHandler::addObject(this);
+    ObjectHandler::addTransparent(this);
 
     for (Object* child : children) {
         this->Object::addChildren(child);
@@ -20,10 +21,16 @@ Object::~Object() {
         displayList = 0;
     }
     
-    ObjectHandler::removeObject(this);
+    if (parent != nullptr) 
+        parent->removeChildren(this);
 
-    for (Object *o : children)
+    ObjectHandler::removeObject(this);
+    ObjectHandler::removeTransparent(this);
+
+    for (Object *o : children) {
+        o->parent = nullptr;
         delete o;
+    }
     children.clear();
 }
 
@@ -132,9 +139,19 @@ Object *Object::addChildren(Object *o) {
     o->parent = this;
     children.push_back(o);
 
-    if (o->hasTransparency()) {
-        ObjectHandler::getTransObjects().push_back(o);
-    }
+    return this;
+}
+
+Object *Object::removeChildren(Object *o) {
+    if (!o) return this;
+
+    auto it = std::find(children.begin(), children.end(), o);
+    if (it != children.end())
+        children.erase(it);
+    o->parent = nullptr;
+    o->setGravity(gravity);
+    o->setVelocity(velocity);
+    ObjectHandler::addObject(o);
 
     return this;
 }
@@ -164,20 +181,13 @@ Object* Object::setRotation(GLfloat angle, Vec3<GLfloat> axis) {
 }
 
 Object* Object::setTexture(TextureID id, bool recurse) {
-    
-    ObjectHandler::removeObject(this);
-
+    TextureID old = texture;
     this->texture = id;
-
-    //! I am the parent, add to global objects
-    if (parent == nullptr) {
-        ObjectHandler::addObject(this);
-    } else {
-        //! I am a child, only add to transparent vector
-        if (hasTransparency()) {
-            ObjectHandler::getTransObjects().push_back(this);
-        }
-    }
+    
+    if (TextureManager::isTransparent(old) && !TextureManager::isTransparent(id))
+        ObjectHandler::removeTransparent(this);
+    else if (!TextureManager::isTransparent(old) && TextureManager::isTransparent(id))
+        ObjectHandler::addTransparent(this);
     
     if (!recurse)
         return this;
@@ -291,10 +301,15 @@ std::vector<Object *> ObjectHandler::transObjects;
 
 void ObjectHandler::addObject(Object *o) {
     ObjectHandler::objects.push_back(o);
+}
 
-    if (o->hasTransparency()) {
+void ObjectHandler::addTransparent(Object *o) {
+    if (!o->hasTransparency())
+        return;
+    
+    auto itTrans = std::find(transObjects.begin(), transObjects.end(), o);
+    if (itTrans == transObjects.end())
         ObjectHandler::transObjects.push_back(o);
-    }
 }
 
 void ObjectHandler::removeObject(Object *o) {
@@ -303,13 +318,13 @@ void ObjectHandler::removeObject(Object *o) {
         std::iter_swap(it, objects.end() - 1);
         objects.pop_back();
     }
+}
 
-    if (o->hasTransparency()) {
-        auto itTrans = std::find(transObjects.begin(), transObjects.end(), o);
-        if (itTrans != transObjects.end()) {
-            std::iter_swap(itTrans, transObjects.end() - 1);
-            transObjects.pop_back();
-        }
+void ObjectHandler::removeTransparent(Object *o) {
+    auto itTrans = std::find(transObjects.begin(), transObjects.end(), o);
+    if (itTrans != transObjects.end()) {
+        std::iter_swap(itTrans, transObjects.end() - 1);
+        transObjects.pop_back();
     }
 }
 

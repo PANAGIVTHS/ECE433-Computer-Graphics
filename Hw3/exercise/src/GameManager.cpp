@@ -40,7 +40,6 @@ void GameManager::loadLevelAssets() {
         return obj;
     };
 
-    addAsset("../assets/forest.txt", Vec3(7.0f, 0.2f, 7.0f));
     addAsset("../assets/sofa.txt", Vec3(0.0f, 0.0f, 0.0f));
     addAsset("../assets/sofa2.txt", Vec3(0.0f, 0.0f, 0.0f));
     addAsset("../assets/stove.txt", Vec3(0.0f, 0.0f, 0.0f));

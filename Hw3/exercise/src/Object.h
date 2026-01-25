@@ -48,6 +48,7 @@ public:
     void optimize();
     void invalidateDisplayList();
     virtual Object *addChildren(Object *object);
+    Object *removeChildren(Object *o);
 
     bool hasTransparency();
     bool isHidden();
@@ -75,7 +76,9 @@ protected:
     static std::vector<Object *> transObjects;
 public:
     static void addObject(Object *o);
+    static void addTransparent(Object *o);
     static void removeObject(Object *o);
+    static void removeTransparent(Object *o);
     static std::vector<Object *> &getObjects();
     static std::vector<Object *> &getTransObjects();
     static void invalidateDisplayListAll();
