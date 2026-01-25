@@ -93,6 +93,14 @@ Vec3<GLfloat>& Camera::getVelocity() {
     return velocity;
 }
 
+int Camera::getFlashlightID() {
+    return flashlightID;
+}
+
+LightConfig Camera::getFlashlightConfig() {
+    return flashlightConfig;
+}
+
 void Camera::setVelocity(Vec3<GLfloat> velocity) {
     this->velocity = velocity;
 }

@@ -81,6 +81,12 @@ void GameManager::unloadLevelAssets() {
     levelAssets.clear();
 }
 
+void GameManager::init(int viewportX, int viewportY) {
+    GameManager::viewportX = viewportX;
+    GameManager::viewportY = viewportY;
+    init();
+}
+
 void GameManager::init() {
     oldTime = glutGet(GLUT_ELAPSED_TIME);
     
@@ -124,11 +130,20 @@ void GameManager::runGameLoop() {
 
 void GameManager::onWindowUpdate(GLint width, GLint height, bool newContext) {
     // Set projection and viewport
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(fov, (GLdouble) width / height, near, far);
-    glMatrixMode(GL_MODELVIEW);
-    glViewport(0, 0, width, height);
+    GLint viewportWidth = width / viewportX;
+    GLint viewportHeight = height / viewportY;
+    for (int x = 0; x < viewportX; x++) {
+        GLint startX = x * viewportWidth;
+        for (int y = 0; y < viewportY; y++) {
+            GLint startY = y * viewportHeight;
+
+            glMatrixMode(GL_PROJECTION);
+            glLoadIdentity();
+            gluPerspective(fov, (GLdouble) viewportWidth / viewportHeight, near, far);
+            glMatrixMode(GL_MODELVIEW);
+            glViewport(startX, startY, startX + viewportWidth, startY + viewportHeight);
+        }
+    }
 
     // Set other OpenGL settings
     glEnable(GL_DEPTH_TEST);

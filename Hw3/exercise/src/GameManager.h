@@ -16,11 +16,13 @@ private:
     inline static Environment *environment = nullptr;
     inline static House *house = nullptr;
     inline static GLint oldTime;
+    inline static int viewportX = 1, viewportY = 1;
 
     //fps related
     inline static int frameCount = 0;
     inline static int lastFpsTime = 0;
     inline static float fps = 0.0f;
+
     inline static std::vector<Object*> levelAssets;
     static void unloadLevelAssets();
     static void loadLevelAssets();
@@ -39,6 +41,7 @@ public:
     inline static GLdouble dt;
 
     static void init();
+    static void init(int viewportX, int viewportY);
     static void onWindowUpdate(GLint width, GLint height, bool newContext);
     static void runGameLoop();
     static void cleanUp();
