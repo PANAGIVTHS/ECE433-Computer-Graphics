@@ -1,6 +1,6 @@
 # --- LUXURY DROP-IN BATHTUB (Complex Plumbing) ---
 # Positioned relative to the scene
-OBJECT 3.9 0.3 -11.7
+OBJECT 3.9 0.3 -1.7
 GRAVITY false
 ROTATION 0 0 0 0
 BEGIN

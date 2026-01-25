@@ -1,6 +1,6 @@
 # --- MODERN SKIRTED TOILET (Ceramic / Bone Texture) ---
 # Positioned relative to the scene
-OBJECT 8.267 0.3 -14.67
+OBJECT 8.267 0.3 -4.67
 GRAVITY false
 ROTATION -90 0 1 0
 BEGIN

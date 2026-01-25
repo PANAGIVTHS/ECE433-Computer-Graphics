@@ -34,7 +34,10 @@ void GameManager::loadLevelAssets() {
         if (obj) {
             obj->optimize();
             levelAssets.push_back(obj);
+            house->addChildren(obj);
         }
+
+        return obj;
     };
 
     addAsset("../assets/forest.txt", Vec3(7.0f, 0.2f, 7.0f));
@@ -66,8 +69,7 @@ void GameManager::loadLevelAssets() {
     addAsset("../assets/kitchensink.txt", Vec3(0.0f, 0.0f, -0.0f));
     addAsset("../assets/toilet2.txt", Vec3(0.0f, 0.0f, -0.0f));
     addAsset("../assets/fence.txt", Vec3(0.0f, 0.0f, -0.0f));
-    
-    
+
 }
 
 void GameManager::unloadLevelAssets() {
@@ -88,9 +90,10 @@ void GameManager::init() {
     environment->spawn(); 
     environment->init();
 
-    House *house = new House(Vec3<GLfloat>(0.0f, 0.0f, -10.0f));
-    Model *car = new Model("../assets/Car.obj", Vec3(13.0f, 0.2f, -13.0f), false, {1.0f, 1.0f, 1.0f}, TextureID::NONE, MaterialID::MATTE);
+    house = new House(Vec3<GLfloat>(0.0f, 0.0f, -10.0f));
+    Model *car = new Model("../assets/Car.obj", Vec3(13.0f, 0.2f, -3.0f), false, {1.0f, 1.0f, 1.0f}, TextureID::NONE, MaterialID::MATTE);
     car->optimize();
+    house->addChildren(car);
 
     loadLevelAssets(); 
 }

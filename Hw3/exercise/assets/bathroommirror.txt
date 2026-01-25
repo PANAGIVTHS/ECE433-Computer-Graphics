@@ -1,6 +1,6 @@
 # --- MODERN VANITY MIRROR WITH SHELF & LIGHTING ---
 # Positioned relative to the scene (suggested height for bathroom wall)
-OBJECT 3 2 -16
+OBJECT 3 2 -6
 GRAVITY false
 ROTATION 90 0 1 0
 BEGIN

@@ -8,11 +8,13 @@
 #include "Camera.h"
 #include "Environment.h"
 #include "Object.h"
+#include "house/House.h"
 
 class GameManager {
 private:
     inline static Camera *camera = nullptr;
     inline static Environment *environment = nullptr;
+    inline static House *house = nullptr;
     inline static GLint oldTime;
 
     //fps related

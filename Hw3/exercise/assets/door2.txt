@@ -1,6 +1,6 @@
 # --- DETAILED INTERIOR DOOR (Fixed Top Gap) ---
 # Positioned at (0, 0, 0)
-OBJECT 7.86 0.2 -14.67
+OBJECT 7.86 0.2 -4.67
 SCALE 0.65 0.85 0.8
 GRAVITY false
 ROTATION -90 0 1 0

@@ -1,6 +1,6 @@
 # --- MODERN KITCHEN SINK UNIT (Fixed Geometry) ---
 # Positioned relative to the scene
-OBJECT 10.1 0.3 -10.9
+OBJECT 10.1 0.3 -0.9
 SCALE 1.3 1 1
 GRAVITY false
 ROTATION -90 0 1 0

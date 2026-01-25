@@ -1,6 +1,6 @@
 # --- RUSTIC WOODEN CHAIR (Square Fit Cushion) ---
 # Positioned at (2, 0, 8)
-OBJECT 4.5 0.3 -7.67
+OBJECT 4.5 0.3 2.33
 GRAVITY false
 ROTATION 180 0 1 0
 BEGIN

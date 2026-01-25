@@ -1,6 +1,6 @@
 # --- DETAILED IMPERFECT SOFA ---
 # Positioned at (5,0,5) - Move this where you want it
-OBJECT 0 0 0 
+OBJECT 0 0 0
 GRAVITY false
 ROTATION 0 0 0 0
 BEGIN

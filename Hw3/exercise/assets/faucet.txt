@@ -1,6 +1,6 @@
 # --- MODERN CHROME BASIN FAUCET (Fixed Geometry) ---
 # Positioned at origin (0,0,0)
-OBJECT 3.0067 1.067 -16
+OBJECT 3.0067 1.067 -6
 SCALE 1.2 1.2 1.2 
 GRAVITY false
 ROTATION 90 0 1 0

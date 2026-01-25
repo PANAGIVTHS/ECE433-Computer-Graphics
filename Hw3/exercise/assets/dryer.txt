@@ -1,6 +1,6 @@
 # --- MODERN TUMBLE DRYER (Heat Pump Model) ---
 # Positioned relative to the scene (e.g., next to a washer)
-OBJECT 7.1 0.3 -12
+OBJECT 7.1 0.3 -2
 SCALE 1.2 1.2 1.2
 GRAVITY false
 ROTATION -95 0 1 0

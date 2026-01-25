@@ -1,6 +1,6 @@
 # --- MODERN WASHING MACHINE (Fixed Geometry) ---
 # Positioned at (12, 0, 8)
-OBJECT 7.1 0.3 -13
+OBJECT 7.1 0.3 -3
 GRAVITY false
 ROTATION -90 0 1 0
 BEGIN

@@ -1,6 +1,6 @@
 # --- MODERN FLOATING HAND BASIN (Vessel Style) ---
 # Positioned relative to the scene
-OBJECT 3.26 0.67 -16
+OBJECT 3.26 0.67 -6
 GRAVITY false
 ROTATION 90 0 1 0
 BEGIN
