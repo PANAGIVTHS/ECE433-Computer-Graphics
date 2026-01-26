@@ -1,0 +1,11 @@
+# --- MODERN COMPLICATED BACKYARD FENCE SECTION ---
+# A realistic 3.2m section with stone pillars, mixed wood shadowbox paneling, and lighting.
+# Position defaults to origin (0,0,0) - Adjust as needed.
+
+OBJECT 10.5 2.65 2.1
+GRAVITY false
+ROTATION -90 0 1 0
+BEGIN
+    CUBOID 0.0 0.0 0.0 2.0 1.0 0.01
+    TEXTURE POSTER_1
+END

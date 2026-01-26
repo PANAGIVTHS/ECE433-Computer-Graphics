@@ -15,7 +15,7 @@
     X(GRAY_WOOL)        \
     X(BLACK_WOOL)       \
     X(BLUE_WOOL)        \
-    X(RED_WOOL)        \
+    X(RED_WOOL)         \
     X(BROWN_WOOL)       \
     X(GREEN_WOOL)       \
     X(MAGENTA_WOOL)     \
@@ -24,6 +24,7 @@
     X(YELLOW_WOOL)      \
     X(BROWN_CONCRETE)   \
     X(SPRUCE_PLANKS)    \
+    X(POSTER_1)         \
 
 
 enum class TextureID {

@@ -68,6 +68,7 @@ void GameManager::loadLevelAssets() {
     addAsset("../assets/kitchensink.txt", Vec3(0.0f, 0.0f, -0.0f));
     addAsset("../assets/toilet2.txt", Vec3(0.0f, 0.0f, -0.0f));
     addAsset("../assets/fence.txt", Vec3(0.0f, 0.0f, -0.0f));
+    addAsset("../assets/poster1.txt", Vec3(0.0f, 0.0f, 0.0f));
 
 }
 
