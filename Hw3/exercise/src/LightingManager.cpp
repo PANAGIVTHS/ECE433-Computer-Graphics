@@ -7,6 +7,11 @@ void LightingManager::init() {
     glEnable(GL_COLOR_MATERIAL);
     glEnable(GL_NORMALIZE);
     glEnable(GL_LIGHTING);
+
+    GLfloat globalAmbient[] = {0.1f, 0.1f, 0.1f, 0.0f};
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient);
+
+    glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
 }
 
 void LightingManager::registerLight(int id, LightConfig* config, Object* owner) {
