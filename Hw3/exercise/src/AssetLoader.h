@@ -113,6 +113,10 @@ public:
                     std::string texName; ss >> texName;
                     currentObj->setTexture(resolveTexture(texName), false);
                 }
+                else if (cmd == "MATERIAL") {
+                    std::string matName; ss >> matName;
+                    currentObj->setMaterial(resolveMaterial(matName), false);
+                }
                 else if (cmd == "ROTATION") {
                     float angle, rx, ry, rz;
                     ss >> angle >> rx >> ry >> rz;
@@ -172,6 +176,13 @@ private:
         TEXTURE_LIST(X)
     #undef X
         return TextureID::NONE;
+    }
+
+    static MaterialID resolveMaterial(std::string_view name) {
+    #define X(mat) if (name == #mat) return MaterialID::mat;
+        MATERIAL_LIST(X)
+    #undef X
+        return MaterialID::NONE;
     }
 
 };

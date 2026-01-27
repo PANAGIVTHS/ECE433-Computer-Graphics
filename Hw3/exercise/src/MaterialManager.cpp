@@ -17,13 +17,6 @@ void MaterialManager::init() {
         {0.0f, 0.0f, 0.0f, 1.0f},
         0.0f
     };
-    materials[MaterialID::GLOSSY] = {
-        {0.25f, 0.25f, 0.25f, 1.0f},
-        {1.0f, 1.0f, 1.0f, 1.0f},
-        {1.0f, 1.0f, 1.0f, 1.0f},
-        {0.0f, 0.0f, 0.0f, 1.0f},
-        100.0f
-    };
     materials[MaterialID::SHINY] = {
         {0.25f, 0.25f, 0.25f, 1.0f},
         {0.4f, 0.4f, 0.4f, 1.0f},

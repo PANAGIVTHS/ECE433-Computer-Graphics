@@ -22,7 +22,7 @@ public:
     static inline GLfloat pillarInset = 0.05f;
 
     static inline Color3f floorColor = {.red = 1, .green = 1, .blue = 1};
-    static inline MaterialID floorMaterial = MaterialID::GLOSSY;
+    static inline MaterialID floorMaterial = MaterialID::MATTE;
     static inline Color3f ceilingColor = {.red = 0.19140625, .green = 0.19140625, .blue = 0.19140625};
     static inline MaterialID ceilingMaterial = MaterialID::MATTE;
 

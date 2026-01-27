@@ -8,10 +8,15 @@
 #include "TextureEnums.h"
 #include <map>
 
+
+#define MATERIAL_LIST(X) \
+    X(MATTE)             \
+    X(SHINY)             \
+
 enum class MaterialID {
-    MATTE,
-    GLOSSY,
-    SHINY,
+#define X(name) name,
+    MATERIAL_LIST(X)
+#undef X
     NONE
 };
 
