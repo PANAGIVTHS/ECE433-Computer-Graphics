@@ -63,13 +63,17 @@ void GameManager::loadLevelAssets() {
     addAsset("../assets/chair2.txt", Vec3(0.0f, 0.0f, -0.0f));
     addAsset("../assets/chair3.txt", Vec3(0.0f, 0.0f, -0.0f));
     addAsset("../assets/chair4.txt", Vec3(0.0f, 0.0f, -0.0f));
+    addAsset("../assets/chair5.txt", Vec3(0.0f, 0.0f, -0.0f));
+    addAsset("../assets/chair6.txt", Vec3(0.0f, 0.0f, -0.0f));
     addAsset("../assets/bed2.txt", Vec3(0.0f, 0.0f, -0.0f));
     addAsset("../assets/wardrobe2.txt", Vec3(0.0f, 0.0f, -0.0f));
     addAsset("../assets/kitchensink.txt", Vec3(0.0f, 0.0f, -0.0f));
     addAsset("../assets/toilet2.txt", Vec3(0.0f, 0.0f, -0.0f));
-    addAsset("../assets/fence.txt", Vec3(0.0f, 0.0f, -0.0f));
+    addAsset("../assets/fence2.txt", Vec3(0.0f, 0.0f, -0.0f));
+    addAsset("../assets/fence3.txt", Vec3(0.0f, 0.0f, -0.0f));
+    addAsset("../assets/fence4.txt", Vec3(0.0f, 0.0f, -0.0f));
     addAsset("../assets/poster1.txt", Vec3(0.0f, 0.0f, 0.0f));
-
+    addAsset("../assets/teda.txt", Vec3(0.0f, 0.0f, 0.0f));
 }
 
 void GameManager::unloadLevelAssets() {

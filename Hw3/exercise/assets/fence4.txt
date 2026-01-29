@@ -2,7 +2,7 @@
 # A realistic 3.2m section with stone pillars, mixed wood shadowbox paneling, and lighting.
 # Position defaults to origin (0,0,0) - Adjust as needed.
 
-OBJECT 13 10 -3
+OBJECT 8 0.0 -13.5
 GRAVITY false
 ROTATION 0 0 0 0
 BEGIN

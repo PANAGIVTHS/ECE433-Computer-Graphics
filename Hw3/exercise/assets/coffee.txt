@@ -1,8 +1,9 @@
 # --- DETAILED COFFEE TABLE (All REPEAT_FIT) ---
 # Positioned at (5, 0, 7.5)
-OBJECT 5 5 17.5
+OBJECT 6.8 0.0 -11.7
+SCALE 1.5 1.5 1.5
 GRAVITY false
-ROTATION 3.0 0 1 0
+ROTATION -90 0 1 0
 BEGIN
     # -- LEGS --
     # Front Left
