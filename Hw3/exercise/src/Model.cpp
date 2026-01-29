@@ -97,7 +97,7 @@ void Model::loadAndCompile(const std::string& filename) {
                 // Send UV
                 if (v->tIdx >= 0 && v->tIdx < (int)temp_texCoords.size()) {
                     Vec3<float>& t = temp_texCoords[v->tIdx];
-                    glTexCoord2f(t.x, t.y);
+                    glTexCoord2f(t.x, 1.0f - t.y);
                 }
                 // Send Position
                 if (v->vIdx >= 0 && v->vIdx < (int)temp_positions.size()) {
