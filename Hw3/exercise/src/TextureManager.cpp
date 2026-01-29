@@ -118,12 +118,12 @@ void TextureManager::init() {
     init(TextureID::BROWN_CONCRETE, "../Texture_Images/brown_concrete.bmp");
     init(TextureID::POSTER_1, "../Texture_Images/your_next_line_is.bmp");
     init(TextureID::POSTER_2, "../Texture_Images/creeper_painting.bmp");
-    init(TextureID::CAR, "../Texture_Images/car.bmp");
+    init(TextureID::CAR, "../Texture_Images/car.bmp", GL_LINEAR);
 
 }
 
 //TODO Do No magic color
-bool TextureManager::init(TextureID id, const std::string& path, int width, int height) {
+bool TextureManager::init(TextureID id, const std::string& path, GLint magMethod, int width, int height) {
     if (id == TextureID::NONE) return false;
     if (textures.count(id)) return true; // Already loaded
 
@@ -212,7 +212,7 @@ bool TextureManager::init(TextureID id, const std::string& path, int width, int 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magMethod);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
