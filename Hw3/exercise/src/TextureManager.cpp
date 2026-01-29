@@ -119,6 +119,8 @@ void TextureManager::init() {
     init(TextureID::POSTER_1, "../Texture_Images/your_next_line_is.bmp");
     init(TextureID::POSTER_2, "../Texture_Images/creeper_painting.bmp");
     init(TextureID::CAR, "../Texture_Images/car.bmp", GL_LINEAR);
+    init(TextureID::TV, "../Texture_Images/tv.bmp", GL_LINEAR);
+    init(TextureID::GOAT, "../Texture_Images/goat.bmp");
 
 }
 

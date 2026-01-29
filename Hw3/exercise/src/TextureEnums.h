@@ -26,7 +26,9 @@
     X(SPRUCE_PLANKS)    \
     X(POSTER_1)         \
     X(POSTER_2)         \
-    X(CAR)         \
+    X(CAR)              \
+    X(TV)               \
+    X(GOAT)             \
 
 
 enum class TextureID {

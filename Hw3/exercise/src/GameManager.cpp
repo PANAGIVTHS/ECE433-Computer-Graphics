@@ -78,6 +78,7 @@ void GameManager::loadLevelAssets() {
     addAsset("../assets/teda.txt", Vec3<GLfloat>(0.0f, 0.0f, 0.0f));
     addAsset("../assets/forest.txt", Vec3<GLfloat>(7.0f, 0.2f, 7.0f));
     addAsset("../assets/roof.txt", Vec3<GLfloat>(0.0f, 0.0f, 0.0f));
+    addAsset("../assets/poster3.txt", Vec3<GLfloat>(0.0f, 0.0f, 0.0f));
     Object *portal = AssetLoader::load("../assets/nether_portal.txt");
     portal->optimize();
     LightConfig config;
