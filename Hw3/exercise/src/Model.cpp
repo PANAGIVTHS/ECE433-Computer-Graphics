@@ -19,12 +19,6 @@ Model::Model(std::string filename, Vec3<float> pos, bool gravity, Color3f color,
 }
 
 void Model::drawInternal() {
-    // Debug
-    if (displayList == 0) {
-        glColor3f(1.0f, 0.0f, 0.0f);
-        glutWireCube(1.0f);
-    }
-
     loadAndCompile(modelPath);
 }
 
@@ -43,11 +37,8 @@ void Model::loadAndCompile(const std::string& filename) {
     std::vector<Vec3<float>> temp_texCoords;
     std::vector<Vec3<float>> temp_normals;
 
-    // Apply settings
-    glDisable(GL_CULL_FACE); // Draw both sides of faces
+    // Apply color settings (Texture/Material are handled by the Object wrapper)
     glColor3f(color.red, color.green, color.blue);
-
-    glBegin(GL_TRIANGLES);
 
     std::string line;
     while (std::getline(file, line)) {
@@ -70,7 +61,6 @@ void Model::loadAndCompile(const std::string& filename) {
             temp_normals.push_back(Vec3<float>(x, y, z));
         }
         else if (prefix == "f") {
-            // 1. Read ALL vertices of the face into a list first
             std::vector<VertexIndex> faceVerts;
             std::string segment;
             
@@ -94,33 +84,28 @@ void Model::loadAndCompile(const std::string& filename) {
                 faceVerts.push_back(idx);
             }
 
-            // 2. Triangulate (Fan Method)
-            // If face has 3 verts (Triangle): Loop runs once (0, 1, 2)
-            // If face has 4 verts (Quad): Loop runs twice (0, 1, 2) and (0, 2, 3)
-            for (size_t i = 1; i < faceVerts.size() - 1; ++i) {
-                VertexIndex* tri[3] = { &faceVerts[0], &faceVerts[i], &faceVerts[i + 1] };
+            glBegin(GL_TRIANGLE_FAN); 
 
-                for (int k = 0; k < 3; k++) {
-                    VertexIndex* v = tri[k];
+            for (size_t k = 0; k < faceVerts.size(); k++) {
+                VertexIndex* v = &faceVerts[k];
 
-                    // Send Normal
-                    if (v->nIdx >= 0 && v->nIdx < (int)temp_normals.size()) {
-                        Vec3<float>& n = temp_normals[v->nIdx];
-                        glNormal3f(n.x, n.y, n.z);
-                    }
-                    // Send UV
-                    if (v->tIdx >= 0 && v->tIdx < (int)temp_texCoords.size()) {
-                        Vec3<float>& t = temp_texCoords[v->tIdx];
-                        glTexCoord2f(t.x, t.y);
-                    }
-                    // Send Position
-                    if (v->vIdx >= 0 && v->vIdx < (int)temp_positions.size()) {
-                        Vec3<float>& p = temp_positions[v->vIdx];
-                        glVertex3f(p.x, p.y, p.z);
-                    }
+                // Send Normal
+                if (v->nIdx >= 0 && v->nIdx < (int)temp_normals.size()) {
+                    Vec3<float>& n = temp_normals[v->nIdx];
+                    glNormal3f(n.x, n.y, n.z);
+                }
+                // Send UV
+                if (v->tIdx >= 0 && v->tIdx < (int)temp_texCoords.size()) {
+                    Vec3<float>& t = temp_texCoords[v->tIdx];
+                    glTexCoord2f(t.x, t.y);
+                }
+                // Send Position
+                if (v->vIdx >= 0 && v->vIdx < (int)temp_positions.size()) {
+                    Vec3<float>& p = temp_positions[v->vIdx];
+                    glVertex3f(p.x, p.y, p.z);
                 }
             }
+            glEnd(); 
         }
     }
-    glEnd();
 }
