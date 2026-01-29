@@ -16,7 +16,7 @@ LightConfig Moon::getConfig() {
     config.isDirectional = true;
     config.position = transform.position;
 
-    float dimFactor = 0.15f;
+    float dimFactor = 0.01f;
 
     config.color = Vec3<float>(
         color.red * dimFactor,
@@ -24,15 +24,12 @@ LightConfig Moon::getConfig() {
         color.blue * dimFactor
     );
 
-    config.ambient = config.color * 0.1f;
-    config.diffuse = config.color;
-    config.specular = {0.1f, 0.1f, 0.1f};
-
     return config;
 }
 
 void Celestial::drawInternal() {
-    LightingManager::updateLight(lightID, getConfig());
+    LightingManager::setConfig(lightID, getConfig());
+    LightingManager::updateLight(lightID);
     glDisable(GL_LIGHTING);
     glColor3f(color.red, color.green, color.blue);
     glutSolidSphere(radius, size, 20);

@@ -20,9 +20,16 @@ void MaterialManager::init() {
     materials[MaterialID::SHINY] = {
         {0.25f, 0.25f, 0.25f, 1.0f},
         {0.4f, 0.4f, 0.4f, 1.0f},
-        {0.77f, 0.77f, 0.77f, 1.0f},
+        {0.2f, 0.2f, 0.2f, 1.0f},
+        {0.5f, 0.5f, 0.5f, 1.0f},
+        0.0f
+    };
+    materials[MaterialID::COLD_LIGHT] = {
         {1.0f, 1.0f, 1.0f, 1.0f},
-        76.8f
+        {1.0f, 1.0f, 1.0f, 1.0f},
+        {1.0f, 1.0f, 1.0f, 1.0f},
+        {1.0f, 1.0f, 1.0f, 1.0f},
+        100.0f
     };
 }
 

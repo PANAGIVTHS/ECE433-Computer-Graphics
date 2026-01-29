@@ -58,8 +58,6 @@ void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
-    LightingManager::updateLight(GameManager::getCamera()->getFlashlightID(), 
-                                GameManager::getCamera()->getFlashlightConfig());
     GameManager::getCamera()->set();
     LightingManager::updateAllLights();
     

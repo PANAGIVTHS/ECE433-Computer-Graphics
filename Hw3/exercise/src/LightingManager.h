@@ -30,7 +30,7 @@ struct LightConfig {
 };
 
 struct RegisteredLight {
-    LightConfig* config;
+    LightConfig config;
     Object* owner;
 };
 
@@ -42,11 +42,14 @@ private:
 
 public:
     static void init();
-    static int createLight(const LightConfig& config);
-    static void updateLight(int id, const LightConfig& config);
-    static void removeLight(int id);
-    static void registerLight(int id, LightConfig* config, Object* owner);
     static void updateAllLights();
+    static void updateLight(int id);
+    static void removeLight(int id);
+    static int registerLight(const LightConfig config);
+    static int registerLight(const LightConfig config, Object* owner);
+    static void setOwner(int id, Object *owner);
+    static void setConfig(int id, const LightConfig config);
+    static LightConfig& getConfig(int id);
     void toggleLight(int id, bool enable);
 };
 

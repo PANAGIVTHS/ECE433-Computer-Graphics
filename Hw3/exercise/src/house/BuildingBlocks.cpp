@@ -65,9 +65,9 @@ void RidgedWall::generateStructure() {
 }
 
 void GlowingCube::drawInternal() {
-    glDisable(GL_LIGHTING);
+    // glDisable(GL_LIGHTING);
     Cube::drawInternal();
-    glEnable(GL_LIGHTING);
+    // glEnable(GL_LIGHTING);
 }
 
 void BorderCubes::createCorners(float w, float h, float l) {
@@ -187,7 +187,7 @@ void FramedWindow::addAll() {
                 gravity,
                 color,
                 TextureID::WINDOW,
-                MaterialID::SHINY,
+                MaterialID::MATTE,
                 TextureConfig(),
                 2
             );

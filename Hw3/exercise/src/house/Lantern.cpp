@@ -54,7 +54,11 @@ void Lantern::setup() {
     // 4. THE BODY
     Object* body = new GlowingCube(
         Vec3<float>(0.0f, 0.0f, 0.0f),
-        Vec3<float>(w - 0.04f, h - 0.04f, d - 0.04f)
+        Vec3<float>(w - 0.04f, h - 0.04f, d - 0.04f),
+        gravity,
+        {1.0f, 1.0f, 1.0f},
+        TextureID::NONE,
+        MaterialID::COLD_LIGHT
     );
     this->addChildren(body);
 
@@ -64,6 +68,5 @@ void Lantern::setup() {
     config.spotDirection = Vec3<float>(0.0f, -1.0f, 0.0f);
     config.spotExponent = 0.01f;
     config.spotCutoff = 20.0f;
-    lightID = LightingManager::createLight(config);
-    LightingManager::registerLight(lightID, &config, this);
+    lightID = LightingManager::registerLight(config, this);
 }

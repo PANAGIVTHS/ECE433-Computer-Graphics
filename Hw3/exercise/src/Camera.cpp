@@ -71,6 +71,8 @@ void Camera::rotatePitch(GLfloat angle) {
 
 void Camera::set() {
     gluLookAt(position.x, position.y, position.z, position.x + direction.x, position.y + direction.y, position.z + direction.z, up.x, up.y, up.z);
+
+    LightingManager::getConfig(flashlightID).position = position;
 }
 
 bool Camera::hasGravity() {

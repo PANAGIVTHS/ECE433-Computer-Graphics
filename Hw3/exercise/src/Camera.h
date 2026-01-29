@@ -32,9 +32,9 @@ public:
         flashlightConfig.spotCutoff = 180.0f;
         flashlightConfig.constant = 1.0f;
         flashlightConfig.linear = 0.2f;
-        flashlightConfig.quadratic = 0.06f;
+        flashlightConfig.quadratic = 0.5f;
 
-        flashlightID = LightingManager::createLight(flashlightConfig);
+        flashlightID = LightingManager::registerLight(flashlightConfig);
     }
     void offset(GLfloat x, GLfloat y, GLfloat z);
     void moveTo(GLfloat x, GLfloat y, GLfloat z);

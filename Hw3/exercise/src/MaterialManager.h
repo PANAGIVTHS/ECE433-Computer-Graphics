@@ -12,6 +12,7 @@
 #define MATERIAL_LIST(X) \
     X(MATTE)             \
     X(SHINY)             \
+    X(COLD_LIGHT)             \
 
 enum class MaterialID {
 #define X(name) name,

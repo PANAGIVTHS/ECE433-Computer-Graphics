@@ -8,27 +8,26 @@ void LightingManager::init() {
     glEnable(GL_NORMALIZE);
     glEnable(GL_LIGHTING);
 
-    GLfloat globalAmbient[] = {0.1f, 0.1f, 0.1f, 0.0f};
+    GLfloat globalAmbient[] = {0.01f, 0.01f, 0.01f, 0.0f};
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient);
 
     glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
 }
 
-void LightingManager::registerLight(int id, LightConfig* config, Object* owner) {
-    if (id < 0 || id >= MAX_LIGHTS) return;
-    registry[id] = { config, owner };
-}
-
 void LightingManager::updateAllLights() {
-    for (auto const& [id, reg] : registry) {
+    for (auto &[id, reg] : registry) {
         if (reg.owner) {
-             reg.config->position = reg.owner->getWorldPosition();
+             reg.config.position = reg.owner->getWorldPosition();
         }
-        updateLight(id, *reg.config);
+        updateLight(id);
     }
 }
 
-int LightingManager::createLight(const LightConfig& config) {
+int LightingManager::registerLight(const LightConfig config) {
+    return registerLight(config, nullptr);
+}
+
+int LightingManager::registerLight(const LightConfig config, Object *owner) {
     int freeID = -1;
     for (int i = 0; i < MAX_LIGHTS; i++) {
         if (!lightAllocation[i]) {
@@ -42,10 +41,30 @@ int LightingManager::createLight(const LightConfig& config) {
     }
 
     lightAllocation[freeID] = true;
-    updateLight(freeID, config);
+    registry[freeID] = { config, owner };
 
     return freeID;
 }
+
+LightConfig& LightingManager::getConfig(int id) {
+    static LightConfig errorConfig;
+    errorConfig.ambient = Vec3<GLfloat>(-1, -1, -1);
+    if (id < 0 || id >= MAX_LIGHTS || lightAllocation[id] == false) return errorConfig;
+
+    return registry[id].config;
+} 
+
+void LightingManager::setConfig(int id, const LightConfig config) {
+    if (id < 0 || id >= MAX_LIGHTS || lightAllocation[id] == false) return;
+
+    registry[id].config = config;
+} 
+
+void LightingManager::setOwner(int id, Object *owner) {
+    if (id < 0 || id >= MAX_LIGHTS || lightAllocation[id] == false) return;
+
+    registry[id].owner = owner;
+} 
 
 void LightingManager::removeLight(int id) {
     if (id < 0 || id >= MAX_LIGHTS) return;
@@ -55,17 +74,19 @@ void LightingManager::removeLight(int id) {
     registry.erase(id);
 }
 
-void LightingManager::updateLight(int id, const LightConfig& config) {
+void LightingManager::updateLight(int id) {
     GLenum lightID = GL_LIGHT0 + id;
     glEnable(lightID);
+
+    LightConfig config = registry[id].config;
 
     GLfloat w = config.isDirectional ? 0.0f : 1.0f;
     GLfloat pos[] = { config.position.x, config.position.y, config.position.z, w };
     glLightfv(lightID, GL_POSITION, pos);
 
-    float ambR = (config.ambient.x == -1.0f) ? config.color.x * 0.2f : config.ambient.x;
-    float ambG = (config.ambient.y == -1.0f) ? config.color.y * 0.2f : config.ambient.y;
-    float ambB = (config.ambient.z == -1.0f) ? config.color.z * 0.2f : config.ambient.z;
+    float ambR = (config.ambient.x == -1.0f) ? config.color.x * 0.4f : config.ambient.x;
+    float ambG = (config.ambient.y == -1.0f) ? config.color.y * 0.4f : config.ambient.y;
+    float ambB = (config.ambient.z == -1.0f) ? config.color.z * 0.4f : config.ambient.z;
 
     float diffR = (config.diffuse.x == -1.0f) ? config.color.x : config.diffuse.x;
     float diffG = (config.diffuse.y == -1.0f) ? config.color.y : config.diffuse.y;
