@@ -34,7 +34,7 @@ void GameManager::loadLevelAssets() {
         if (obj) {
             obj->optimize();
             levelAssets.push_back(obj);
-            house->addChildren(obj);
+            // house->addChildren(obj);
         }
 
         return obj;
@@ -74,6 +74,8 @@ void GameManager::loadLevelAssets() {
     addAsset("../assets/fence4.txt", Vec3(0.0f, 0.0f, -0.0f));
     addAsset("../assets/poster1.txt", Vec3(0.0f, 0.0f, 0.0f));
     addAsset("../assets/teda.txt", Vec3(0.0f, 0.0f, 0.0f));
+    addAsset("../assets/poster2.txt", Vec3(0.0f, 0.0f, 0.0f));
+    addAsset("../assets/forest.txt", Vec3(7.0f, 0.2f, 7.0f));
 }
 
 void GameManager::unloadLevelAssets() {

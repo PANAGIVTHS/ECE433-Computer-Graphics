@@ -62,8 +62,8 @@ BEGIN
 
             # -- SINGLE LEVER HANDLE --
             # Mounted on top of the upper section
-            OBJECT 0.0 0.06 0.0
-            ROTATION 0 15 0 0 
+            OBJECT 0.0 0.05 0.0
+            ROTATION 20 1 0 0 
             BEGIN
                  # Dome Cap (Pivot point)
                  CUBOID 0.0 0.01 0.0 0.05 0.02 0.05

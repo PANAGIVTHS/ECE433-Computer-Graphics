@@ -25,6 +25,7 @@
     X(BROWN_CONCRETE)   \
     X(SPRUCE_PLANKS)    \
     X(POSTER_1)         \
+    X(POSTER_2)         \
 
 
 enum class TextureID {

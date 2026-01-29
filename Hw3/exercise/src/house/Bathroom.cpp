@@ -46,25 +46,23 @@ Object *Bathroom::addWalls(FramedWindow *window, FramedWindow *door) {
     Object* walls = new Object(Vec3<GLfloat>(0,0,0));
 
     // RIGHT WINDOW WALL
-    GLint ridgeCount = 7;
     walls->addChildren(new RidgedWall(Vec3(House::ridgeThickness, 0.0f, 0.0f),
     Vec3(House::exteriorWallThickness, House::height + House::floorHeight, leftWallSideWidth),
         Vec3(-1.0f, 0.0f, 0.0f),
-        ridgeCount,
+        House::ridgeSpacing,
         House::ridgeThickness)
     );
 
-    ridgeCount = 4;
     walls->addChildren(new RidgedWall(Vec3(House::ridgeThickness, 0.0f, leftWallSideWidth),
     Vec3(House::exteriorWallThickness, windowHeightOffset, window->getDimensions().x),
         Vec3(-1.0f, 0.0f, 0.0f),
-        ridgeCount,
+        House::ridgeSpacing,
         House::ridgeThickness)
     );
     walls->addChildren(new RidgedWall(Vec3(House::ridgeThickness, windowHeightOffset + window->getDimensions().y, leftWallSideWidth),
     Vec3(House::exteriorWallThickness, totalHeight - windowHeightOffset - window->getDimensions().y, window->getDimensions().x),
         Vec3(-1.0f, 0.0f, 0.0f),
-        ridgeCount,
+        House::ridgeSpacing,
         House::ridgeThickness)
     );
 
@@ -72,7 +70,7 @@ Object *Bathroom::addWalls(FramedWindow *window, FramedWindow *door) {
     walls->addChildren(new RidgedWall(Vec3(House::ridgeThickness, 0.0f, leftWallSideWidth + window->getDimensions().x),
     Vec3(House::exteriorWallThickness, House::height + House::floorHeight, totalLength - leftWallSideWidth - window->getDimensions().x),
         Vec3(-1.0f, 0.0f, 0.0f),
-        ridgeCount,
+        House::ridgeSpacing,
         House::ridgeThickness)
     );
 

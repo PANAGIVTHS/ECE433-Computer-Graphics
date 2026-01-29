@@ -46,11 +46,10 @@ Object *Bedroom2::addWalls(FramedWindow *window, FramedWindow *door) {
     Object* walls = new Object(Vec3<GLfloat>(0,0,0));
 
     // LEFT WALL
-    GLint ridgeCount = 7;
     walls->addChildren(new RidgedWall(Vec3(House::ridgeThickness, 0.0f, House::ridgeThickness + House::exteriorWallThickness),
     Vec3(House::exteriorWallThickness, House::height + House::floorHeight, House::interiorWallThickness + length),
         Vec3(-1.0f, 0.0f, 0.0f),
-        ridgeCount,
+        House::ridgeSpacing,
         House::ridgeThickness)
     );
 
@@ -120,34 +119,31 @@ Object *Bedroom2::addWalls(FramedWindow *window, FramedWindow *door) {
     // BACK WALL
     Object* backWalls = new Object(Vec3<GLfloat>(House::ridgeThickness,0,House::ridgeThickness));
 
-    ridgeCount = 2;
     backWalls->addChildren(new RidgedWall(Vec3(0.0f, 0.0f, 0.0f),
     Vec3(backWallSideWidth, House::height + House::floorHeight, House::exteriorWallThickness),
         Vec3(0.0f, 0.0f, -1.0f),
-        ridgeCount,
+        House::ridgeSpacing,
         House::ridgeThickness)
     );
 
-    ridgeCount = 4;
     backWalls->addChildren(new RidgedWall(Vec3(backWallSideWidth, 0.0f, 0.0f),
     Vec3(window->getDimensions().x, House::floorHeight + windowHeightOffset, House::exteriorWallThickness),
         Vec3(0.0f, 0.0f, -1.0f),
-        ridgeCount,
+        House::ridgeSpacing,
         House::ridgeThickness)
     );
 
     backWalls->addChildren(new RidgedWall(Vec3(backWallSideWidth, House::floorHeight + windowHeightOffset + window->getDimensions().y, 0.0f),
     Vec3(window->getDimensions().x, totalHeight - (House::floorHeight + windowHeightOffset + window->getDimensions().y), House::exteriorWallThickness),
         Vec3(0.0f, 0.0f, -1.0f),
-        ridgeCount,
+        House::ridgeSpacing,
         House::ridgeThickness)
     );
 
-    ridgeCount = 7;
     backWalls->addChildren(new RidgedWall(Vec3(backWallSideWidth + window->getDimensions().x, 0.0f, 0.0f),
     Vec3(totalWidth - (House::ridgeThickness + backWallSideWidth + window->getDimensions().x), House::height + House::floorHeight, House::exteriorWallThickness),
         Vec3(0.0f, 0.0f, -1.0f),
-        ridgeCount,
+        House::ridgeSpacing,
         House::ridgeThickness)
     );
 

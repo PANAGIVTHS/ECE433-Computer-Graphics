@@ -13,9 +13,22 @@ void RidgedWall::generateStructure() {
 
     Vec3<GLfloat> runDir = protrusionVec.cross(Vec3(0.0f, 1.0f, 0.0f)).abs();
     GLfloat wallLength = std::abs(dim.dot(runDir));
-    GLfloat spacing = wallLength / static_cast<float>(count);
-    GLfloat ridgeBreadth = spacing * 0.2f;
+    
+    GLfloat spacing;
+    GLint count;
 
+    if (useFixedSpacing) {
+        // Distance Mode: Spacing is fixed, Count is calculated
+        spacing = fixedSpacing;
+        if (spacing == 0.0f) spacing = 1.0f;
+        count = static_cast<int>(wallLength / spacing);
+    } else {
+        // Count Mode: Count is fixed, Spacing is calculated
+        count = fixedCount;
+        spacing = (count >= 1) ? wallLength / static_cast<float>(count) : 1;
+    }
+    
+    GLfloat ridgeBreadth = spacing * 0.2f;
     Vec3<GLfloat> ridgeSize = (runDir * ridgeBreadth).abs()
                             + Vec3(0.0f, dim.y, 0.0f)
                             + (protrusionVec * ridgeThickness).abs();

@@ -48,13 +48,23 @@ public:
 class RidgedWall : public Object {
     Vec3<GLfloat> dim;
     Vec3<GLfloat> protrusionVec;
-    GLint count;
+
+    GLint fixedCount = 0;
+    GLfloat fixedSpacing = 0.0f;
+    bool useFixedSpacing = false;
     GLfloat ridgeThickness;
 
     void generateStructure();
 public:
     RidgedWall(Vec3<GLfloat> pos, Vec3<GLfloat> dim, Vec3<GLfloat> protrusionVec, GLint count, GLfloat ridgeThickness, bool gravity = DEFAULT_GRAVITY, Color3f color = DEFAULT_COLOR, TextureID texture = DEFAULT_TEXTURE, MaterialID material = DEFAULT_MATERIAL)
-        : Object(pos, gravity, color, texture, material), dim(dim), protrusionVec(protrusionVec), count(count), ridgeThickness(ridgeThickness) {
+        : Object(pos, gravity, color, texture, material), dim(dim), protrusionVec(protrusionVec), fixedCount(count), ridgeThickness(ridgeThickness) {
+        this->useFixedSpacing = false;
+        generateStructure();
+    }
+
+    RidgedWall(Vec3<GLfloat> pos, Vec3<GLfloat> dim, Vec3<GLfloat> protrusionVec, GLfloat spacing, GLfloat ridgeThickness, bool gravity = DEFAULT_GRAVITY, Color3f color = DEFAULT_COLOR, TextureID texture = DEFAULT_TEXTURE, MaterialID material = DEFAULT_MATERIAL)
+        : Object(pos, gravity, color, texture, material), dim(dim), protrusionVec(protrusionVec), fixedSpacing(spacing), ridgeThickness(ridgeThickness) {
+        this->useFixedSpacing = true;
         generateStructure();
     }
 

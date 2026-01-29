@@ -117,6 +117,7 @@ void TextureManager::init() {
     init(TextureID::SPRUCE_PLANKS, "../Texture_Images/spruce_planks.bmp");
     init(TextureID::BROWN_CONCRETE, "../Texture_Images/brown_concrete.bmp");
     init(TextureID::POSTER_1, "../Texture_Images/your_next_line_is.bmp");
+    init(TextureID::POSTER_2, "../Texture_Images/creeper_painting.bmp");
 
 }
 

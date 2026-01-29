@@ -23,35 +23,31 @@ Object *FamilyRoom::addFloor() {
 Object *FamilyRoom::addWalls(FramedWindow *window) {
     Object* walls = new Object(Vec3<GLfloat>(0,0,0));
 
-    GLint ridgeCount = 10;
     walls->addChildren(new RidgedWall(Vec3(House::ridgeThickness, 0.0f, 0.0f),
     Vec3(House::exteriorWallThickness, House::height + House::floorHeight, length),
         Vec3(-1.0f, 0.0f, 0.0f),
-        ridgeCount,
+        House::ridgeSpacing,
         House::ridgeThickness)
     );
 
-    ridgeCount = 2;
     walls->addChildren(new RidgedWall(Vec3(House::ridgeThickness, 0.0f, length),
     Vec3(House::exteriorWallThickness + frontWallSideWidth, House::height + House::floorHeight, House::exteriorWallThickness),
         Vec3(0.0f, 0.0f, 1.0f),
-        ridgeCount,
+        House::ridgeSpacing,
         House::ridgeThickness)
     );
 
-    ridgeCount = 3;
     walls->addChildren(new RidgedWall(Vec3(House::ridgeThickness + House::exteriorWallThickness + frontWallSideWidth + (windowCount + 1) * window->getDimensions().x, 0.0f, length),
     Vec3(width - frontWallSideWidth - (windowCount + 1) * window->getDimensions().x, House::height + House::floorHeight, House::exteriorWallThickness),
         Vec3(0.0f, 0.0f, 1.0f),
-        ridgeCount,
+        House::ridgeSpacing,
         House::ridgeThickness)
     );
 
-    ridgeCount = 7;
     walls->addChildren(new RidgedWall(Vec3(House::ridgeThickness + House::exteriorWallThickness + frontWallSideWidth, House::floorHeight + window->getDimensions().y, length),
     Vec3((windowCount + 1) * window->getDimensions().x, totalHeight - window->getDimensions().y - House::floorHeight, House::exteriorWallThickness),
         Vec3(0.0f, 0.0f, 1.0f),
-        ridgeCount,
+        House::ridgeSpacing,
         House::ridgeThickness)
     );
 

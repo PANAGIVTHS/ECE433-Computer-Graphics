@@ -26,6 +26,7 @@ public:
     static inline GLfloat interiorWallThickness = .10f;
     static inline GLfloat exteriorWallThickness = .25f;
     static inline GLfloat ridgeThickness = 0.1f;
+    static inline GLfloat ridgeSpacing = 0.35f;
     static inline GLfloat garageInset = 4.0f;
 
     static inline Color3f lightColor = {.red = 1.0f, .green = 1.0f, .blue = 1.0f};

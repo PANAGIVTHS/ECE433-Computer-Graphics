@@ -44,60 +44,53 @@ Object *DiningRoom::addWalls(FramedWindow *window, FramedWindow *door) {
     Object* walls = new Object(Vec3<GLfloat>(0,0,0));
 
     // FRONT WALLS
-    GLint ridgeCount = 2;
     walls->addChildren(new RidgedWall(Vec3(0.0f, 0.0f, length),
     Vec3(frontWallSideWidth, House::height + House::floorHeight, House::exteriorWallThickness),
         Vec3(0.0f, 0.0f, 1.0f),
-        ridgeCount,
+        House::ridgeSpacing,
         House::ridgeThickness)
     );
 
-    ridgeCount = 3;
     walls->addChildren(new RidgedWall(Vec3(frontWallSideWidth, 0.0f, length),
     Vec3(window->getDimensions().x, windowHeightOffset + House::floorHeight, House::exteriorWallThickness),
         Vec3(0.0f, 0.0f, 1.0f),
-        ridgeCount,
+        House::ridgeSpacing,
         House::ridgeThickness)
     );
 
-    ridgeCount = 3;
     walls->addChildren(new RidgedWall(Vec3(frontWallSideWidth, House::floorHeight + windowHeightOffset + window->getDimensions().y, length),
     Vec3(window->getDimensions().x, totalHeight - (House::floorHeight + windowHeightOffset + window->getDimensions().y), House::exteriorWallThickness),
         Vec3(0.0f, 0.0f, 1.0f),
-        ridgeCount,
+        House::ridgeSpacing,
         House::ridgeThickness)
     );
 
-    ridgeCount = 4;
     walls->addChildren(new RidgedWall(Vec3(frontWallSideWidth + window->getDimensions().x, 0.0f, length),
     Vec3(width - window->getDimensions().x - frontWallSideWidth, House::height + House::floorHeight, House::exteriorWallThickness),
         Vec3(0.0f, 0.0f, 1.0f),
-        ridgeCount,
+        House::ridgeSpacing,
         House::ridgeThickness)
     );
 
     // RIGHT WALLS
-    ridgeCount = 6;
     walls->addChildren(new RidgedWall(Vec3(width, 0.0f, length + House::exteriorWallThickness - rightWallSideWidth - House::exteriorWallThickness),
     Vec3(House::exteriorWallThickness, House::height + House::floorHeight, rightWallSideWidth + House::exteriorWallThickness),
         Vec3(1.0f, 0.0f, 0.0f),
-        ridgeCount,
+        House::ridgeSpacing,
         House::ridgeThickness)
     );
 
-    ridgeCount = 4;
     walls->addChildren(new RidgedWall(Vec3(width, door->getDimensions().y + House::floorHeight, length - rightWallSideWidth - door->getDimensions().x),
     Vec3(House::exteriorWallThickness, totalHeight - (door->getDimensions().y + House::floorHeight), door->getDimensions().x),
         Vec3(1.0f, 0.0f, 0.0f),
-        ridgeCount,
+        House::ridgeSpacing,
         House::ridgeThickness)
     );
 
-    ridgeCount = 12;
     walls->addChildren(new RidgedWall(Vec3(width, 0.0f, 0.0f),
     Vec3(House::exteriorWallThickness, House::height + House::floorHeight, length - rightWallSideWidth - door->getDimensions().x),
         Vec3(1.0f, 0.0f, 0.0f),
-        ridgeCount,
+        House::ridgeSpacing,
         House::ridgeThickness)
     );
 

@@ -15,7 +15,6 @@ void Environment::init() {
 }
 
 void Environment::spawn() {
-    AssetLoader::load("../assets/forest.txt", Vec3(7.0f, 0.2f, 7.0f))->optimize();
     AssetLoader::load("../assets/nether_portal.txt")->optimize();
 
     static const float rockRotations[] = {286, 115, 295, 12, 181, 67};
