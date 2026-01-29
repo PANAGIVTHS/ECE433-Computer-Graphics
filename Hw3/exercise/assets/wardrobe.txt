@@ -1,9 +1,7 @@
 # --- HEIRLOOM OAK WARDROBE (Triangular Hangers) ---
 # Positioned in scene
-OBJECT 6.5 0.27 -8.45
-SCALE 0.8 0.8 1
+OBJECT 0 0 0
 GRAVITY false
-ROTATION -90 0 1 0
 BEGIN
     # -- THE CARCASS --
     # Plinth Base
