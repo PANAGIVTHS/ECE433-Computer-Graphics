@@ -1,0 +1,63 @@
+# --- PEAKED WOODEN ROOF ---
+# A classic 45-degree pitched roof.
+# Dimensions: Covers roughly a 4x4 area.
+# Position: Defaults to origin (0,0,0). Place this on top of your house walls.
+
+OBJECT 6.8 4.0 -2.9
+GRAVITY false
+SCALE 2 1.8 3.1
+BEGIN
+    # ==========================
+    # LEFT ROOF SLOPE
+    # ==========================
+    # Positioned halfway up the slope (x=-1, y=1) to rotate around its center
+    OBJECT -1.2 0.7 0.0
+    ROTATION 40.9 0 0 1
+    BEGIN
+        # A flat, wide plank scaled to form the slope
+        # Dimensions: 3.2m long (slope), 0.15m thick, 4.4m deep (overhangs Z)
+        CUBOID 0.0 0.0 0.0 2.8 0.15 4.4
+        TEXTURE SPRUCE_PLANKS
+        TEX_CONFIG REPEAT_FIT
+    END
+
+    # ==========================
+    # RIGHT ROOF SLOPE
+    # ==========================
+    # Positioned at (x=1, y=1)
+    OBJECT 1.15 0.7 0.0
+    ROTATION -40.9 0 0 1
+    BEGIN
+        # Mirror of the left slope
+        CUBOID 0.0 0.0 0.0 2.8 0.15 4.4
+        TEXTURE SPRUCE_PLANKS
+        TEX_CONFIG REPEAT_FIT
+    END
+
+    # ==========================
+    # CENTRAL BEAM (RIDGE)
+    # ==========================
+    # Runs along the top peak to close any tiny gap and add detail
+    # Positioned at the very peak (y ~ 2.1)
+    CUBOID -0.02 1.63 0.0 0.3 0.3 4.4
+    TEXTURE WOOD
+    TEX_CONFIG REPEAT_FIT
+
+    # ==========================
+    # CHIMNEY
+    # ==========================
+    # A stone chimney poking through the right slope
+    OBJECT 1.2 1.5 1.0
+    ROTATION 0 0 0 0
+    BEGIN
+        # Chimney Body
+        CUBOID 0.0 0.0 0.0 0.5 1.5 0.5
+        TEXTURE STONE
+        TEX_CONFIG REPEAT_FIT
+
+        # Chimney Top Detail
+        CUBOID 0.0 0.8 0.0 0.6 0.2 0.6
+        TEXTURE STONE
+        TEX_CONFIG REPEAT_FIT
+    END
+END

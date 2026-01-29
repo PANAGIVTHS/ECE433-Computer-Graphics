@@ -11,7 +11,7 @@
 
 class Celestial : public Object {
 protected:
-    static constexpr GLfloat orbitSpeed = 0.001f;
+    static constexpr GLfloat orbitSpeed = 0.1f;
     static constexpr GLfloat orbitRadius = 500.0f;
     static constexpr GLfloat radius = 35.0f;
     GLint size;
@@ -30,14 +30,14 @@ public:
 
 class Sun : public Celestial {
 public:
-    Sun() : Celestial({ .red = 1.0f, .green = 0.4f, .blue = 0.0f }, 15) { orbitAngle = M_PI; }
+    Sun() : Celestial({ .red = 1.0f, .green = 0.4f, .blue = 0.0f }, 15) { orbitAngle = 0; }
 };
 
 class Moon : public Celestial {
     LightConfig getConfig() override;
     void update() override;
 public:
-    Moon() : Celestial({ .red = 1.0f, .green = 1.0f, .blue = 1.0f }, 15) { orbitAngle = 0; }
+    Moon() : Celestial({ .red = 1.0f, .green = 1.0f, .blue = 1.0f }, 15) { orbitAngle = M_PI; }
 };
 
 #endif

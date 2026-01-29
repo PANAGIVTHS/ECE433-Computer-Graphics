@@ -52,7 +52,7 @@ void Lantern::setup() {
     this->addChildren(glass);
 
     // 4. THE BODY
-    Object* body = new GlowingCube(
+    Object* body = new Cube(
         Vec3<float>(0.0f, 0.0f, 0.0f),
         Vec3<float>(w - 0.04f, h - 0.04f, d - 0.04f),
         gravity,

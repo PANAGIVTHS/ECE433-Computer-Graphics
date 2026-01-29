@@ -8,6 +8,7 @@
 #include "Garage.h"
 #include "Hallway.h"
 #include "Porch.h"
+#include "../Model.h"
 
 void House::setup() {
     Porch *porch = new Porch(Vec3<GLfloat>(0, 0, 0), House::scale);
@@ -27,8 +28,12 @@ void House::setup() {
     diningRoom->optimize();
 
     Garage *garage = new Garage(diningRoom->getPosition() + Vec3<GLfloat>(DiningRoom::totalWidth - House::ridgeThickness, 0, -House::garageInset), scale);
-    addChildren(garage);
+    Model *car = new Model("../assets/Car.obj", Vec3(Garage::totalWidth / 2.5f, floorHeight + 0.2f, Garage::totalLength / 2.0f), false, {1.0f, 1.0f, 1.0f}, TextureID::CAR, MaterialID::MATTE);
+    car->setRotation(180, Vec3<GLfloat>(0.0f, 1.0f, 0.0f));
+    car->optimize();
+    garage->addChildren(car);
     garage->optimize();
+    addChildren(garage);
 
     Bathroom *bathroom = new Bathroom(familyRoom->getPosition(), House::scale);
     bathroom->setPosition(bathroom->getPosition() + Vec3<GLfloat>(0.0f, 0.0f, -Bathroom::totalLength));
@@ -92,5 +97,24 @@ void House::setup() {
         House::darkColor
     ));
 
+    roof->addChildren(new TriangularRidgedWall(Vec3(ridgeThickness, House::height + House::floorHeight, Bedroom1::totalLength + DiningRoom::totalLength - exteriorWallThickness - ridgeThickness),
+        Vec3(FamilyRoom::totalWidth + DiningRoom::totalWidth - 2 * ridgeThickness, roofHeight, exteriorWallThickness),
+        Vec3(0.0f, 0.0f, 1.0f),
+        House::ridgeSpacing + 0.032,
+        House::ridgeThickness,
+        gravity,
+        House::lightColor
+    ));
+
+    roof->addChildren(new TriangularRidgedWall(Vec3(ridgeThickness, House::height + House::floorHeight, ridgeThickness),
+        Vec3(FamilyRoom::totalWidth + DiningRoom::totalWidth - 2 * ridgeThickness, roofHeight, exteriorWallThickness),
+        Vec3(0.0f, 0.0f, -1.0f),
+        House::ridgeSpacing + 0.032,
+        House::ridgeThickness,
+        gravity,
+        House::lightColor
+    ));
+
     addChildren(roof);
+
 }

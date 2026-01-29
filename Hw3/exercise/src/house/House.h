@@ -28,6 +28,7 @@ public:
     static inline GLfloat ridgeThickness = 0.1f;
     static inline GLfloat ridgeSpacing = 0.35f;
     static inline GLfloat garageInset = 4.0f;
+    static inline GLfloat roofHeight = height * 0.9f;
 
     static inline Color3f lightColor = {.red = 1.0f, .green = 1.0f, .blue = 1.0f};
     static inline Color3f darkColor = {.red = 0.19140625, .green = 0.19140625, .blue = 0.19140625};

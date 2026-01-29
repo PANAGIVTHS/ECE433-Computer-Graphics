@@ -16,9 +16,6 @@ void LightingManager::init() {
 
 void LightingManager::updateAllLights() {
     for (auto &[id, reg] : registry) {
-        if (reg.owner) {
-             reg.config.position = reg.owner->getWorldPosition();
-        }
         updateLight(id);
     }
 }
@@ -79,9 +76,10 @@ void LightingManager::updateLight(int id) {
     glEnable(lightID);
 
     LightConfig config = registry[id].config;
+    Vec3<GLfloat> finalPos = registry[id].owner ? config.position + registry[id].owner->getWorldPosition() : config.position; 
 
     GLfloat w = config.isDirectional ? 0.0f : 1.0f;
-    GLfloat pos[] = { config.position.x, config.position.y, config.position.z, w };
+    GLfloat pos[] = { finalPos.x, finalPos.y, finalPos.z, w };
     glLightfv(lightID, GL_POSITION, pos);
 
     float ambR = (config.ambient.x == -1.0f) ? config.color.x * 0.4f : config.ambient.x;

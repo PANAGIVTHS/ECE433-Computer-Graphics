@@ -73,6 +73,36 @@ public:
     }
 };
 
+class TriangularRidgedWall : public Object {
+    Vec3<GLfloat> dim;
+    Vec3<GLfloat> protrusionVec;
+
+    GLfloat spacing;
+    GLfloat ridgeThickness;
+    GLfloat wallThickness;
+    void generateStructure();
+public:
+    TriangularRidgedWall(Vec3<GLfloat> pos, Vec3<GLfloat> dim, Vec3<GLfloat> protrusionVec, GLfloat spacing, GLfloat ridgeThickness, bool gravity = DEFAULT_GRAVITY, Color3f color = DEFAULT_COLOR, TextureID texture = DEFAULT_TEXTURE, MaterialID material = DEFAULT_MATERIAL)
+        : Object(pos, gravity, color, texture, material), dim(dim), protrusionVec(protrusionVec), spacing(spacing), ridgeThickness(ridgeThickness) {
+        generateStructure();
+    }
+
+    Vec3<GLfloat> getDimensions() const {
+        return dim;
+    }
+};
+
+class TriangularPrism : public Object {
+protected:
+    Vec3<GLfloat> dim;
+    void drawInternal() override;
+public:
+    TriangularPrism(Vec3<float> pos, Vec3<float> dim, bool gravity = DEFAULT_GRAVITY, Color3f color = DEFAULT_COLOR, TextureID texture = DEFAULT_TEXTURE, MaterialID material = DEFAULT_MATERIAL)
+        : Object(pos, gravity, color, texture, material), dim(dim) { setScale(dim); }
+
+    Vec3<GLfloat> getDimensions() { return dim; }
+};
+
 class FramedWindow : public Block {
     GLfloat totalWidth;
     GLfloat totalHeight;
@@ -110,17 +140,6 @@ protected:
         totalLength = frameSize;
     }
 };
-
-class GlowingCube : public Cube {
-public:
-    GlowingCube(Vec3<GLfloat> pos, Vec3<GLfloat> dim, bool gravity = DEFAULT_GRAVITY, Color3f color = DEFAULT_COLOR, TextureID texture = DEFAULT_TEXTURE,
-        MaterialID material = DEFAULT_MATERIAL)
-        : Cube(pos, dim, gravity, color, texture, material) {
-    }
-
-    void drawInternal() override;
-};
-
 
 class BorderCubes : public Object {
 public:

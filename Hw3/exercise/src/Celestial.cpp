@@ -42,7 +42,7 @@ void Celestial::update() {
 
     Vec3<GLfloat> camPos = cam->getPosition();
 
-    orbitAngle += orbitSpeed;
+    orbitAngle += orbitSpeed * GameManager::dt;
     GLfloat xOffset = cos(orbitAngle) * orbitRadius;
     GLfloat yOffset = sin(orbitAngle) * orbitRadius;
     
@@ -90,7 +90,7 @@ void Moon::update() {
 
     Vec3<GLfloat> camPos = cam->getPosition();
 
-    orbitAngle += orbitSpeed;
+    orbitAngle += orbitSpeed * GameManager::dt;
     GLfloat xOffset = cos(orbitAngle) * orbitRadius;
     GLfloat yOffset = sin(orbitAngle) * orbitRadius;
 

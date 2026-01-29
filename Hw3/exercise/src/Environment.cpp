@@ -15,7 +15,15 @@ void Environment::init() {
 }
 
 void Environment::spawn() {
-    AssetLoader::load("../assets/nether_portal.txt")->optimize();
+    Object *portal = AssetLoader::load("../assets/nether_portal.txt");
+    portal->optimize();
+    LightConfig config;
+    config.position = {2.0f, 1.5f, 0.5f};
+    config.color = {0.765625f, 0.0703125f, 0.85546875f};
+    config.constant = 1.0f;
+    config.linear = 0.5f;
+    config.quadratic = 0.3f;
+    LightingManager::registerLight(config, portal);
 
     static const float rockRotations[] = {286, 115, 295, 12, 181, 67};
 

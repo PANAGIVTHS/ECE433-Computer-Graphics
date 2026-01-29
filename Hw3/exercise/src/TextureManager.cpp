@@ -118,6 +118,7 @@ void TextureManager::init() {
     init(TextureID::BROWN_CONCRETE, "../Texture_Images/brown_concrete.bmp");
     init(TextureID::POSTER_1, "../Texture_Images/your_next_line_is.bmp");
     init(TextureID::POSTER_2, "../Texture_Images/creeper_painting.bmp");
+    init(TextureID::CAR, "../Texture_Images/car.bmp");
 
 }
 
