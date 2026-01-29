@@ -1,9 +1,12 @@
 #include "LightingManager.h"
+#include "WindowManager.h"
 #include "Object.h"
 
 std::map<int, RegisteredLight> LightingManager::registry;
 
 void LightingManager::init() {
+    if (!WindowManager::getMode()) return;
+
     glEnable(GL_COLOR_MATERIAL);
     glEnable(GL_NORMALIZE);
     glEnable(GL_LIGHTING);
@@ -15,6 +18,8 @@ void LightingManager::init() {
 }
 
 void LightingManager::updateAllLights() {
+    if (!WindowManager::getMode()) return;
+
     for (auto &[id, reg] : registry) {
         updateLight(id);
     }
@@ -25,6 +30,8 @@ int LightingManager::registerLight(const LightConfig config) {
 }
 
 int LightingManager::registerLight(const LightConfig config, Object *owner) {
+    if (!WindowManager::getMode()) return -1;
+
     int freeID = -1;
     for (int i = 0; i < MAX_LIGHTS; i++) {
         if (!lightAllocation[i]) {
@@ -64,7 +71,7 @@ void LightingManager::setOwner(int id, Object *owner) {
 } 
 
 void LightingManager::removeLight(int id) {
-    if (id < 0 || id >= MAX_LIGHTS) return;
+    if (id < 0 || id >= MAX_LIGHTS || lightAllocation[id] == false) return;
 
     glDisable(GL_LIGHT0 + id);
     lightAllocation[id] = false;
@@ -72,6 +79,8 @@ void LightingManager::removeLight(int id) {
 }
 
 void LightingManager::updateLight(int id) {
+    if (!WindowManager::getMode()) return;
+
     GLenum lightID = GL_LIGHT0 + id;
     glEnable(lightID);
 
@@ -111,6 +120,8 @@ void LightingManager::updateLight(int id) {
 }
 
 void LightingManager::toggleLight(int id, bool enable) {
+    if (!WindowManager::getMode()) return;
+
     if (enable) glEnable(GL_LIGHT0 + id);
     else        glDisable(GL_LIGHT0 + id);
 }

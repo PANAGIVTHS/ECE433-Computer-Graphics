@@ -79,15 +79,18 @@ void WindowManager::init() {
         }
     #endif
 
-    glutIgnoreKeyRepeat(1);
-    glutSetCursor(GLUT_CURSOR_NONE);
-    glutWarpPointer(width/2, height/2);
+    if (mode) {
+        glutIgnoreKeyRepeat(1);
+        glutSetCursor(GLUT_CURSOR_NONE);
+        glutWarpPointer(width/2, height/2);
+    }
 
     glutDisplayFunc(display);
     glutIdleFunc(idle);
     glutReshapeFunc(reshape);
-
-    InputManager::init();
+    
+    if (mode)
+        InputManager::init();
     GameManager::onWindowUpdate(width, height, true);
 }
 
@@ -111,7 +114,8 @@ void WindowManager::switchMode() {
     init();
 }
 
-void WindowManager::init(void (*display) (), void (*idle) ()) {
+void WindowManager::init(void (*display) (), void (*idle) (), int mode) {
+    WindowManager::mode = mode;
     WindowManager::display = display;
     WindowManager::idle = idle;
     init();
@@ -131,4 +135,8 @@ GLdouble WindowManager::getAspect() {
 
 bool WindowManager::isGameMode() {
     return gameMode;
+}
+
+int WindowManager::getMode() {
+    return mode;
 }

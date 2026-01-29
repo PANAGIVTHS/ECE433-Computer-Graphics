@@ -16,7 +16,6 @@ private:
     inline static Environment *environment = nullptr;
     inline static House *house = nullptr;
     inline static GLint oldTime;
-    inline static int viewportX = 1, viewportY = 1;
 
     //fps related
     inline static int frameCount = 0;
@@ -37,11 +36,10 @@ public:
     static constexpr GLdouble near = 0.1;
     static constexpr GLdouble far = 2000;
     inline static const Vec3<GLfloat> initialCameraPos = Vec3(13.323354f, 1.700000f, 17.628853f);
-    inline static const Color3f skyColor = {.red = 0.3828125f, .green = 0.75390625f, .blue = 0.89453125f};
+    inline static const Color3f skyColor = {0.4f, 0.6f, 0.9f};
     inline static GLdouble dt;
 
     static void init();
-    static void init(int viewportX, int viewportY);
     static void onWindowUpdate(GLint width, GLint height, bool newContext);
     static void runGameLoop();
     static void cleanUp();

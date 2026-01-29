@@ -14,10 +14,102 @@
 #include "TextureManager.h"
 #include "MaterialManager.h"
 
-Object* housePtr = nullptr;
-Object* roofPtr = nullptr;
+void init(int argc, char *argv[]);
+void display();
+void setupViewport(int x, int y, int w, int h, 
+                   GLfloat eyeX, GLfloat eyeY, GLfloat eyeZ, 
+                   GLfloat upX, GLfloat upY, GLfloat upZ);
+void displayScene(Vec3<GLfloat> camPos);
 
-void drawScene() {
+int main(int argc, char *argv[]) {
+    init(argc, argv);
+
+	printf("Keyboard commands:\n");
+	printf("'w' - Move forward.\n");
+	printf("'a' - Move left.\n");
+	printf("'s' - Move backward.\n");
+	printf("'d' - Move right.\n");
+	printf("'SPACE' - Move up.\n");
+	printf("'z' - Move down.\n");
+#ifndef MOUSE_ROTATION
+	printf("'i' - Look up.\n");
+	printf("'j' - Look left.\n");
+	printf("'k' - Look down.\n");
+	printf("'l' - Look right.\n");
+#endif
+	printf("'ESC' - Quit the application.\n");
+	printf("'F11' - Toggle fullscreen.\n");
+#ifdef MOUSE_ROTATION
+	printf("\n");
+    printf("Move the mouse to look around!\n");
+#endif
+
+    glutMainLoop();
+    return 0;
+}
+
+void init(int argc, char *argv[]) {
+    glutInit(&argc, argv);
+    WindowManager::init(display, nullptr, 0);
+    MaterialManager::init();
+    TextureManager::init();
+    GameManager::init();
+}
+
+void display() {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+    glDisable(GL_LIGHTING);
+
+    int w = WindowManager::getWidth();
+    int h = WindowManager::getHeight();
+
+    Vec3<GLfloat> camPos = Vec3(0.0f, 0.0f, 3.0f);
+    setupViewport(0, 0, w, h, 
+                  camPos.x, camPos.y, camPos.z,
+                  0.0f, 1.0f, 0.0f);
+    displayScene(camPos);
+
+    // setupViewport(w, h, w, h, 
+    //               0.0f, 0.0f, 0.0f,
+    //               0.0f, 1.0f, 0.0f);
+    // displayScene();
+
+    // setupViewport(0, 0, w, h, 
+    //               0.0f, 0.0f, 0.0f,
+    //               0.0f, 1.0f, 0.0f);
+    // displayScene();
+
+    // setupViewport(w, 0, w, h, 
+    //               0.0f, 0.0f, 0.0f,
+    //               0.0f, 1.0f, 0.0f);
+    // displayScene();
+
+    glutSwapBuffers();
+}
+
+void setupViewport(int x, int y, int w, int h, 
+                   GLfloat eyeX, GLfloat eyeY, GLfloat eyeZ, 
+                   GLfloat upX, GLfloat upY, GLfloat upZ) {
+    glViewport(x, y, w, h);
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    GLfloat zoom = 100.0f; 
+    GLfloat aspect = (GLfloat)w / (GLfloat)h;
+    if (w <= h)
+        glOrtho(-zoom, zoom, -zoom/aspect, zoom/aspect, 1.0, 100.0);
+    else
+        glOrtho(-zoom*aspect, zoom*aspect, -zoom, zoom, 1.0, 100.0);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    gluLookAt(eyeX, eyeY, eyeZ,
+              0.0, 0.0, 0.0,
+              upX, upY, upZ);
+}
+
+void displayScene(Vec3<GLfloat> camPos) {
     for (Object *o : ObjectHandler::getObjects()) {
         if (!o->hasTransparency()) {
             o->draw();
@@ -25,115 +117,15 @@ void drawScene() {
     }
 
     std::vector<Object*>& trans = ObjectHandler::getTransObjects();
+    
+    // //! Sort transparent objects (Farthest -> Nearest)
+    std::sort(trans.begin(), trans.end(), [camPos](Object* a, Object* b) {
+        return (a->getWorldPosition() - camPos).magSq() > (b->getWorldPosition() - camPos).magSq();
+    });
+
     glDepthMask(GL_FALSE);
     for (Object *o : trans) {
-        if (!o->isHidden()) {
-            o->draw();
-        }
+        o->draw();
     }
     glDepthMask(GL_TRUE);
-}
-
-void display() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
-    glDisable(GL_LIGHTING);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_NORMALIZE);
-
-    int w = glutGet(GLUT_WINDOW_WIDTH);
-    int h = glutGet(GLUT_WINDOW_HEIGHT);
-    int vw = w / 2;
-    int vh = h / 2;
-
-    glViewport(0, h/2, vw, vh);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(-5.0, 30.0, -10.0, 25.0, 1.0, 100.0);
-    
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    gluLookAt(12.0, 50.0, 8.0,
-              12.0, 0.0, 8.0,
-              0.0, 0.0, -1.0);
-
-    if (roofPtr) roofPtr->setHidden(true);
-    drawScene();
-
-
-    // --- VIEW 2: Top-Down Floor Plan ---
-    glViewport(w/2, h/2, vw, vh);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(-5.0, 30.0, -10.0, 25.0, 1.0, 100.0);
-    
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    gluLookAt(12.0, 50.0, 8.0,
-              12.0, 0.0, 8.0,
-              0.0, 0.0, -1.0);
-    if (roofPtr) roofPtr->setHidden(false);
-    drawScene();
-
-
-    // --- VIEW 3: Front View ---
-    glViewport(0, 0, vw, vh);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(GameManager::fov, (GLfloat)vw/vh, GameManager::near, GameManager::far);
-    
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    Vec3<GLfloat> camPos = GameManager::initialCameraPos;
-    gluLookAt(camPos.x, camPos.y, camPos.z,
-              8.0, 2.0, 5.0,
-              0.0, 1.0, 0.0);
-    if (roofPtr) roofPtr->setHidden(false);
-    drawScene();
-
-
-    // --- VIEW 4: Interior ---
-    glViewport(w/2, 0, vw, vh);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(GameManager::fov, (GLfloat)vw/vh, GameManager::near, GameManager::far);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    // Position inside the Family Room / Dining Room
-    gluLookAt(8.0, 1.7, 5.0,
-              15.0, 1.5, 5.0,
-              0.0, 1.0, 0.0);
-    if (roofPtr) roofPtr->setHidden(false);
-    drawScene();
-
-    glutSwapBuffers();
-}
-
-void idle() {
-    glutPostRedisplay();
-}
-
-int main(int argc, char *argv[]) {
-    glutInit(&argc, argv);
-
-    WindowManager::init(display, idle);
-    MaterialManager::init();
-    TextureManager::init();
-    GameManager::init();
-
-    size_t maxChildren = 0;
-    for (Object* obj : ObjectHandler::getObjects()) {
-        if (obj->getChildren().size() > maxChildren) {
-            maxChildren = obj->getChildren().size();
-            housePtr = obj;
-        }
-    }
-
-    if (housePtr && !housePtr->getChildren().empty()) {
-        roofPtr = housePtr->getChildren().back();
-    }
-
-    glutMainLoop();
-    return 0;
 }

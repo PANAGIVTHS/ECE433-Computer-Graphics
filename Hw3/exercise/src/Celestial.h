@@ -30,14 +30,14 @@ public:
 
 class Sun : public Celestial {
 public:
-    Sun() : Celestial({ .red = 1.0f, .green = 0.4f, .blue = 0.0f }, 15) { orbitAngle = 0; }
+    Sun() : Celestial({ .red = 1.0f, .green = 0.4f, .blue = 0.0f }, 15) { orbitAngle = 0; transform.position.x = orbitRadius; }
 };
 
 class Moon : public Celestial {
     LightConfig getConfig() override;
     void update() override;
 public:
-    Moon() : Celestial({ .red = 1.0f, .green = 1.0f, .blue = 1.0f }, 15) { orbitAngle = M_PI; }
+    Moon() : Celestial({ .red = 1.0f, .green = 1.0f, .blue = 1.0f }, 15) { orbitAngle = M_PI; transform.position.x = orbitRadius; }
 };
 
 #endif
