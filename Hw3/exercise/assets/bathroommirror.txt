@@ -90,7 +90,8 @@ BEGIN
         
         # Light Diffuser (Emissive-style strip)
         CUBOID 0.0 0.02 0.0 0.85 0.01 0.06
-        TEXTURE WHITE_WOOL
+        TEXTURE BONE_SIDE
+        MATERIAL COLD_LIGHT
     END
     
     # -- INDUSTRIAL MOUNTING DETAILS --

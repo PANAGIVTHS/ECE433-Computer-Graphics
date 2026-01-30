@@ -44,7 +44,6 @@ void GameManager::loadLevelAssets() {
     house->addChildren(AssetLoader::addAsset("../assets/bathtub.txt", Vec3<GLfloat>(0.0f, 0.0f, 0.0f)));
     house->addChildren(AssetLoader::addAsset("../assets/wardrobe.txt", Vec3<GLfloat>(6.5, 0.27, -8.45))->setRotation(-90, Vec3<GLfloat>(0, 1, 0))->setScale(Vec3<GLfloat>(0.8, 0.8, 1)));
     house->addChildren(AssetLoader::addAsset("../assets/bookshelf.txt", Vec3<GLfloat>(0.0f, 0.0f, 0.0f)));
-    house->addChildren(AssetLoader::addAsset("../assets/bathroommirror.txt", Vec3<GLfloat>(0.0f, 0.0f, 0.0f)));
     house->addChildren(AssetLoader::addAsset("../assets/basin.txt", Vec3<GLfloat>(0.0f, 0.0f, 0.0f)));
     house->addChildren(AssetLoader::addAsset("../assets/faucet.txt", Vec3<GLfloat>(0.0f, 0.0f, 0.0f)));
     house->addChildren(AssetLoader::addAsset("../assets/dryer.txt", Vec3<GLfloat>(0.0f, 0.0f, 0.0f)));
@@ -66,7 +65,6 @@ void GameManager::loadLevelAssets() {
     house->addChildren(AssetLoader::addAsset("../assets/teda.txt", Vec3<GLfloat>(0.0f, 0.0f, 0.0f)));
     house->addChildren(AssetLoader::addAsset("../assets/forest.txt", Vec3<GLfloat>(7.0f, 0.2f, 7.0f)));
     house->addChildren(AssetLoader::addAsset("../assets/poster3.txt", Vec3<GLfloat>(0.0f, 0.0f, 0.0f)));
-    house->addChildren(AssetLoader::addAsset("../assets/ceilingLight.txt", Vec3<GLfloat>(0.0f, 0.0f, 0.0f)));
 }
 
 void GameManager::init() {

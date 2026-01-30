@@ -53,6 +53,7 @@ int LightingManager::registerLight(const LightConfig config, Object *owner) {
 
     lightAllocation[freeID] = true;
     registry[freeID] = { config, owner };
+    glEnable(GL_LIGHT0 + freeID);
 
     return freeID;
 }
@@ -89,8 +90,6 @@ void LightingManager::updateLight(int id) {
     if (!WindowManager::getMode()) return;
 
     GLenum lightID = GL_LIGHT0 + id;
-    glEnable(lightID);
-
     LightConfig config = registry[id].config;
     Vec3<GLfloat> finalPos = registry[id].owner ? config.position + registry[id].owner->getWorldPosition() : config.position; 
 

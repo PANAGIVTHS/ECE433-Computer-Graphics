@@ -75,6 +75,11 @@ void Camera::set() {
     LightingManager::getConfig(flashlightID).position = position;
 }
 
+void Camera::toggleFlashlight() {
+    flashlight = !flashlight;
+    LightingManager::toggleLight(flashlightID, flashlight);
+}
+
 bool Camera::hasGravity() {
     return gravity;
 }

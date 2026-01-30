@@ -10,6 +10,7 @@
 #include "Porch.h"
 #include "../Model.h"
 #include "../AssetLoader.h"
+#include "../LightingManager.h"
 
 void House::setup() {
     Porch *porch = new Porch(Vec3<GLfloat>(0, 0, 0), House::scale);
@@ -60,6 +61,25 @@ void House::setup() {
     tv->setScale(0.17, 0.17, 0.17);
     addChildren(tv);
     tv->setStatic(true);
+
+    Object *ceilingLight = AssetLoader::load("../assets/ceilingLight.txt", Vec3<GLfloat>(0.0f, 0.0f, 0.0f));
+    LightConfig config;
+    config.position = {0.0f, -1.05f, 0.0f};
+    config.color = {1.0f, 1.0f, 1.0f};
+    config.linear = 0.5f;
+    config.quadratic = 0.3f;
+    LightingManager::registerLight(config, ceilingLight);
+    addChildren(ceilingLight);
+
+
+    Object *bathroomMirror = AssetLoader::load("../assets/bathroommirror.txt", Vec3<GLfloat>(0.0f, 0.0f, 0.0f));
+    LightConfig mirrorConfig;
+    mirrorConfig.position = {0.0f, 0.55f, 0.08f};
+    mirrorConfig.color = {1.0f, 1.0f, 1.0f};
+    mirrorConfig.linear = 0.7f;
+    mirrorConfig.quadratic = 0.4f;
+    LightingManager::registerLight(mirrorConfig, bathroomMirror);
+    addChildren(bathroomMirror);
 
     // PATHWAY
     GLfloat pathWidth = Garage::doorWidth;

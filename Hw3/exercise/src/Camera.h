@@ -15,6 +15,7 @@ private:
     Vec3<GLfloat> up = Vec3<GLfloat>(0.0f, 1.0f, 0.0f);
     GLfloat yaw = -90.0f, pitch = 0.0f;
     bool gravity = false;
+    bool flashlight = true;
     int flashlightID = -1;
     LightConfig flashlightConfig;
 
@@ -44,6 +45,7 @@ public:
     void set();
     bool hasGravity();
     void setGravity(bool gravity);
+    void toggleFlashlight();
     int getFlashlightID();
     LightConfig getFlashlightConfig();
     Vec3<GLfloat> getDirection();
