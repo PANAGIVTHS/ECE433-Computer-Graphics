@@ -94,7 +94,7 @@ void display() {
     switch (phase) {
         case 0: // Family Room / Entrance
             frontEye = Vec3<GLfloat>(8.135541, 1.700000, -0.567432);
-            frontCenter = frontEye + Vec3<GLfloat>(-0.893911, -0.131046, 0.428660);
+            frontCenter = frontEye + Vec3<GLfloat>(-0.813911, -0.101046, 0.428660);
             break;
         case 1: // Dining Room / Kitchen area
             frontEye = Vec3<GLfloat>(6.072436, 1.700000, 3.437286);
