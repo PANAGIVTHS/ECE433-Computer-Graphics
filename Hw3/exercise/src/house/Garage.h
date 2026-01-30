@@ -25,6 +25,8 @@ public:
     static inline GLfloat totalHeight = height + wallThickness;
     static inline GLfloat totalLength = length + 2 * ceilingOffset;
 
+    static inline Object *ceiling;
+
     Garage(Vec3<GLfloat> pos, GLfloat scale = 1.0f, bool gravity = DEFAULT_GRAVITY, Color3f color = House::darkColor, TextureID texture = DEFAULT_TEXTURE, MaterialID material = DEFAULT_MATERIAL)
     : Block(pos, scale, gravity, color, texture, material) { performScaling(); updateDimensions(); addAll(); }
 
@@ -61,6 +63,8 @@ private:
     Object *addBackSide();
     Object *addCeiling();
     Object *addDoor();
+public:
+    Object *getCeiling();
 };
 
 #endif //SRC_GARAGE_H

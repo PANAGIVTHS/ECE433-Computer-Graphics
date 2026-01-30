@@ -16,9 +16,9 @@
 
 void init(int argc, char *argv[]);
 void display();
-void setupViewport(int x, int y, int w, int h, 
-                   GLfloat eyeX, GLfloat eyeY, GLfloat eyeZ, 
-                   GLfloat upX, GLfloat upY, GLfloat upZ);
+void setupPerspective(int x, int y, int w, int h, 
+                      Vec3<GLfloat> eye, Vec3<GLfloat> center, Vec3<GLfloat> up);
+void setupOrtho(int x, int y, int w, int h, GLfloat zoom, bool topDown);
 void displayScene(Vec3<GLfloat> camPos);
 
 int main(int argc, char *argv[]) {
@@ -59,54 +59,77 @@ void init(int argc, char *argv[]) {
 void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
-    glDisable(GL_LIGHTING);
 
-    int w = WindowManager::getWidth();
-    int h = WindowManager::getHeight();
+    int W = WindowManager::getWidth();
+    int H = WindowManager::getHeight();
+    int halfW = W / 2;
+    int halfH = H / 2;
+    House *house = GameManager::getHouse();
 
-    Vec3<GLfloat> camPos = Vec3(0.0f, 0.0f, 3.0f);
-    setupViewport(0, 0, w, h, 
-                  camPos.x, camPos.y, camPos.z,
-                  0.0f, 1.0f, 0.0f);
-    displayScene(camPos);
+    // ---------------------------------------------------------
+    // Botton left floor plan
+    // ---------------------------------------------------------
+    house->getRoof()->setHidden(true); 
+    // house->getGarageCeiling()->setHidden(true);
 
-    // setupViewport(w, h, w, h, 
-    //               0.0f, 0.0f, 0.0f,
-    //               0.0f, 1.0f, 0.0f);
-    // displayScene();
+    setupOrtho(0, 0, halfW, halfH, 20.0f, true);
+    displayScene(Vec3(10.0f, 50.0f, 10.0f));
 
-    // setupViewport(0, 0, w, h, 
-    //               0.0f, 0.0f, 0.0f,
-    //               0.0f, 1.0f, 0.0f);
-    // displayScene();
+    // ---------------------------------------------------------
+    // Bottom right floor plan with roof
+    // ---------------------------------------------------------
+    house->getRoof()->setHidden(false); 
+    // house->getGarageCeiling()->setHidden(false);
 
-    // setupViewport(w, 0, w, h, 
-    //               0.0f, 0.0f, 0.0f,
-    //               0.0f, 1.0f, 0.0f);
-    // displayScene();
+    setupOrtho(halfW, 0, halfW, halfH, 20.0f, true);
+    displayScene(Vec3(10.0f, 50.0f, 10.0f));
+
+    // ---------------------------------------------------------
+    // Top left front view perspective
+    // ---------------------------------------------------------
+    // displayScene(camPos);
+
+    // ---------------------------------------------------------
+    // Top right interior cycling
+    // ---------------------------------------------------------
+    // displayScene(camPos);
 
     glutSwapBuffers();
 }
 
-void setupViewport(int x, int y, int w, int h, 
-                   GLfloat eyeX, GLfloat eyeY, GLfloat eyeZ, 
-                   GLfloat upX, GLfloat upY, GLfloat upZ) {
+void setupPerspective(int x, int y, int w, int h, 
+                      Vec3<GLfloat> eye, Vec3<GLfloat> center, Vec3<GLfloat> up) {
     glViewport(x, y, w, h);
-
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    GLfloat zoom = 100.0f; 
-    GLfloat aspect = (GLfloat)w / (GLfloat)h;
-    if (w <= h)
-        glOrtho(-zoom, zoom, -zoom/aspect, zoom/aspect, 1.0, 100.0);
-    else
-        glOrtho(-zoom*aspect, zoom*aspect, -zoom, zoom, 1.0, 100.0);
+    gluPerspective(60.0, (GLfloat)w / (GLfloat)h, 0.1, 1000.0);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    gluLookAt(eyeX, eyeY, eyeZ,
-              0.0, 0.0, 0.0,
-              upX, upY, upZ);
+    gluLookAt(eye.x, eye.y, eye.z, 
+              center.x, center.y, center.z, 
+              up.x, up.y, up.z);
+}
+
+void setupOrtho(int x, int y, int w, int h, GLfloat zoom, bool topDown) {
+    glViewport(x, y, w, h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    
+    GLfloat aspect = (GLfloat)w / (GLfloat)h;
+    if (w <= h)
+        glOrtho(-zoom, zoom, -zoom/aspect, zoom/aspect, -100.0, 100.0);
+    else
+        glOrtho(-zoom*aspect, zoom*aspect, -zoom, zoom, -100.0, 100.0);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    
+    if (topDown) {
+        gluLookAt(10.0, 50.0, 10.0,
+                  10.0, 0.0, 10.0,
+                  0.0, 0.0, -1.0);
+    }
 }
 
 void displayScene(Vec3<GLfloat> camPos) {

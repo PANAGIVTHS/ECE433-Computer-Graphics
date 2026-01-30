@@ -30,10 +30,13 @@ LightConfig Moon::getConfig() {
 void Celestial::drawInternal() {
     LightingManager::setConfig(lightID, getConfig());
     LightingManager::updateLight(lightID);
+    bool lightingOn = glIsEnabled(GL_LIGHTING);
+    
     glDisable(GL_LIGHTING);
     glColor3f(color.red, color.green, color.blue);
     glutSolidSphere(radius, size, 20);
-    glEnable(GL_LIGHTING);
+    if (lightingOn)
+        glEnable(GL_LIGHTING);
 }
 
 void Celestial::update() {

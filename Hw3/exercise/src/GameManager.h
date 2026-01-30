@@ -22,7 +22,6 @@ private:
     inline static int lastFpsTime = 0;
     inline static float fps = 0.0f;
 
-    inline static std::vector<Object*> levelAssets;
     static void unloadLevelAssets();
     static void loadLevelAssets();
     static void updateDeltaTime();
@@ -51,6 +50,7 @@ public:
     
     static Camera *getCamera();
     static Environment *getEnvironment();
+    static House* getHouse();
 };
 
 #endif

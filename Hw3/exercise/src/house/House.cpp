@@ -9,6 +9,7 @@
 #include "Hallway.h"
 #include "Porch.h"
 #include "../Model.h"
+#include "../AssetLoader.h"
 
 void House::setup() {
     Porch *porch = new Porch(Vec3<GLfloat>(0, 0, 0), House::scale);
@@ -33,6 +34,7 @@ void House::setup() {
     car->optimize();
     garage->addChildren(car);
     garage->optimize();
+    garageCeiling = garage->getCeiling();
     addChildren(garage);
 
     Bathroom *bathroom = new Bathroom(familyRoom->getPosition(), House::scale);
@@ -85,7 +87,7 @@ void House::setup() {
     pathway1->optimize();
 
     // ROOF
-    Object *roof = new Object(Vec3<GLfloat>(bedroom2->getPosition().x, 0.0f, bedroom2->getPosition().z), House::scale);
+    roof = new Object(Vec3<GLfloat>(bedroom2->getPosition().x, 0.0f, bedroom2->getPosition().z), House::scale);
 
     GLfloat ceilingWidth = FamilyRoom::totalWidth + DiningRoom::totalWidth - 2 * (exteriorWallThickness + ridgeThickness);
     GLfloat ceilingHeight = 0.2f;
@@ -115,6 +117,16 @@ void House::setup() {
         House::lightColor
     ));
 
+    this->addChildren(AssetLoader::addAsset("../assets/roof.txt", Vec3<GLfloat>(0.0f, 0.0f, 0.0f)));
+
     addChildren(roof);
 
+}
+
+Object *House::getGarageCeiling() {
+    return garageCeiling;
+}
+
+Object *House::getRoof() {
+    return roof;
 }

@@ -170,7 +170,28 @@ public:
         return anchor;
     }
 
+    static Object *addAsset(std::string path, Vec3<GLfloat> pos) {
+        Object* obj = AssetLoader::load(path, pos);
+        if (obj) {
+            obj->optimize();
+            levelAssets.push_back(obj);
+        }
+
+        return obj;
+    };
+
+    static void unloadLevelAssets() {
+        for (Object* obj : levelAssets) {
+            if (obj) {
+                delete obj;
+            }
+        }
+        levelAssets.clear();
+    }
+
 private:
+    inline static std::vector<Object*> levelAssets;
+
     static TextureID resolveTexture(std::string_view name) {
     #define X(tex) if (name == #tex) return TextureID::tex;
         TEXTURE_LIST(X)

@@ -34,8 +34,14 @@ public:
     static inline Color3f darkColor = {.red = 0.19140625, .green = 0.19140625, .blue = 0.19140625};
     static inline Color3f floorColor = {0.55f, 0.57f, 0.58f};
 
+    static inline Object *garageCeiling;
+    static inline Object *roof;
+
     House(Vec3<GLfloat> pos, bool gravity = DEFAULT_GRAVITY, Color3f color = {.red = 1, .green = 1, .blue = 1}, TextureID texture = DEFAULT_TEXTURE, MaterialID material = DEFAULT_MATERIAL)
         : Object(pos, gravity, color, texture, material) { performScaling(); setup(); }
+
+    Object *getGarageCeiling();
+    Object *getRoof();
 };
 
 #endif //SRC_HOUSE_H

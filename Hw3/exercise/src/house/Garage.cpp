@@ -5,7 +5,8 @@ void Garage::addAll() {
     addChildren(addFloor());
     addChildren(addRightSide());
     addChildren(addBackSide());
-    addChildren(addCeiling());
+    ceiling = addCeiling();
+    addChildren(ceiling);
     Object *frontSide = addFrontSide();
     addChildren(frontSide);
     frontSide->addChildren(addDoor());
@@ -153,4 +154,8 @@ Object *Garage::addDoor() {
     );
 
     return garageDoor;
+}
+
+Object *Garage::getCeiling() {
+    return ceiling;
 }

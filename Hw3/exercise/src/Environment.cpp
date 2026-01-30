@@ -16,10 +16,8 @@ void Environment::init() {
 }
 
 void Environment::spawn() {
-    if (WindowManager::getMode()) {
-        new Sun();
-        new Moon();
-    }
+    new Sun();
+    new Moon();
     //TODO add to settings menu
     (new Cuboid(0, -0.05, 0, 100, 0.1, 100, false, {.red = 1.0f, .green = 1.0f, .blue = 1.0f}, TextureID::GRASS, MaterialID::MATTE, TextureConfig(TextureMode::REPEAT_FIT, 100, 100), 300))->optimize();
 
