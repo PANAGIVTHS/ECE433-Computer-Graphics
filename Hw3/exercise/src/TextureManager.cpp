@@ -124,7 +124,6 @@ void TextureManager::init() {
 
 }
 
-//TODO Do No magic color
 bool TextureManager::init(TextureID id, const std::string& path, GLint magMethod, int width, int height) {
     if (id == TextureID::NONE) return false;
     if (textures.count(id)) return true; // Already loaded
@@ -136,7 +135,7 @@ bool TextureManager::init(TextureID id, const std::string& path, GLint magMethod
     if (width > 0 && height > 0) {
         imgWidth = width;
         imgHeight = height;
-
+        
         data = LoadTextureFile(const_cast<char*>(path.c_str()), width, height);
         
         if (!data) {
@@ -170,43 +169,6 @@ bool TextureManager::init(TextureID id, const std::string& path, GLint magMethod
         reverseImage(data, byteWidth, imgHeight, paddedWidth - byteWidth);
     }
 
-    // RGBA conversion add alpha channel
-    // Allocate a new buffer with 4 components (BGRA) instead of 3 (BGR)
-    unsigned char* rgbaData = (unsigned char*)malloc(imgWidth * imgHeight * 4 * sizeof(unsigned char));
-    if (!rgbaData) {
-        std::cerr << "Out of memory for texture RGBA conversion.\n";
-        free(data);
-        return false;
-    }
-
-    unsigned char* src = data;
-    unsigned char* dst = rgbaData;
-    int numPixels = imgWidth * imgHeight;
-
-    for (int i = 0; i < numPixels; i++) {
-        unsigned char b = src[0];
-        unsigned char g = src[1];
-        unsigned char r = src[2];
-
-        dst[0] = b;
-        dst[1] = g;
-        dst[2] = r;
-
-        // If color is Magenta (255, 0, 255), make it transparent.
-        if (r == 255 && g == 0 && b == 255) {
-            dst[3] = 200; 
-        } else {
-            dst[3] = 255;
-        }
-
-        // Move to next
-        src += 3;
-        dst += 4;
-    }
-
-    // Free the original RGB data
-    free(data);
-
     GLuint texID;
     glGenTextures(1, &texID);
     glBindTexture(GL_TEXTURE_2D, texID);
@@ -216,18 +178,23 @@ bool TextureManager::init(TextureID id, const std::string& path, GLint magMethod
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magMethod);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 4); 
+    if (width > 0 && height > 0) {
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    } else {
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+    }
 
-    // Build Mipmaps using the new RGBA data
+    // Generate Mipmaps
     gluBuild2DMipmaps(
-        GL_TEXTURE_2D, GL_RGBA, imgWidth, imgHeight, 
-        GL_BGRA_EXT, GL_UNSIGNED_BYTE, rgbaData
+        GL_TEXTURE_2D, GL_RGB, imgWidth, imgHeight, 
+        GL_BGR_EXT, GL_UNSIGNED_BYTE, data
     );
 
     glBindTexture(GL_TEXTURE_2D, 0);
-    free(rgbaData);
+    free(data);
 
     textures[id] = texID;
     return true;
