@@ -11,6 +11,7 @@
 #include "../Model.h"
 #include "../AssetLoader.h"
 #include "../LightingManager.h"
+#include "../Spline.h"
 
 void House::setup() {
     Porch *porch = new Porch(Vec3<GLfloat>(0, 0, 0), House::scale);
@@ -146,6 +147,68 @@ void House::setup() {
 
     addChildren(roof);
 
+    Object* faucet = AssetLoader::load("../assets/tap.txt", Vec3<float>(0.0f, 0.3f, 0.0f)); 
+
+    std::vector<Vec3<float>> pathPoints;
+    pathPoints.push_back(Vec3<float>(0.0f, 1.025f, 0.35f)); 
+    pathPoints.push_back(Vec3<float>(0.0f, 0.90f, 0.38f)); 
+    pathPoints.push_back(Vec3<float>(0.0f, 0.40f, 0.40f)); 
+    pathPoints.push_back(Vec3<float>(0.0f, 0.05f, 0.45f)); 
+
+    //! Coiling on the Floor
+    float angle = 0.0f;
+    float radius = 0.5f;
+    for (int i = 0; i < 5; i++) {
+        angle += 0.8f; 
+        radius += 0.06f;
+        float x = sin(angle) * radius;
+        float z = cos(angle) * radius + 0.5f; 
+        pathPoints.push_back(Vec3<float>(x, 0.05f, z));
+    }
+
+    //! Generate the 3D Tube Grid
+    std::vector<std::vector<Vec3<float>>> tubeGrid;
+    float hoseThickness = 0.035f; //! Radius of the hose
+    int ringRes = 6; //! How round the tube is (N sides)
+
+    for (size_t i = 0; i < pathPoints.size(); i++) {
+        //! Calculate Direction
+        Vec3<float> pCurrent = pathPoints[i];
+        Vec3<float> pNext = (i < pathPoints.size() - 1) ? pathPoints[i + 1] : pathPoints[i];
+        Vec3<float> pPrev = (i > 0) ? pathPoints[i - 1] : pathPoints[i];
+        
+        Vec3<float> tangent;
+        if (i == 0) tangent = (pNext - pCurrent).normalize();
+        else if (i == pathPoints.size() - 1) tangent = (pCurrent - pPrev).normalize();
+        else tangent = (pNext - pPrev).normalize();
+
+        //! Calculate Orientation Frame
+        Vec3<float> worldUp = Vec3<float>(0.0f, 1.0f, 0.0f);
+        if (fabs(tangent.y) > 0.99f) worldUp = Vec3<float>(1.0f, 0.0f, 0.0f);
+
+        Vec3<float> right = tangent.cross(worldUp).normalize();
+        Vec3<float> up = right.cross(tangent).normalize();
+
+        //! Generate Ring of points
+        std::vector<Vec3<float>> ring;
+        for (int j = 0; j <= ringRes; j++) {
+            float theta = (float)j / ringRes * 6.28318f;
+            float cosT = cos(theta);
+            float sinT = sin(theta);
+            
+            Vec3<float> point = pCurrent + (right * cosT * hoseThickness) + (up * sinT * hoseThickness);
+            ring.push_back(point);
+        }
+        tubeGrid.push_back(ring);
+    }
+
+    Color3f hoseColor = {0.0f, 0.4f, 0.0f}; 
+    NurbsSurface* hose = new NurbsSurface(tubeGrid, Vec3<float>(0,0,0), 4, hoseColor, TextureID::GREEN_WOOL, MaterialID::MATTE);
+    hose->setStatic(true);
+    faucet->setStatic(true);
+
+    faucet->addChildren(hose);
+    addChildren(faucet);
 }
 
 Object *House::getGarageCeiling() {

@@ -1,0 +1,101 @@
+# --- BACKYARD FAUCET ---
+# A realistic industrial faucet with a stone base and iron piping.
+# Position defaults to origin (0,0,0).
+
+OBJECT 2.3 -0.3 -7.0
+GRAVITY false
+ROTATION -90 0 1 0
+BEGIN
+    # ==========================
+    # CONCRETE BASE PAD
+    # ==========================
+    # A small slab to keep it off the mud
+    CUBOID 0.0 0.05 0.0 0.4 0.1 0.4
+    TEXTURE STONE
+    TEX_CONFIG REPEAT_FIT
+
+    # ==========================
+    # VERTICAL STANDPIPE
+    # ==========================
+    # The main water supply pipe coming up
+    CUBOID 0.0 0.55 0.0 0.08 0.9 0.08
+    TEXTURE IRON
+    TEX_CONFIG REPEAT_FIT
+
+    # Pipe Joint/Coupling (Decoration)
+    CUBOID 0.0 0.3 0.0 0.1 0.15 0.1
+    TEXTURE IRON
+    TEX_CONFIG REPEAT_FIT
+
+    # ==========================
+    # FAUCET BODY (VALVE)
+    # ==========================
+    # The complex junction box at the top
+    OBJECT 0.0 1.05 0.0
+    ROTATION 0 0 0 0
+    BEGIN
+        # Main Chamber
+        CUBOID 0.0 0.0 0.0 0.12 0.12 0.12
+        TEXTURE IRON
+        TEX_CONFIG REPEAT_FIT
+
+        # Back-flow Preventer (Bulky section on top)
+        CUBOID 0.0 0.1 0.0 0.1 0.08 0.1
+        TEXTURE IRON
+        TEX_CONFIG REPEAT_FIT
+        
+        # Hex Nut Detail (rotated slightly by eye if needed, here just a block)
+        CUBOID 0.0 0.15 0.0 0.06 0.04 0.06
+        TEXTURE IRON
+        TEX_CONFIG REPEAT_FIT
+    END
+
+    # ==========================
+    # SPOUT
+    # ==========================
+    # Angled pipe sticking out
+    OBJECT 0.0 1.05 0.15
+    ROTATION -15.0 1 0 0
+    BEGIN
+        # Horizontal-ish section
+        CUBOID 0.0 0.0 0.0 0.06 0.06 0.2
+        TEXTURE IRON
+        TEX_CONFIG REPEAT_FIT
+        
+        # Downward tip
+        OBJECT 0.0 -0.05 0.15
+        ROTATION 75.0 1 0 0
+        BEGIN
+             CUBOID 0.0 0.0 0.0 0.05 0.1 0.05
+             TEXTURE IRON
+             TEX_CONFIG REPEAT_FIT
+        END
+    END
+
+    # ==========================
+    # VALVE HANDLE (WHEEL)
+    # ==========================
+    # A "cross" style handle on top
+    OBJECT 0.0 1.2 0.0
+    ROTATION 0 0 0 0
+    BEGIN
+        # Stem
+        CUBOID 0.0 -0.05 0.0 0.03 0.1 0.03
+        TEXTURE IRON
+        TEX_CONFIG REPEAT_FIT
+
+        # Cross Bar 1 (Using BLOCK_SIDE for visibility/accent)
+        CUBOID 0.0 0.05 0.0 0.25 0.03 0.03
+        TEXTURE RED_WOOL
+        TEX_CONFIG REPEAT_FIT
+
+        # Cross Bar 2
+        OBJECT 0.0 0.05 0.0
+        ROTATION 90.0 0 1 0
+        BEGIN
+            CUBOID 0.0 0.0 0.0 0.25 0.03 0.03
+            TEXTURE RED_WOOL
+            TEX_CONFIG REPEAT_FIT
+        END
+    END
+END
