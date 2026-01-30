@@ -23,6 +23,7 @@ void displayScene(Vec3<GLfloat> camPos);
 void keyboardDown(unsigned char key, int x, int y);
 void specialKeyboardDown(int key, int x, int y);
 int pause = 0;
+int phase = 0;
 
 int main(int argc, char *argv[]) {
     init(argc, argv);
@@ -87,9 +88,11 @@ void display() {
     // ---------------------------------------------------------
     // Top right interior cycling
     // ---------------------------------------------------------
-    int time = glutGet(GLUT_ELAPSED_TIME);
-    int period = 4000; // 4 seconds per room
-    int phase = pause ? phase : (time / period) % 4;
+    if (!pause) {
+        int time = glutGet(GLUT_ELAPSED_TIME);
+        int period = 4000; // 4 seconds per room
+        phase = (time / period) % 4;
+    }
 
     switch (phase) {
         case 0: // Family Room / Entrance
