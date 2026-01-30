@@ -95,9 +95,9 @@ void WindowManager::init() {
 }
 
 void WindowManager::reshape(int newWidth, int newHeight) {
-    WindowManager::width = width;
-    WindowManager::height = height;
-    aspect = (GLdouble) width / (GLdouble) height;
+    WindowManager::width = newWidth;
+    WindowManager::height = newHeight;
+    aspect = (GLdouble) newWidth / (GLdouble) newHeight;
     
     GameManager::onWindowUpdate(newWidth, newHeight, false);
 }

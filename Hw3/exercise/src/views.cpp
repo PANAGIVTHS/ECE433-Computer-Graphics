@@ -20,29 +20,17 @@ void setupPerspective(int x, int y, int w, int h,
                       Vec3<GLfloat> eye, Vec3<GLfloat> center, Vec3<GLfloat> up);
 void setupOrtho(int x, int y, int w, int h, GLfloat zoom, bool topDown);
 void displayScene(Vec3<GLfloat> camPos);
+void keyboardDown(unsigned char key, int x, int y);
+void specialKeyboardDown(int key, int x, int y);
+int pause = 0;
 
 int main(int argc, char *argv[]) {
     init(argc, argv);
 
 	printf("Keyboard commands:\n");
-	printf("'w' - Move forward.\n");
-	printf("'a' - Move left.\n");
-	printf("'s' - Move backward.\n");
-	printf("'d' - Move right.\n");
-	printf("'SPACE' - Move up.\n");
-	printf("'z' - Move down.\n");
-#ifndef MOUSE_ROTATION
-	printf("'i' - Look up.\n");
-	printf("'j' - Look left.\n");
-	printf("'k' - Look down.\n");
-	printf("'l' - Look right.\n");
-#endif
+	printf("'p' - Toggle playback on top-right view.\n");
 	printf("'ESC' - Quit the application.\n");
 	printf("'F11' - Toggle fullscreen.\n");
-#ifdef MOUSE_ROTATION
-	printf("\n");
-    printf("Move the mouse to look around!\n");
-#endif
 
     glutMainLoop();
     return 0;
@@ -54,6 +42,8 @@ void init(int argc, char *argv[]) {
     MaterialManager::init();
     TextureManager::init();
     GameManager::init();
+    glutKeyboardFunc(keyboardDown);
+    glutSpecialFunc(specialKeyboardDown);
 }
 
 void display() {
@@ -70,31 +60,62 @@ void display() {
     // Botton left floor plan
     // ---------------------------------------------------------
     house->getRoof()->setHidden(true); 
-    // house->getGarageCeiling()->setHidden(true);
+    house->getGarageCeiling()->setHidden(true);
 
-    setupOrtho(0, 0, halfW, halfH, 20.0f, true);
-    displayScene(Vec3(10.0f, 50.0f, 10.0f));
+    setupOrtho(0, 0, halfW, halfH, 8.0f, true);
+    displayScene(Vec3(10.0f, 50.0f, -2.5f));
 
     // ---------------------------------------------------------
     // Bottom right floor plan with roof
     // ---------------------------------------------------------
     house->getRoof()->setHidden(false); 
-    // house->getGarageCeiling()->setHidden(false);
+    house->getGarageCeiling()->setHidden(false);
 
-    setupOrtho(halfW, 0, halfW, halfH, 20.0f, true);
-    displayScene(Vec3(10.0f, 50.0f, 10.0f));
+    setupOrtho(halfW, 0, halfW, halfH, 8.0f, true);
+    displayScene(Vec3(10.0f, 50.0f, -2.5f));
 
     // ---------------------------------------------------------
     // Top left front view perspective
     // ---------------------------------------------------------
-    // displayScene(camPos);
+    Vec3<GLfloat> frontEye(14.570936, 1.700000, 11.138914);
+    Vec3<GLfloat> frontCenter = frontEye + Vec3<GLfloat>(-0.472914, -0.022165, -0.880830);
+    
+    setupPerspective(0, halfH, halfW, halfH, 
+                     frontEye, frontCenter, Vec3(0.0f, 1.0f, 0.0f));
+    displayScene(frontEye);
 
     // ---------------------------------------------------------
     // Top right interior cycling
     // ---------------------------------------------------------
-    // displayScene(camPos);
+    int time = glutGet(GLUT_ELAPSED_TIME);
+    int period = 4000; // 4 seconds per room
+    int phase = pause ? phase : (time / period) % 4;
+
+    switch (phase) {
+        case 0: // Family Room / Entrance
+            frontEye = Vec3<GLfloat>(8.135541, 1.700000, -0.567432);
+            frontCenter = frontEye + Vec3<GLfloat>(-0.893911, -0.131046, 0.428660);
+            break;
+        case 1: // Dining Room / Kitchen area
+            frontEye = Vec3<GLfloat>(6.072436, 1.700000, 3.437286);
+            frontCenter = frontEye + Vec3<GLfloat>(0.750779, -0.120657, -0.649441);
+            break;
+        case 2: // Bedroom / Hallway
+            frontEye = Vec3<GLfloat>(9.445059, 1.700000, -9.201321);
+            frontCenter = frontEye + Vec3<GLfloat>(-0.413258, -0.110250, 0.903915);
+            break;
+        case 3: // Garage
+            frontEye = Vec3<GLfloat>(14.818394, 1.700000, 4.067469);
+            frontCenter = frontEye + Vec3<GLfloat>(-0.472939, 0.014660, -0.880973);
+            break;
+    }
+    
+    setupPerspective(halfW, halfH, halfW, halfH, 
+                     frontEye, frontCenter, Vec3(0.0f, 1.0f, 0.0f));
+    displayScene(frontEye);
 
     glutSwapBuffers();
+    glutPostRedisplay();
 }
 
 void setupPerspective(int x, int y, int w, int h, 
@@ -126,8 +147,8 @@ void setupOrtho(int x, int y, int w, int h, GLfloat zoom, bool topDown) {
     glLoadIdentity();
     
     if (topDown) {
-        gluLookAt(10.0, 50.0, 10.0,
-                  10.0, 0.0, 10.0,
+        gluLookAt(10.0, 50.0, -2.5,
+                  10.0, 0.0, -2.5,
                   0.0, 0.0, -1.0);
     }
 }
@@ -151,4 +172,23 @@ void displayScene(Vec3<GLfloat> camPos) {
         o->draw();
     }
     glDepthMask(GL_TRUE);
+}
+
+void keyboardDown(unsigned char key, int x, int y) {
+    switch (key) {
+        case 27:
+            GameManager::cleanUp();
+            exit(0);
+        case 'p': 
+        case 'P':
+            pause = !pause;
+            break;
+    }
+}
+
+void specialKeyboardDown(int key, int x, int y) {
+    if (key != GLUT_KEY_F11)
+        return;
+    
+    WindowManager::switchMode();
 }

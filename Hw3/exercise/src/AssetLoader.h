@@ -170,6 +170,10 @@ public:
         return anchor;
     }
 
+    static Object *addAsset(std::string path) {
+        return addAsset(path, Vec3(0.0f, 0.0f, 0.0f));
+    }
+
     static Object *addAsset(std::string path, Vec3<GLfloat> pos) {
         Object* obj = AssetLoader::load(path, pos);
         if (obj) {
