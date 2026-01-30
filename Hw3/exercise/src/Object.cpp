@@ -163,7 +163,7 @@ Vec3<GLfloat> Object::getWorldPosition() {
     if (parent == nullptr) {
         return transform.position;
     }
-    // Recursive Step: Parent's World Position + My Local Position
+    //! Recursive Step: Parent's World Position + My Local Position
     return parent->getWorldPosition() + transform.position;
 }
 
@@ -417,7 +417,6 @@ void Cuboid::drawInternal() {
         vFront = vSide = vTop = texConfig.vMax;
     }
 
-    //! Maybe not clean enough
     TextureManager::drawQuadTex(
         Vec3<GLfloat>(-w, -h,  l), Vec3<GLfloat>( w, -h,  l), 
         Vec3<GLfloat>( w,  h,  l), Vec3<GLfloat>(-w,  h,  l), front, uFront, vFront, subdivisions);

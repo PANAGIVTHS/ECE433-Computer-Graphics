@@ -98,7 +98,7 @@ public:
                 objectCreated = true;
             }
 
-            // --- LINKING ---
+            //! --- LINKING ---
             if (objectCreated && currentObj) {
                 if (hierarchyStack.empty()) {
                     anchor->addChildren(currentObj);
@@ -107,7 +107,7 @@ public:
                 }
             }
 
-            // --- PROPERTIES ---
+            //! --- PROPERTIES ---
             else if (currentObj) {
                 if (cmd == "TEXTURE") {
                     std::string texName; ss >> texName;
@@ -196,6 +196,7 @@ public:
 private:
     inline static std::vector<Object*> levelAssets;
 
+    //! Name resolvers
     static TextureID resolveTexture(std::string_view name) {
     #define X(tex) if (name == #tex) return TextureID::tex;
         TEXTURE_LIST(X)

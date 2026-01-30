@@ -105,7 +105,7 @@ void GameManager::runGameLoop() {
 }
 
 void GameManager::onWindowUpdate(GLint width, GLint height, bool newContext) {
-    // Set projection and viewport
+    //! Set projection and viewport
     if (WindowManager::getMode()) {
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
@@ -114,10 +114,9 @@ void GameManager::onWindowUpdate(GLint width, GLint height, bool newContext) {
         glViewport(0, 0, width, height);
     }
 
-    // Set other OpenGL settings
     glEnable(GL_DEPTH_TEST);
 
-    // Initialize anything that has a per window context
+    //! Initialize anything that has a per window context
     if (newContext) {
         //! Delete old unreachable textures
         TextureManager::clear();
