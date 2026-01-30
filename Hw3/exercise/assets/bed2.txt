@@ -1,11 +1,10 @@
-# --- MODERN IMPERFECT BED (Final) ---
-# Positioned at (5, 0, 10)
+# -- MODERN BED --
 OBJECT 8.2 0.3 -8.2
 SCALE 0.67 0.67 0.67 
 GRAVITY false
 ROTATION 0 0 0 0
 BEGIN
-    # -- LEGS --
+    # -- BED LEGS --
     CUBOID -0.9 0.1 1.4 0.1 0.2 0.1
     TEXTURE WOOD
     CUBOID 0.9 0.1 1.4 0.1 0.2 0.1
@@ -21,7 +20,6 @@ BEGIN
     TEX_CONFIG REPEAT_FIT
 
     # -- MATTRESS --
-    # Top surface is at Y = 0.55 + 0.15 = 0.70
     OBJECT 0.05 0.55 0.05
     ROTATION 0.5 0 1 0
     BEGIN
@@ -30,7 +28,7 @@ BEGIN
         TEX_CONFIG REPEAT_FIT
     END
 
-    # -- DUVET / BLANKET --
+    # -- YELLOW DUVET --
     OBJECT 0.0 0.7 0.2
     ROTATION -0.5 0 1 0
     BEGIN
@@ -39,7 +37,7 @@ BEGIN
         TEXTURE YELLOW_WOOL
         TEX_CONFIG REPEAT_FIT
 
-        # Left Side Drop
+        # Left Side
         OBJECT -0.924 -0.161 0.0
         ROTATION 0 0 0 0
         BEGIN
@@ -48,7 +46,7 @@ BEGIN
             TEX_CONFIG REPEAT_FIT
         END
 
-        # Right Side Drop
+        # Right Side
         OBJECT 1.025 -0.075 0.0
         ROTATION 0 0 0 0
         BEGIN
@@ -84,10 +82,8 @@ BEGIN
         END
     END
 
-    # -- PILLOWS (Imperfect & Raised) --
-    # Raised to Y=0.82 to sit on the 0.70 mattress top without clipping
-    
-    # Left Pillow: Rotated 18 degrees (Steeper lean)
+    # -- PILLOWS --
+    # Left Pillow
     OBJECT -0.45 0.82 -1.15
     ROTATION 18.0 1 0 0
     BEGIN
@@ -95,7 +91,7 @@ BEGIN
         TEXTURE BONE_SIDE
     END
 
-    # Right Pillow: Rotated 12 degrees (Relaxed lean) & slightly offset Z
+    # Right Pillow
     OBJECT 0.45 0.82 -1.12
     ROTATION 12.0 1 0 0
     BEGIN

@@ -1,18 +1,14 @@
-# --- MODERN VANITY MIRROR WITH SHELF & LIGHTING ---
-# Positioned relative to the scene (suggested height for bathroom wall)
+# -- VANITY MIRROR --
 OBJECT 3 2 -6
 GRAVITY false
 ROTATION 90 0 1 0
 BEGIN
-    # -- BACKING BOARD (Matte Black Frame) --
-    # Creates a floating effect and frame backdrop
+    # -- BACKING FRAME --
     CUBOID 0.0 0.0 0.0 0.9 1.1 0.04
     TEXTURE BLACK_WOOL
     TEX_CONFIG REPEAT_FIT
 
-    # -- THE MIRROR GLASS --
-    # Placed slightly forward. Using IRON for silver/reflective surface 
-    # as it is the closest supported texture to a mirror.
+    # -- MIRROR GLASS --
     OBJECT 0.0 0.0 0.025
     BEGIN
         CUBOID 0.0 0.0 0.0 0.85 1.05 0.02
@@ -21,33 +17,32 @@ BEGIN
         TEX_CONFIG REPEAT_FIT
     END
 
-    # -- FLOATING WOODEN SHELF --
-    # Attached near the bottom of the mirror unit
+    # -- WOODEN SHELF --
     OBJECT 0.0 -0.45 0.15
     BEGIN
-        # The Wood Slab
+        # -- SHELF SLAB --
         CUBOID 0.0 0.0 0.0 1.0 0.05 0.25
         TEXTURE SPRUCE_PLANKS
         TEX_CONFIG REPEAT_FIT
         
-        # Metal Support Brackets (Underneath)
+        # -- LEFT BRACKET --
         OBJECT -0.3 -0.04 -0.05
         BEGIN
             CUBOID 0.0 0.0 0.0 0.02 0.04 0.15
             TEXTURE IRON
         END
+
+        # -- RIGHT BRACKET --
         OBJECT 0.3 -0.04 -0.05
         BEGIN
             CUBOID 0.0 0.0 0.0 0.02 0.04 0.15
             TEXTURE IRON
         END
 
-        # -- DECORATIVE AMENITIES (Complex Detail) --
-        
-        # 1. Soap Dispenser Bottle
+        # -- SOAP DISPENSER --
         OBJECT -0.35 0.08 0.0
         BEGIN
-            # Bottle Body (Frosted look)
+            # Bottle Body
             CUBOID 0.0 0.0 0.0 0.06 0.12 0.06
             TEXTURE WHITE_WOOL
             # Pump Neck
@@ -58,20 +53,20 @@ BEGIN
             TEXTURE BLACK_WOOL
         END
         
-        # 2. Toothbrush Tumbler
+        # -- TOOTHBRUSH CUP --
         OBJECT -0.25 0.06 0.0
         BEGIN
             CUBOID 0.0 0.0 0.0 0.07 0.12 0.07
             TEXTURE BLUE_WOOL
         END
 
-        # 3. Stacked Face Towels
+        # -- STACKED TOWELS --
         OBJECT 0.3 0.04 0.0
         BEGIN
             # Bottom Towel
             CUBOID 0.0 0.0 0.0 0.15 0.03 0.15
             TEXTURE GRAY_WOOL
-            # Top Towel (Rotated slightly)
+            # Top Towel
             OBJECT 0.0 0.03 0.0
             ROTATION 0 15 0 0
             BEGIN
@@ -81,33 +76,31 @@ BEGIN
         END
     END
 
-    # -- INTEGRATED LED LIGHTING (Top Bar) --
+    # -- LED LIGHTING --
     OBJECT 0.0 0.55 0.08
     BEGIN
         # Metal Housing
         CUBOID 0.0 0.05 0.0 0.9 0.02 0.08
         TEXTURE IRON
-        
-        # Light Diffuser (Emissive-style strip)
+        # Light Diffuser
         CUBOID 0.0 0.02 0.0 0.85 0.01 0.06
         TEXTURE BONE_SIDE
         MATERIAL COLD_LIGHT
     END
     
-    # -- INDUSTRIAL MOUNTING DETAILS --
-    # Visible screw caps on the mirror surface corners
+    # -- MOUNTING CAPS --
     OBJECT 0.0 0.0 0.04
     BEGIN
-        # Top Left Cap
+        # Top Left
         CUBOID -0.4 0.45 0.0 0.02 0.02 0.01
         TEXTURE IRON
-        # Top Right Cap
+        # Top Right
         CUBOID 0.4 0.45 0.0 0.02 0.02 0.01
         TEXTURE IRON
-        # Bottom Left Cap
+        # Bottom Left
         CUBOID -0.4 -0.45 0.0 0.02 0.02 0.01
         TEXTURE IRON
-        # Bottom Right Cap
+        # Bottom Right
         CUBOID 0.4 -0.45 0.0 0.02 0.02 0.01
         TEXTURE IRON
     END

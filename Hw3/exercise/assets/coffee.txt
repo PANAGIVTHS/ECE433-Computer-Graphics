@@ -1,5 +1,4 @@
-# --- DETAILED COFFEE TABLE (All REPEAT_FIT) ---
-# Positioned at (5, 0, 7.5)
+# -- COFFEE TABLE --
 OBJECT 6.8 0.0 -11.7
 SCALE 1.5 1.5 1.5
 GRAVITY false
@@ -27,28 +26,27 @@ BEGIN
     TEX_CONFIG REPEAT_FIT
 
     # -- LOWER SHELF --
-    # Floating shelf for magazines
     CUBOID 0.0 0.15 0.0 1.0 0.04 0.6
     TEXTURE STONE
     TEX_CONFIG REPEAT_FIT
 
-    # -- TABLETOP FRAME --
-    # Long Side Front
+    # -- TABLE FRAME --
+    # Front Side
     CUBOID 0.0 0.42 0.35 1.2 0.05 0.1
     TEXTURE SPRUCE_PLANKS
     TEX_CONFIG REPEAT_FIT
 
-    # Long Side Back
+    # Back Side
     CUBOID 0.0 0.42 -0.35 1.2 0.05 0.1
     TEXTURE SPRUCE_PLANKS
     TEX_CONFIG REPEAT_FIT
 
-    # Short Side Left
+    # Left Side
     CUBOID -0.55 0.42 0.0 0.1 0.05 0.6
     TEXTURE SPRUCE_PLANKS
     TEX_CONFIG REPEAT_FIT
 
-    # Short Side Right
+    # Right Side
     CUBOID 0.55 0.42 0.0 0.1 0.05 0.6
     TEXTURE SPRUCE_PLANKS
     TEX_CONFIG REPEAT_FIT
@@ -58,8 +56,8 @@ BEGIN
     TEXTURE WINDOW
     TEX_CONFIG REPEAT_FIT
 
-    # -- DECOR: STACK OF BOOKS --
-    # Book 1 (Bottom)
+    # -- BOOKS --
+    # Bottom Book
     OBJECT -0.3 0.45 0.15
     ROTATION 10.0 0 1 0
     BEGIN
@@ -76,7 +74,7 @@ BEGIN
         TEX_CONFIG REPEAT_FIT
     END
 
-    # Book 2 (Top) - Rotated differently
+    # Top Book
     OBJECT -0.3 0.48 0.15
     ROTATION 25.0 0 1 0
     BEGIN
@@ -85,7 +83,7 @@ BEGIN
         TEX_CONFIG REPEAT_FIT
     END
 
-    # -- DECOR: REMOTE CONTROL --
+    # -- REMOTE --
     OBJECT 0.2 0.44 -0.1
     ROTATION -15.0 0 1 0
     BEGIN
@@ -94,7 +92,7 @@ BEGIN
         TEX_CONFIG REPEAT_FIT
     END
 
-    # -- DECOR: COASTER --
+    # -- COASTER --
     OBJECT 0.4 0.44 0.2
     ROTATION 0 0 0 0
     BEGIN

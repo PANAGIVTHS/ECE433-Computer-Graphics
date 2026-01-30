@@ -1,5 +1,4 @@
-# --- MODERN WASHING MACHINE (Fixed Geometry) ---
-# Positioned at (12, 0, 8)
+# -- WASHING MACHINE --
 OBJECT 7.1 0.3 -3
 GRAVITY false
 ROTATION -90 0 1 0
@@ -11,7 +10,6 @@ BEGIN
     TEX_CONFIG REPEAT_FIT
 
     # Top Lid
-    # Bottom edge of lid is at Y = 1.025
     CUBOID 0.0 1.05 0.0 0.8 0.05 0.7
     TEXTURE BONE_SIDE
     TEX_CONFIG REPEAT_FIT
@@ -31,7 +29,7 @@ BEGIN
     TEXTURE BONE_SIDE
     TEX_CONFIG REPEAT_FIT
 
-    # -- INTERNAL DRUM --
+    # -- DRUM --
     OBJECT 0.0 0.5 0.0
     ROTATION 0 0 0 0
     BEGIN
@@ -56,14 +54,14 @@ BEGIN
         TEX_CONFIG REPEAT_FIT
     END
 
-    # -- FRONT PANEL (Fixed Gaps) --
+    # -- PANEL --
     
-    # Bottom Strip (Top edge is at Y=0.30)
+    # Bottom Strip
     CUBOID 0.0 0.2 0.325 0.7 0.2 0.05
     TEXTURE BONE_SIDE
     TEX_CONFIG REPEAT_FIT
 
-    # Top Strip (Bottom edge is at Y=0.75, Top edge at Y=0.85)
+    # Top Strip
     CUBOID 0.0 0.8 0.325 0.7 0.1 0.05
     TEXTURE BONE_SIDE
     TEX_CONFIG REPEAT_FIT
@@ -78,14 +76,11 @@ BEGIN
     TEXTURE BONE_SIDE
     TEX_CONFIG REPEAT_FIT
 
-    # -- DETERGENT DRAWER --
-    # FIX: Moved Z to 0.45 to draw it outwards
-    # FIX: Moved Y to 0.9375 to align with new panel height
+    # -- DRAWER --
     OBJECT -0.24 0.9375 0.45
     ROTATION 0 0 0 0
     BEGIN
         # Faceplate
-        # FIX: Height increased to 0.175 to reach Top Lid
         CUBOID 0.0 0.0 0.0 0.22 0.175 0.02
         TEXTURE BONE_SIDE
         TEX_CONFIG REPEAT_FIT
@@ -99,37 +94,33 @@ BEGIN
         TEX_CONFIG REPEAT_FIT
     END
 
-    # -- CONTROL PANEL --
-    # FIX: Width reduced to 0.46 to prevent overlap with right wall
-    # FIX: Height increased to 0.175 and Y moved to 0.9375 to close gap with Top Lid
+    # -- CONTROLS --
     CUBOID 0.12 0.9375 0.325 0.46 0.175 0.05
     TEXTURE BONE_SIDE
     TEX_CONFIG REPEAT_FIT
 
-    # Digital Display
-    # FIX: Y moved to 0.9375 to match panel
+    # Display
     OBJECT 0.2 0.9375 0.355
     ROTATION 0 0 0 0
     BEGIN
         CUBOID 0.0 0.0 0.0 0.25 0.08 0.01
         TEXTURE BLACK_WOOL
         TEX_CONFIG REPEAT_FIT
-        # Green "On" Light
+        # Light
         CUBOID 0.1 0.0 0.005 0.02 0.01 0.01
         TEXTURE WINDOW
     END
 
-    # Rotary Dial
-    # FIX: Y moved to 0.9375 to match panel
+    # Dial
     OBJECT -0.05 0.9375 0.36
     ROTATION 0 0 1 0
     BEGIN
-        # Knob Base
+        # Base
         CUBOID 0.0 0.0 0.0 0.06 0.06 0.02
         TEXTURE STONE
         TEX_CONFIG REPEAT_FIT
         
-        # Selector Line
+        # Line
         OBJECT 0.0 0.0 0.015
         ROTATION -35.0 0 0 1
         BEGIN
@@ -139,8 +130,7 @@ BEGIN
         END
     END
 
-    # -- THE DOOR --
-    # Ajar by 15 degrees
+    # -- DOOR --
     OBJECT -0.35 0.5 0.38
     ROTATION -20.0 0 1 0
     BEGIN
@@ -152,6 +142,7 @@ BEGIN
         CUBOID 0.55 0.0 0.0 0.1 0.6 0.04
         TEXTURE STONE
         TEX_CONFIG REPEAT_FIT
+    
         # Top Rim
         CUBOID 0.3 0.25 0.0 0.4 0.1 0.04
         TEXTURE STONE
@@ -161,7 +152,7 @@ BEGIN
         TEXTURE STONE
         TEX_CONFIG REPEAT_FIT
 
-        # Glass Window
+        # Window
         CUBOID 0.3 0.0 0.0 0.4 0.4 0.03
         TEXTURE WINDOW
         TEX_CONFIG REPEAT_FIT

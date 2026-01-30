@@ -1,11 +1,10 @@
-# --- DETAILED INTERIOR DOOR (Fixed Top Gap) ---
-# Positioned at (0, 0, 0)
+# -- INTERIOR DOOR --
 OBJECT 7.86 0.2 -4.67
 SCALE 0.65 0.85 0.8
 GRAVITY false
 ROTATION -90 0 1 0
 BEGIN
-    # -- DOOR FRAME (JAMBS) --
+    # -- DOOR FRAME --
     # Left Jamb
     CUBOID -0.45 1.05 0.0 0.05 2.1 0.15
     TEXTURE SPRUCE_PLANKS
@@ -21,7 +20,7 @@ BEGIN
     TEXTURE SPRUCE_PLANKS
     TEX_CONFIG REPEAT_FIT
 
-    # -- ARCHITRAVE / TRIM --
+    # -- DOOR TRIM --
     # Left Trim
     CUBOID -0.45 1.05 0.08 0.08 2.15 0.02
     TEXTURE SPRUCE_PLANKS
@@ -47,27 +46,25 @@ BEGIN
     TEXTURE BLACK_WOOL
     TEX_CONFIG REPEAT_FIT
 
-    # -- DOOR LEAF (Fixed Gap) --
-    # Rotated 15 degrees OPEN
+    # -- DOOR LEAF --
     OBJECT -0.4 1.025 0.0
     ROTATION -96.0 0 1 0
     BEGIN
-        # -- STRUCTURAL FRAME (Stiles & Rails) --
+        # -- STRUCTURAL FRAME --
         
-        # Left Stile (Hinge side)
+        # Left Stile
         CUBOID 0.05 0.0 0.0 0.1 2.0 0.04
         TEXTURE BONE_SIDE
         TEX_CONFIG REPEAT_FIT
         SET_SUBDIVS 2
 
-        # Right Stile (Lock side)
+        # Right Stile
         CUBOID 0.75 0.0 0.0 0.1 2.0 0.04
         TEXTURE BONE_SIDE
         TEX_CONFIG REPEAT_FIT
         SET_SUBDIVS 2
 
-        # Top Rail (FIXED)
-        # Moved UP to 0.925 so the top edge hits 1.0 (flush with stiles)
+        # Top Rail
         CUBOID 0.4 0.925 0.0 0.6 0.15 0.04
         TEXTURE BONE_SIDE
         TEX_CONFIG REPEAT_FIT
@@ -85,10 +82,9 @@ BEGIN
         TEX_CONFIG REPEAT_FIT
         SET_SUBDIVS 2
 
-        # -- RECESSED PANELS --
+        # -- DOOR PANELS --
         
-        # Top Panel (FIXED)
-        # Stretched height (0.775) and moved center up (0.4625) to meet the new Top Rail
+        # Top Panel
         CUBOID 0.4 0.4625 0.0 0.6 0.775 0.015
         TEXTURE BONE_SIDE
         TEX_CONFIG REPEAT_FIT
@@ -114,7 +110,7 @@ BEGIN
             TEXTURE BLACK_WOOL
             TEX_CONFIG REPEAT_FIT
 
-            # Lever (Tilted)
+            # Lever
             OBJECT 0.0 0.0 0.04
             ROTATION -5.0 0 0 1
             BEGIN
@@ -128,7 +124,7 @@ BEGIN
         OBJECT 0.73 0.0 -0.04
         ROTATION 0 1 0 0
         BEGIN
-             # Base Plate
+            # Base Plate
             CUBOID 0.0 0.0 0.0 0.04 0.12 0.01
             TEXTURE BLACK_WOOL
             TEX_CONFIG REPEAT_FIT

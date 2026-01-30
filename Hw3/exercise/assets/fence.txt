@@ -1,89 +1,72 @@
-# --- MODERN COMPLICATED BACKYARD FENCE SECTION ---
-# A realistic 3.2m section with stone pillars, mixed wood shadowbox paneling, and lighting.
-# Position defaults to origin (0,0,0) - Adjust as needed.
-
+# -- FENCE SECTION --
 OBJECT 0 0 0
 GRAVITY false
 ROTATION 0 0 0 0
 BEGIN
-    # ==========================
-    # LEFT PILLAR CONSTRUCTION
-    # ==========================
+    # -- LEFT PILLAR --
     
-    # -- Core Pillar Body --
-    # 2m tall, 0.4m wide stone structure
+    # Core Body
     CUBOID -1.6 1.0 0.0 0.4 2.0 0.4
     TEXTURE STONE
     TEX_CONFIG REPEAT_FIT
 
-    # -- Decorative Base Trim --
-    # Slightly wider at the bottom for stability/realism
+    # Base Trim
     CUBOID -1.6 0.1 0.0 0.5 0.2 0.5
     TEXTURE STONE
     TEX_CONFIG REPEAT_FIT
 
-    # -- Pillar Capstone (Lower) --
-    # Overhangs the main body
+    # Lower Cap
     CUBOID -1.6 2.05 0.0 0.5 0.1 0.5
     TEXTURE STONE
     TEX_CONFIG REPEAT_FIT
 
-    # -- Pillar Capstone (Upper Detail) --
-    # Uses BONE_SIDE for a clean, modern concrete/white accent
+    # Upper Cap
     CUBOID -1.6 2.15 0.0 0.4 0.1 0.4
     TEXTURE BONE_SIDE
     TEX_CONFIG REPEAT_FIT
 
-    # ==========================
-    # RIGHT PILLAR CONSTRUCTION
-    # ==========================
+    # -- RIGHT PILLAR --
     
-    # -- Core Pillar Body --
+    # Core Body
     CUBOID 1.6 1.0 0.0 0.4 2.0 0.4
     TEXTURE STONE
     TEX_CONFIG REPEAT_FIT
 
-    # -- Decorative Base Trim --
+    # Base Trim
     CUBOID 1.6 0.1 0.0 0.5 0.2 0.5
     TEXTURE STONE
     TEX_CONFIG REPEAT_FIT
 
-    # -- Pillar Capstone (Lower) --
+    # Lower Cap
     CUBOID 1.6 2.05 0.0 0.5 0.1 0.5
     TEXTURE STONE
     TEX_CONFIG REPEAT_FIT
 
-    # -- Pillar Capstone (Upper Detail) --
+    # Upper Cap
     CUBOID 1.6 2.15 0.0 0.4 0.1 0.4
     TEXTURE BONE_SIDE
     TEX_CONFIG REPEAT_FIT
 
-    # ==========================
-    # CENTRAL FENCE PANEL
-    # ==========================
+    # -- FENCE PANEL --
 
-    # -- Iron Frame (Top Rail) --
-    # Connects the two pillars
+    # Top Rail
     CUBOID 0.0 1.9 0.0 2.8 0.1 0.15
     TEXTURE IRON
     TEX_CONFIG REPEAT_FIT
 
-    # -- Iron Frame (Bottom Rail) --
+    # Bottom Rail
     CUBOID 0.0 0.1 0.0 2.8 0.1 0.15
     TEXTURE IRON
     TEX_CONFIG REPEAT_FIT
 
-    # -- Central Support Post --
-    # Adds structural realism in the center of the span
+    # Support Post
     CUBOID 0.0 1.0 0.0 0.1 1.8 0.1
     TEXTURE IRON
     TEX_CONFIG REPEAT_FIT
 
-    # -- FRONT SLATS (Spruce) --
-    # Horizontal slats facing the "public" side
-    # Spaced to allow the back slats to be visible through gaps (Shadowbox)
+    # -- FRONT SLATS --
     
-    # Slat 1 (Bottom)
+    # Bottom Slat
     CUBOID 0.0 0.3 0.06 2.7 0.15 0.02
     TEXTURE SPRUCE_PLANKS
     TEX_CONFIG REPEAT_FIT
@@ -108,14 +91,12 @@ BEGIN
     TEXTURE SPRUCE_PLANKS
     TEX_CONFIG REPEAT_FIT
     
-    # Slat 6 (Top)
+    # Top Slat
     CUBOID 0.0 1.8 0.06 2.7 0.15 0.02
     TEXTURE SPRUCE_PLANKS
     TEX_CONFIG REPEAT_FIT
 
-    # -- BACK SLATS (Oak) --
-    # Offset vertically to cover the gaps of the front slats
-    # Using WOOD (Oak) creates a subtle modern two-tone effect
+    # -- BACK SLATS --
     
     # Slat 1
     CUBOID 0.0 0.45 -0.06 2.7 0.15 0.02
@@ -142,45 +123,43 @@ BEGIN
     TEXTURE WOOD
     TEX_CONFIG REPEAT_FIT
 
-    # ==========================
-    # INTEGRATED LIGHTING
-    # ==========================
+    # -- LIGHTING --
 
-    # -- Left Pillar Lantern --
+    # Left Lantern
     OBJECT -1.6 2.4 0.0
     ROTATION 0 0 0 0
     BEGIN
-        # Mounting Stem
+        # Stem
         CUBOID 0.0 -0.2 0.0 0.05 0.15 0.05
         TEXTURE IRON
         TEX_CONFIG REPEAT_FIT
         
-        # Lantern Housing
+        # Housing
         CUBOID 0.0 0.0 0.0 0.2 0.3 0.2
         TEXTURE IRON
         TEX_CONFIG REPEAT_FIT
         
-        # Light Diffuser (Using BONE_SIDE as white substitute)
+        # Diffuser
         CUBOID 0.0 0.0 0.0 0.15 0.25 0.15
         TEXTURE BONE_SIDE
         TEX_CONFIG REPEAT_FIT
     END
 
-    # -- Right Pillar Lantern --
+    # Right Lantern
     OBJECT 1.6 2.4 0.0
     ROTATION 0 0 0 0
     BEGIN
-        # Mounting Stem
+        # Stem
         CUBOID 0.0 -0.2 0.0 0.05 0.15 0.05
         TEXTURE IRON
         TEX_CONFIG REPEAT_FIT
         
-        # Lantern Housing
+        # Housing
         CUBOID 0.0 0.0 0.0 0.2 0.3 0.2
         TEXTURE IRON
         TEX_CONFIG REPEAT_FIT
         
-        # Light Diffuser
+        # Diffuser
         CUBOID 0.0 0.0 0.0 0.15 0.25 0.15
         TEXTURE BONE_SIDE
         TEX_CONFIG REPEAT_FIT

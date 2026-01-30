@@ -1,10 +1,9 @@
-# --- HEIRLOOM OAK WARDROBE (Triangular Hangers) ---
-# Positioned in scene
+# -- WARDROBE --
 OBJECT 0 0 0
 GRAVITY false
 BEGIN
-    # -- THE CARCASS --
-    # Plinth Base
+    # -- CARCASS --
+    # Base
     CUBOID 0.0 0.05 0.0 1.6 0.1 0.65
     TEXTURE SPRUCE_PLANKS
     TEX_CONFIG REPEAT_FIT
@@ -22,15 +21,15 @@ BEGIN
     CUBOID 0.0 2.05 0.0 1.5 0.05 0.55
     TEXTURE OAK_PLANKS
 
-    # -- CROWN MOLDING --
+    # -- MOLDING --
     CUBOID 0.0 2.1 0.0 1.65 0.05 0.65
     TEXTURE SPRUCE_PLANKS
     CUBOID 0.0 2.15 0.0 1.7 0.05 0.7
     TEXTURE SPRUCE_PLANKS
 
-    # -- THE DOORS (Wide Open) --
+    # -- DOORS --
     
-    # Left Door (110 degrees open)
+    # Left Door
     OBJECT -0.775 1.05 0.3
     ROTATION -100.0 0 1 0
     BEGIN
@@ -42,7 +41,7 @@ BEGIN
         TEXTURE GOLD_BLOCK
     END
 
-    # Right Door (-110 degrees open)
+    # Right Door
     OBJECT 0.775 1.05 0.3
     ROTATION 0.0 0 1 0
     BEGIN
@@ -54,61 +53,56 @@ BEGIN
         TEXTURE GOLD_BLOCK
     END
 
-    # -- INTERIOR RAIL --
+    # -- RAIL --
     CUBOID 0.0 1.85 0.0 1.5 0.03 0.03
     TEXTURE IRON
 
-    # -- HANGER 1 (Triangular Design) --
-    # Rotated randomly on Y (vertical axis) to sit on rail
+    # -- HANGER 1 --
     OBJECT -0.5 1.8 0.0
     ROTATION 20.0 0 1 0
     BEGIN
-        # 1. The Hook (Gold)
+        # Hook
         OBJECT 0.0 0.12 0.0
         BEGIN
             CUBOID 0.0 0.0 0.0 0.01 0.12 0.01
             TEXTURE GOLD_BLOCK
         END
         
-        # 2. Central Joinery Plate (Gold)
+        # Plate
         CUBOID 0.0 0.02 0.0 0.06 0.04 0.04
         TEXTURE GOLD_BLOCK
 
-        # 3. Left Shoulder (Rotated Z for Triangle)
+        # Left Shoulder
         OBJECT 0.0 0.0 0.0
         ROTATION 25.0 0 0 1
         BEGIN
-            # The wooden arm sloping down-left
             CUBOID -0.15 -0.02 0.0 0.3 0.04 0.04
             TEXTURE SPRUCE_PLANKS
         END
 
-        # 4. Right Shoulder (Rotated -Z for Triangle)
+        # Right Shoulder
         OBJECT 0.0 0.0 0.0
         ROTATION -25.0 0 0 1
         BEGIN
-            # The wooden arm sloping down-right
             CUBOID 0.15 -0.02 0.0 0.3 0.04 0.04
             TEXTURE SPRUCE_PLANKS
         END
 
-        # 5. Bottom Trouser Bar (Completes the Triangle)
-        # Positioned lower to meet the arm tips
+        # Bottom Bar
         OBJECT 0.0 -0.12 0.0
         BEGIN
-            # The Wood Bar
             CUBOID 0.0 0.0 0.0 0.5 0.02 0.02
             TEXTURE SPRUCE_PLANKS
-            # Metal Clip Left
+            # Left Clip
             CUBOID -0.15 -0.03 0.0 0.02 0.06 0.01
             TEXTURE IRON
-            # Metal Clip Right
+            # Right Clip
             CUBOID 0.15 -0.03 0.0 0.02 0.06 0.01
             TEXTURE IRON
         END
     END
 
-    # -- HANGER 2 (Triangular Design) --
+    # -- HANGER 2 --
     OBJECT 0.0 1.8 0.0
     ROTATION -15.0 0 1 0
     BEGIN
@@ -121,14 +115,14 @@ BEGIN
         # Plate
         CUBOID 0.0 0.02 0.0 0.06 0.04 0.04
         TEXTURE GOLD_BLOCK
-        # Left Arm (Slope)
+        # Left Shoulder
         OBJECT 0.0 0.0 0.0
         ROTATION 25.0 0 0 1
         BEGIN
             CUBOID -0.15 -0.02 0.0 0.3 0.04 0.04
             TEXTURE SPRUCE_PLANKS
         END
-        # Right Arm (Slope)
+        # Right Shoulder
         OBJECT 0.0 0.0 0.0
         ROTATION -25.0 0 0 1
         BEGIN
@@ -147,7 +141,7 @@ BEGIN
         END
     END
 
-    # -- HANGER 3 (Triangular Design) --
+    # -- HANGER 3 --
     OBJECT 0.5 1.8 0.0
     ROTATION 35.0 0 1 0
     BEGIN
@@ -160,14 +154,14 @@ BEGIN
         # Plate
         CUBOID 0.0 0.02 0.0 0.06 0.04 0.04
         TEXTURE GOLD_BLOCK
-        # Left Arm (Slope)
+        # Left Shoulder
         OBJECT 0.0 0.0 0.0
         ROTATION 25.0 0 0 1
         BEGIN
             CUBOID -0.15 -0.02 0.0 0.3 0.04 0.04
             TEXTURE SPRUCE_PLANKS
         END
-        # Right Arm (Slope)
+        # Right Shoulder
         OBJECT 0.0 0.0 0.0
         ROTATION -25.0 0 0 1
         BEGIN

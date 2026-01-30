@@ -1,68 +1,53 @@
-# --- BACKYARD FAUCET ---
-# A realistic industrial faucet with a stone base and iron piping.
-# Position defaults to origin (0,0,0).
-
+# -- FAUCET --
 OBJECT 2.3 -0.3 -7.0
 GRAVITY false
 ROTATION -90 0 1 0
 BEGIN
-    # ==========================
-    # CONCRETE BASE PAD
-    # ==========================
-    # A small slab to keep it off the mud
+    # -- BASE --
     CUBOID 0.0 0.05 0.0 0.4 0.1 0.4
     TEXTURE STONE
     TEX_CONFIG REPEAT_FIT
 
-    # ==========================
-    # VERTICAL STANDPIPE
-    # ==========================
-    # The main water supply pipe coming up
+    # -- PIPE --
     CUBOID 0.0 0.55 0.0 0.08 0.9 0.08
     TEXTURE IRON
     TEX_CONFIG REPEAT_FIT
 
-    # Pipe Joint/Coupling (Decoration)
+    # Joint
     CUBOID 0.0 0.3 0.0 0.1 0.15 0.1
     TEXTURE IRON
     TEX_CONFIG REPEAT_FIT
 
-    # ==========================
-    # FAUCET BODY (VALVE)
-    # ==========================
-    # The complex junction box at the top
+    # -- VALVE --
     OBJECT 0.0 1.05 0.0
     ROTATION 0 0 0 0
     BEGIN
-        # Main Chamber
+        # Chamber
         CUBOID 0.0 0.0 0.0 0.12 0.12 0.12
         TEXTURE IRON
         TEX_CONFIG REPEAT_FIT
 
-        # Back-flow Preventer (Bulky section on top)
+        # Preventer
         CUBOID 0.0 0.1 0.0 0.1 0.08 0.1
         TEXTURE IRON
         TEX_CONFIG REPEAT_FIT
         
-        # Hex Nut Detail (rotated slightly by eye if needed, here just a block)
+        # Nut
         CUBOID 0.0 0.15 0.0 0.06 0.04 0.06
         TEXTURE IRON
         TEX_CONFIG REPEAT_FIT
     END
 
-    # ==========================
-    # SPOUT
-    # ==========================
-    # Angled pipe sticking out
+    # -- SPOUT --
     OBJECT 0.0 1.05 0.15
     ROTATION -15.0 1 0 0
     BEGIN
-        # Horizontal-ish section
+        # Horizontal
         CUBOID 0.0 0.0 0.0 0.06 0.06 0.2
         TEXTURE IRON
         TEX_CONFIG REPEAT_FIT
         
-        # Downward tip
+        # Tip
         OBJECT 0.0 -0.05 0.15
         ROTATION 75.0 1 0 0
         BEGIN
@@ -72,10 +57,7 @@ BEGIN
         END
     END
 
-    # ==========================
-    # VALVE HANDLE (WHEEL)
-    # ==========================
-    # A "cross" style handle on top
+    # -- HANDLE --
     OBJECT 0.0 1.2 0.0
     ROTATION 0 0 0 0
     BEGIN
@@ -84,12 +66,12 @@ BEGIN
         TEXTURE IRON
         TEX_CONFIG REPEAT_FIT
 
-        # Cross Bar 1 (Using BLOCK_SIDE for visibility/accent)
+        # Cross Bar
         CUBOID 0.0 0.05 0.0 0.25 0.03 0.03
         TEXTURE RED_WOOL
         TEX_CONFIG REPEAT_FIT
 
-        # Cross Bar 2
+        # Cross Bar
         OBJECT 0.0 0.05 0.0
         ROTATION 90.0 0 1 0
         BEGIN

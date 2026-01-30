@@ -1,5 +1,4 @@
-# --- RUSTIC WOODEN CHAIR (Square Fit Cushion) ---
-# Positioned at (2, 0, 8)
+# -- WOODEN CHAIR --
 OBJECT 0 0 0
 GRAVITY false
 BEGIN
@@ -14,25 +13,22 @@ BEGIN
     TEXTURE WOOD
     TEX_CONFIG REPEAT_FIT
 
-    # Back Left (Post)
+    # Back Left
     CUBOID -0.22 0.47 -0.22 0.05 0.95 0.05
     TEXTURE WOOD
     TEX_CONFIG REPEAT_FIT
 
-    # Back Right (Post)
+    # Back Right
     CUBOID 0.22 0.47 -0.22 0.05 0.95 0.05
     TEXTURE WOOD
     TEX_CONFIG REPEAT_FIT
 
     # -- SEAT FRAME --
-    # Top of frame is at Y = 0.42 + 0.025 = 0.445
     CUBOID 0.0 0.422 0.0 0.5 0.05 0.5
     TEXTURE WOOD
     TEX_CONFIG REPEAT_FIT
 
-    # -- CUSHION (Square, Smaller, Centered) --
-    # Y Position: Frame Top (0.445) + Half Cushion Height (0.04) = 0.485
-    # Size: 0.35 ensures it fits inside the legs (which are at 0.195 inner edge)
+    # -- CUSHION --
     OBJECT 0.0 0.455 0.03
     ROTATION 0.0 0 1 0
     BEGIN
@@ -41,8 +37,7 @@ BEGIN
         TEX_CONFIG REPEAT_FIT
     END
 
-    # -- WICKER BACKREST DETAIL --
-    # Tilted back slightly (5 degrees)
+    # -- BACKREST --
     OBJECT 0.0 0.7 -0.22
     ROTATION -5.0 1 0 0
     BEGIN
@@ -56,13 +51,13 @@ BEGIN
         TEXTURE WOOD
         TEX_CONFIG REPEAT_FIT
 
-        # -- VERTICAL SLATS (Layer 1) --
-        # Slat 1 (Left)
+        # -- VERTICAL SLATS --
+        # Left Slat
         CUBOID -0.12 0.0 0.0 0.02 0.45 0.01
         TEXTURE WOOD
         TEX_CONFIG REPEAT_FIT
         
-        # Slat 2 (Center) - Rotated slightly
+        # Center Slat
         OBJECT 0.0 0.0 0.0
         ROTATION 2.0 0 0 1
         BEGIN
@@ -71,18 +66,18 @@ BEGIN
             TEX_CONFIG REPEAT_FIT
         END
 
-        # Slat 3 (Right)
+        # Right Slat
         CUBOID 0.12 0.0 0.0 0.02 0.45 0.01
         TEXTURE WOOD
         TEX_CONFIG REPEAT_FIT
 
-        # -- HORIZONTAL SLATS (Layer 2) --
-        # Slat A (Top)
+        # -- HORIZONTAL SLATS --
+        # Top Slat
         CUBOID 0.0 0.12 0.015 0.4 0.02 0.01
         TEXTURE WOOD
         TEX_CONFIG REPEAT_FIT
 
-        # Slat B (Middle) - Rotated slightly
+        # Middle Slat
         OBJECT 0.0 0.0 0.015
         ROTATION 3.0 1 0 0
         BEGIN
@@ -91,7 +86,7 @@ BEGIN
             TEX_CONFIG REPEAT_FIT
         END
 
-        # Slat C (Bottom)
+        # Bottom Slat
         CUBOID 0.0 -0.12 0.015 0.4 0.02 0.01
         TEXTURE WOOD
         TEX_CONFIG REPEAT_FIT

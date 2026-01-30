@@ -1,5 +1,4 @@
-# --- DETAILED DINING TABLE (Fixed Z-Fighting) ---
-# Positioned at (8, 0, 8)
+# -- TABLE --
 OBJECT 4.5 0.3 1
 GRAVITY false
 ROTATION 90 0 1 0
@@ -21,7 +20,7 @@ BEGIN
     TEXTURE SPRUCE_PLANKS
     TEX_CONFIG REPEAT_FIT
 
-    # -- STRUCTURAL BEAMS --
+    # -- BEAMS --
     CUBOID -0.8 0.15 0.0 0.05 0.08 0.6
     TEXTURE SPRUCE_PLANKS
     TEX_CONFIG REPEAT_FIT
@@ -34,20 +33,18 @@ BEGIN
     TEXTURE SPRUCE_PLANKS
     TEX_CONFIG REPEAT_FIT
 
-    # -- APRON (WIDENED) --
-    # Increased to 1.71 x 0.81 to overlap leg edges and stop z-fighting
+    # -- APRON --
     CUBOID 0.0 0.65 0.0 1.71 0.1 0.81
     TEXTURE SPRUCE_PLANKS
     TEX_CONFIG REPEAT_FIT
 
-    # -- TABLETOP --
-    # Top surface is at Y = 0.75
+    # -- TOP --
     CUBOID 0.0 0.725 0.0 2.0 0.05 1.0
     TEXTURE BONE_SIDE
     TEX_CONFIG REPEAT_FIT
     SET_SUBDIVS 2
 
-    # -- DECOR: MINIMALIST RUNNER --
+    # -- RUNNER --
     OBJECT 0.0 0.755 0.0
     ROTATION 1.0 0 1 0
     BEGIN
@@ -56,16 +53,16 @@ BEGIN
         TEX_CONFIG REPEAT_FIT
     END
 
-    # -- CENTERPIECE: CANDLE TRIO --
+    # -- CANDLES --
     OBJECT 0.0 0.765 0.0
     ROTATION 5.0 0 1 0
     BEGIN
-        # Wooden Tray
+        # Tray
         CUBOID 0.0 0.0 0.0 0.4 0.02 0.2
         TEXTURE WOOD
         TEX_CONFIG REPEAT_FIT
 
-        # Candle 1 (Tall)
+        # Tall Candle
         OBJECT -0.1 0.1 0.0
         ROTATION 0 0 0 0
         BEGIN
@@ -77,7 +74,7 @@ BEGIN
             TEXTURE BLACK_WOOL
         END
 
-        # Candle 2 (Medium)
+        # Medium Candle
         OBJECT 0.08 0.07 0.05
         ROTATION 0 0 0 0
         BEGIN
@@ -89,7 +86,7 @@ BEGIN
             TEXTURE BLACK_WOOL
         END
 
-        # Candle 3 (Short/Fat)
+        # Short Candle
         OBJECT 0.1 0.04 -0.05
         ROTATION 0 0 0 0
         BEGIN
@@ -102,16 +99,16 @@ BEGIN
         END
     END
 
-    # -- SETTING 1 (Left - Neat) --
+    # -- SETTING 1 --
     OBJECT -0.8 0.76 0.0
     ROTATION 90 0 1 0
     BEGIN
-        # 1. Placemat (Black)
+        # Placemat
         CUBOID 0.0 0.0 0.0 0.45 0.01 0.35
         TEXTURE BLACK_WOOL
         TEX_CONFIG REPEAT_FIT
 
-        # 2. CHOPSTICKS
+        # Chopsticks
         # Stick 1
         OBJECT -0.28 0.015 0.0
         ROTATION 0 0 0 0
@@ -129,11 +126,11 @@ BEGIN
             TEX_CONFIG REPEAT_FIT
         END
 
-        # 3. COMPLICATED BOWL (Empty/Hollow)
+        # Bowl
         OBJECT 0.05 0.015 0.0
         ROTATION 0 0 0 0
         BEGIN
-            # Bowl Base
+            # Base
             CUBOID 0.0 0.0 0.0 0.14 0.02 0.14
             TEXTURE STONE
             TEX_CONFIG REPEAT_FIT
@@ -156,7 +153,7 @@ BEGIN
             TEX_CONFIG REPEAT_FIT
         END
 
-        # 4. Wine Glass
+        # Glass
         OBJECT 0.22 0.0 0.25
         ROTATION 0 0 0 0
         BEGIN
@@ -169,16 +166,16 @@ BEGIN
         END
     END
 
-    # -- SETTING 2 (Right - Imperfect) --
+    # -- SETTING 2 --
     OBJECT 0.8 0.76 0.0
     ROTATION -90.0 0 1 0
     BEGIN
-        # 1. Placemat
+        # Placemat
         CUBOID 0.0 0.0 0.0 0.45 0.01 0.35
         TEXTURE BLACK_WOOL
         TEX_CONFIG REPEAT_FIT
 
-        # 2. CHOPSTICKS
+        # Chopsticks
         # Stick 1
         OBJECT -0.28 0.015 0.0
         ROTATION 2.0 0 1 0
@@ -196,11 +193,11 @@ BEGIN
             TEX_CONFIG REPEAT_FIT
         END
 
-        # 3. COMPLICATED BOWL
+        # Bowl
         OBJECT 0.05 0.015 0.0
         ROTATION 10.0 0 1 0
         BEGIN
-            # Bowl Base
+            # Base
             CUBOID 0.0 0.0 0.0 0.14 0.02 0.14
             TEXTURE STONE
             TEX_CONFIG REPEAT_FIT
@@ -220,7 +217,7 @@ BEGIN
             TEX_CONFIG REPEAT_FIT
         END
 
-        # 4. Wine Glass
+        # Glass
         OBJECT 0.22 0.0 0.25
         ROTATION 0 0 0 0
         BEGIN

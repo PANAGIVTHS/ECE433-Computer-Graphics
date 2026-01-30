@@ -1,16 +1,15 @@
-# --- LUXURY DROP-IN BATHTUB (Complex Plumbing) ---
-# Positioned relative to the scene
+# -- LUXURY BATHTUB --
 OBJECT 3.9 0.3 -1.7
 GRAVITY false
 ROTATION 0 0 0 0
 BEGIN
-    # -- THE TUB HULL --
-    # 1. The Floor Base
+    # -- TUB HULL --
+    # Floor Base
     CUBOID 0.0 0.025 0.0 1.4 0.05 0.5
     TEXTURE QUARTZ
     TEX_CONFIG REPEAT_FIT
 
-    # 2. Lower Wall Ring
+    # -- LOWER WALLS --
     OBJECT 0.0 0.15 0.0
     ROTATION 0 0 0 0
     BEGIN
@@ -24,7 +23,7 @@ BEGIN
         TEXTURE QUARTZ
     END
 
-    # 3. Upper Wall Ring
+    # -- UPPER WALLS --
     OBJECT 0.0 0.375 0.0
     ROTATION 0 0 0 0
     BEGIN
@@ -36,7 +35,7 @@ BEGIN
         TEXTURE QUARTZ
     END
 
-    # 4. The Backrest Slope
+    # -- BACKREST SLOPE --
     OBJECT -0.8 0.375 0.0
     ROTATION 0 0 0 0
     BEGIN
@@ -46,7 +45,7 @@ BEGIN
         TEXTURE QUARTZ
     END
 
-    # 5. The Rolled Rim
+    # -- ROLLED RIM --
     OBJECT 0.0 0.525 0.0
     ROTATION 0 0 0 0
     BEGIN
@@ -60,17 +59,15 @@ BEGIN
         TEXTURE QUARTZ
     END
 
-    # -- COMPLEX PLUMBING ASSEMBLY --
-    # Located at foot end (X > 0)
+    # -- PLUMBING ASSEMBLY --
     OBJECT 0.825 0.55 0.0
     SCALE 1 0.8 1
     ROTATION 0 0 0 0
     BEGIN
-        # -- BASE PILLARS --
-        # Left Pillar (Cold)
+        # -- LEFT PILLAR --
         OBJECT 0.0 0.0 0.15
         BEGIN
-            # Decorative Flange at base
+            # Base Flange
             CUBOID 0.0 0.0 0.0 0.06 0.02 0.06
             TEXTURE IRON
             # Vertical Riser
@@ -79,7 +76,7 @@ BEGIN
             # Handle Hub
             CUBOID 0.0 0.21 0.0 0.04 0.02 0.04
             TEXTURE IRON
-            # Cross Handle (4 Prongs)
+            # Cross Handle
             OBJECT 0.0 0.23 0.0
             ROTATION 0 45 0 0
             BEGIN
@@ -90,10 +87,10 @@ BEGIN
             END
         END
 
-        # Right Pillar (Hot)
+        # -- RIGHT PILLAR --
         OBJECT 0.0 0.0 -0.15
         BEGIN
-            # Decorative Flange at base
+            # Base Flange
             CUBOID 0.0 0.0 0.0 0.06 0.02 0.06
             TEXTURE IRON
             # Vertical Riser
@@ -102,7 +99,7 @@ BEGIN
             # Handle Hub
             CUBOID 0.0 0.21 0.0 0.04 0.02 0.04
             TEXTURE IRON
-            # Cross Handle (4 Prongs)
+            # Cross Handle
             OBJECT 0.0 0.23 0.0
             ROTATION 0 45 0 0
             BEGIN
@@ -113,30 +110,29 @@ BEGIN
             END
         END
 
-        # -- CENTRAL BODY --
-        # The Bridge connecting pillars
+        # -- BRIDGE CONNECTOR --
         CUBOID 0.0 0.12 0.0 0.04 0.04 0.35
         TEXTURE IRON
 
-        # -- SWAN NECK SPOUT --
+        # -- SWAN SPOUT --
         OBJECT -0.02 0.12 0.0
         BEGIN
-            # 1. Base Riser
+            # Base Riser
             CUBOID 0.0 0.06 0.0 0.04 0.12 0.04
             TEXTURE IRON
-            # 2. Lower Arch (Angled Up/Forward)
+            # Lower Arch
             OBJECT -0.04 0.14 0.0
             BEGIN
                CUBOID 0.0 0.0 0.0 0.06 0.04 0.04
                TEXTURE IRON
             END
-            # 3. Upper Arch (Forward)
+            # Upper Arch
             OBJECT -0.09 0.16 0.0
             BEGIN
                CUBOID 0.0 0.0 0.0 0.06 0.035 0.035
                TEXTURE IRON
             END
-            # 4. Spout Tip (Vertical Drop)
+            # Spout Tip
             OBJECT -0.13 0.13 0.0
             BEGIN
                CUBOID 0.0 0.0 0.0 0.035 0.05 0.035
@@ -144,15 +140,13 @@ BEGIN
             END
         END
 
-        # -- TELEPHONE HAND SHOWER --
-        # Resting on a cradle above the bridge
+        # -- HAND SHOWER --
         OBJECT 0.0 0.25 0.0
         BEGIN
-            # The Cradle
+            # Shower Cradle
             CUBOID 0.0 0.0 0.0 0.02 0.06 0.04
             TEXTURE IRON
-            
-            # The Hand Shower Unit (Angled)
+            # Shower Unit
             OBJECT 0.0 0.06 0.0
             ROTATION 0 0 20 0
             BEGIN
@@ -163,23 +157,20 @@ BEGIN
                 CUBOID 0.0 0.09 0.0 0.05 0.06 0.05
                 TEXTURE IRON
             END
-
-            # The Hose Loop (Simulated)
+            # -- HOSE LOOP --
             OBJECT 0.05 -0.1 0.0
             BEGIN
-                # Top loop part
+                # Top Loop
                 CUBOID 0.0 0.0 0.0 0.01 0.15 0.01
                 TEXTURE IRON
-                # Bottom loop part (Curved under bridge)
+                # Bottom Loop
                 CUBOID -0.02 -0.07 0.0 0.05 0.01 0.01
                 TEXTURE IRON
             END
         END
     END
 
-    # -- INTERIOR DETAILS --
-    
-    # Chrome Drain (Floor)
+    # -- CHROME DRAIN --
     OBJECT 0.6 0.06 0.0
     ROTATION 0 0 0 0
     BEGIN
@@ -188,12 +179,10 @@ BEGIN
         TEX_CONFIG REPEAT_FIT
     END
 
-    # Overflow Plate
-    # Simplified rotation to sit flush on X-Wall
+    # -- OVERFLOW PLATE --
     OBJECT 0.74 0.40 0.0
     ROTATION 0 0 0 0
     BEGIN
-        # Thin plate on X-axis
         CUBOID 0.0 0.0 0.0 0.01 0.08 0.08
         TEXTURE IRON
         TEX_CONFIG REPEAT_FIT

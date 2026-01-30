@@ -1,5 +1,4 @@
-# --- DETAILED IMPERFECT SOFA ---
-# Positioned at (5,0,5) - Move this where you want it
+# -- SOFA --
 OBJECT 0 0 0
 GRAVITY false
 ROTATION -90 0 1 0
@@ -18,26 +17,22 @@ BEGIN
     CUBOID 0.9 0.1 -0.4 0.15 0.2 0.15
     TEXTURE WOOD
 
-    # -- BASE FRAME --
-    # The main solid block under the cushions
+    # -- BASE --
     CUBOID 0.0 0.35 0.0 2.2 0.3 1.0
     TEXTURE GRAY_WOOL
     TEX_CONFIG REPEAT_FIT
 
-    # -- ARMREST LEFT --
-    # Imperfection: Slightly wider (0.25) than the right one
+    # -- LEFT ARM --
     CUBOID -1.15 0.65 0.1 0.25 0.6 0.9
     TEXTURE GRAY_WOOL
     TEX_CONFIG REPEAT_FIT
 
-    # -- ARMREST RIGHT --
-    # Imperfection: Slightly narrower (0.2)
+    # -- RIGHT ARM --
     CUBOID 1.15 0.65 0.1 0.2 0.6 0.9
     TEXTURE GRAY_WOOL
     TEX_CONFIG REPEAT_FIT
 
-    # -- BACKREST FRAME --
-    # Tilted slightly backwards for comfort
+    # -- BACKREST --
     OBJECT 0.0 0.5 -0.4
     ROTATION -5.0 1 0 0 
     BEGIN
@@ -46,8 +41,7 @@ BEGIN
         TEX_CONFIG REPEAT_FIT
     END
 
-    # -- SEAT CUSHION LEFT --
-    # Imperfection: Rotated slightly (1.5 deg)
+    # -- LEFT SEAT --
     OBJECT -0.5 0.6 0.15
     ROTATION 1.5 0 1 0
     BEGIN
@@ -56,8 +50,7 @@ BEGIN
         TEX_CONFIG REPEAT_FIT
     END
 
-    # -- SEAT CUSHION RIGHT --
-    # Imperfection: Rotated slightly opposite (-1.0 deg) and slightly lower (worn)
+    # -- RIGHT SEAT --
     OBJECT 0.5 0.58 0.12 
     ROTATION -1.0 0 1 0
     BEGIN
@@ -66,8 +59,7 @@ BEGIN
         TEX_CONFIG REPEAT_FIT
     END
 
-    # -- BACK CUSHION LEFT --
-    # Leaning back strongly against the frame
+    # -- LEFT BACK --
     OBJECT -0.5 0.85 -0.3
     ROTATION -12.0 1 0 0 
     BEGIN
@@ -76,8 +68,7 @@ BEGIN
         TEX_CONFIG REPEAT_FIT
     END
 
-    # -- BACK CUSHION RIGHT --
-    # Imperfection: Leaning back but also slightly twisted (1 0.1 0 axis)
+    # -- RIGHT BACK --
     OBJECT 0.5 0.85 -0.3
     ROTATION -10.0 1 0.1 0 
     BEGIN
