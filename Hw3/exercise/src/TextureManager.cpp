@@ -94,33 +94,33 @@ void TextureManager::init() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // Load textures
-    init(TextureID::IRON, "../Texture_Images/iron022.bmp");
-    init(TextureID::GRASS, "../Texture_Images/grass_block_top.bmp");
-    init(TextureID::WOOD, "../Texture_Images/oak_log.bmp");
-    init(TextureID::WINDOW, "../Texture_Images/glass.bmp", "../Texture_Images/glass_mask.bmp");
-    init(TextureID::OBSIDIAN, "../Texture_Images/obsidian.bmp");
-    init(TextureID::PORTAL, "../Texture_Images/nether_portal.bmp", "../Texture_Images/nether_portal_mask.bmp");
-    init(TextureID::LEAVES, "../Texture_Images/azalea_top.bmp");
-    init(TextureID::MYCELIUM, "../Texture_Images/mycelium_top.bmp");
-    init(TextureID::STONE, "../Texture_Images/cobblestone.bmp");
-    init(TextureID::GRAY_WOOL, "../Texture_Images/gray_wool.bmp");
-    init(TextureID::BONE_SIDE, "../Texture_Images/bone_block_side.bmp");
-    init(TextureID::BLACK_WOOL, "../Texture_Images/black_wool.bmp");
-    init(TextureID::BLUE_WOOL, "../Texture_Images/blue_wool.bmp");
-    init(TextureID::BROWN_WOOL, "../Texture_Images/brown_wool.bmp");
-    init(TextureID::GREEN_WOOL, "../Texture_Images/green_wool.bmp");
-    init(TextureID::MAGENTA_WOOL, "../Texture_Images/magenta_wool.bmp");
-    init(TextureID::ORANGE_WOOL, "../Texture_Images/orange_wool.bmp");
-    init(TextureID::RED_WOOL, "../Texture_Images/red_wool.bmp");
-    init(TextureID::WHITE_WOOL, "../Texture_Images/white_wool.bmp");
-    init(TextureID::YELLOW_WOOL, "../Texture_Images/yellow_wool.bmp");
-    init(TextureID::SPRUCE_PLANKS, "../Texture_Images/spruce_planks.bmp");
-    init(TextureID::BROWN_CONCRETE, "../Texture_Images/brown_concrete.bmp");
-    init(TextureID::POSTER_1, "../Texture_Images/your_next_line_is.bmp");
-    init(TextureID::POSTER_2, "../Texture_Images/creeper_painting.bmp");
-    init(TextureID::CAR, "../Texture_Images/car.bmp", GL_LINEAR);
-    init(TextureID::TV, "../Texture_Images/tv.bmp", GL_LINEAR);
-    init(TextureID::GOAT, "../Texture_Images/goat.bmp");
+    init(TextureID::IRON, "../textures/iron022.bmp");
+    init(TextureID::GRASS, "../textures/grass_block_top.bmp");
+    init(TextureID::WOOD, "../textures/oak_log.bmp");
+    init(TextureID::WINDOW, "../textures/glass.bmp", "../textures/glass_mask.bmp");
+    init(TextureID::OBSIDIAN, "../textures/obsidian.bmp");
+    init(TextureID::PORTAL, "../textures/nether_portal.bmp", "../textures/nether_portal_mask.bmp");
+    init(TextureID::LEAVES, "../textures/azalea_top.bmp");
+    init(TextureID::MYCELIUM, "../textures/mycelium_top.bmp");
+    init(TextureID::STONE, "../textures/cobblestone.bmp");
+    init(TextureID::GRAY_WOOL, "../textures/gray_wool.bmp");
+    init(TextureID::BONE_SIDE, "../textures/bone_block_side.bmp");
+    init(TextureID::BLACK_WOOL, "../textures/black_wool.bmp");
+    init(TextureID::BLUE_WOOL, "../textures/blue_wool.bmp");
+    init(TextureID::BROWN_WOOL, "../textures/brown_wool.bmp");
+    init(TextureID::GREEN_WOOL, "../textures/green_wool.bmp");
+    init(TextureID::MAGENTA_WOOL, "../textures/magenta_wool.bmp");
+    init(TextureID::ORANGE_WOOL, "../textures/orange_wool.bmp");
+    init(TextureID::RED_WOOL, "../textures/red_wool.bmp");
+    init(TextureID::WHITE_WOOL, "../textures/white_wool.bmp");
+    init(TextureID::YELLOW_WOOL, "../textures/yellow_wool.bmp");
+    init(TextureID::SPRUCE_PLANKS, "../textures/spruce_planks.bmp");
+    init(TextureID::BROWN_CONCRETE, "../textures/brown_concrete.bmp");
+    init(TextureID::POSTER_1, "../textures/your_next_line_is.bmp");
+    init(TextureID::POSTER_2, "../textures/creeper_painting.bmp");
+    init(TextureID::CAR, "../textures/car.bmp", GL_LINEAR);
+    init(TextureID::TV, "../textures/tv.bmp", GL_LINEAR);
+    init(TextureID::GOAT, "../textures/goat.bmp");
 
 }
 
