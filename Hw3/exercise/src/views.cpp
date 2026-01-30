@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
 
 	printf("Keyboard commands:\n");
 	printf("'p' - Toggle playback on top-right view.\n");
-	printf("'ESC' - Quit the application.\n");
+	printf("'q/ESC' - Quit the application.\n");
 	printf("'F11' - Toggle fullscreen.\n");
 
     glutMainLoop();

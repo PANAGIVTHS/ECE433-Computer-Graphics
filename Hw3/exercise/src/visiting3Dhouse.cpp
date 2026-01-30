@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
 	printf("'a' - Move left.\n");
 	printf("'s' - Move backward.\n");
 	printf("'d' - Move right.\n");
-	printf("'SPACE' - Move up.\n");
+	printf("'SPACE' - Jump/Move up.\n");
 	printf("'z' - Move down.\n");
 #ifndef MOUSE_ROTATION
 	printf("'i' - Look up.\n");
@@ -34,7 +34,9 @@ int main(int argc, char *argv[]) {
 	printf("'k' - Look down.\n");
 	printf("'l' - Look right.\n");
 #endif
-	printf("'ESC' - Quit the application.\n");
+	printf("'f' - Toggle flight mode.\n");
+	printf("'e' - Toggle camera flashlight.\n");
+	printf("'q/ESC' - Quit the application.\n");
 	printf("'F11' - Toggle fullscreen.\n");
 #ifdef MOUSE_ROTATION
 	printf("\n");
