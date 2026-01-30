@@ -168,17 +168,22 @@ Vec3<GLfloat> Object::getWorldPosition() {
 }
 
 Object* Object::setScale(Vec3<GLfloat> scale) {
+    if (this->transform.scale == scale) return this;
     this->transform.scale = scale;
+    if (staticObject && (displayList != 0)) invalidateDisplayList();
     return this;
 }
 
 Object* Object::setScale(GLfloat x, GLfloat y, GLfloat z) {
+    if (this->transform.scale == Vec3(x, y, z)) return this;
     this->transform.scale = Vec3<GLfloat>(x, y, z);
     if (staticObject && (displayList != 0)) invalidateDisplayList();
     return this;
 }
 
 Object* Object::setRotation(GLfloat angle, Vec3<GLfloat> axis) {
+    if (this->transform.angle == angle && this->transform.rotateAxis == axis) return this;
+
     this->transform.angle = angle;
     this->transform.rotateAxis = axis;
     if (staticObject && (displayList != 0)) invalidateDisplayList();
@@ -253,6 +258,7 @@ Vec3<GLfloat> Object::getPosition() const{
 }
 
 Object* Object::setPosition(Vec3<GLfloat> position) {
+    if (this->transform.position == position) return this;
     this->transform.position = position;
     if (staticObject && (displayList != 0)) invalidateDisplayList();
     return this;

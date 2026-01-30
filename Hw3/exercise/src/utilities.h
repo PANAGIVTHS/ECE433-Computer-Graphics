@@ -32,6 +32,14 @@ public:
     
     Vec3(T x = 0, T y = 0, T z = 0): x(x), y(y), z(z) {}
 
+    bool operator==(const Vec3& other) const {
+        return x == other.x && y == other.y && z == other.z;
+    }
+    
+    bool operator!=(const Vec3& other) const {
+        return !(*this == other);
+    }
+
     Vec3& normalize() {
         T length = sqrt(x*x + y*y + z*z);
         if (length == 0)
