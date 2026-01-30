@@ -68,5 +68,5 @@ views.o: views.cpp
 	$(CC) $(CFLAGS) $(INCFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(ALL) $(OBJS1) $(OBJS2) $(COMMON_OBJS)
+	rm -f $(ALL) $(OBJS1) $(OBJS2) $(COMMON_OBJS) $(TARGET1) $(TARGET2)
  
