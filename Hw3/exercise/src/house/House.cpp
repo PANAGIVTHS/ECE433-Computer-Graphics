@@ -56,6 +56,12 @@ void House::setup() {
     hallway->setPosition(hallwayPosition);
     addChildren(hallway);
 
+    Model *tv = new Model("../assets/tv.obj", Vec3(8.2f, 0.8f, -5.5f), false, {1.0f, 1.0f, 1.0f}, TextureID::TV, MaterialID::MATTE);
+    tv->setRotation(180, Vec3<GLfloat>(0.0f, 1.0f, 0.0f));
+    tv->setScale(0.17, 0.17, 0.17);
+    addChildren(tv);
+    tv->optimize();
+
     // PATHWAY
     GLfloat pathWidth = Garage::doorWidth;
     GLfloat pathLength = 16;

@@ -65,6 +65,7 @@ void GameManager::loadLevelAssets() {
     house->addChildren(AssetLoader::addAsset("../assets/poster2.txt", Vec3<GLfloat>(0.0f, 0.0f, 0.0f)));
     house->addChildren(AssetLoader::addAsset("../assets/teda.txt", Vec3<GLfloat>(0.0f, 0.0f, 0.0f)));
     house->addChildren(AssetLoader::addAsset("../assets/forest.txt", Vec3<GLfloat>(7.0f, 0.2f, 7.0f)));
+    house->addChildren(AssetLoader::addAsset("../assets/poster3.txt", Vec3<GLfloat>(0.0f, 0.0f, 0.0f)));
     Object *portal = AssetLoader::load("../assets/nether_portal.txt");
     portal->optimize();
     LightConfig config;
