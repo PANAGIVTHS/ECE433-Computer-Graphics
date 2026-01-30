@@ -350,7 +350,7 @@ void FramedWindow::addAll() {
                 TextureConfig(),
                 2
             );
-            glassPane->optimize();
+            glassPane->setStatic(true);
 
             addChildren(glassPane);
         }

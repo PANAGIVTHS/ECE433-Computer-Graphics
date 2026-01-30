@@ -35,7 +35,10 @@ Object::~Object() {
 }
 
 void Object::invalidateDisplayList() {
-    displayList = 0;
+    if (displayList != 0) {
+        glDeleteLists(displayList, 1);
+        displayList = 0;
+    }
 
     for (Object *o : children) {
         o->invalidateDisplayList();
@@ -46,12 +49,11 @@ bool Object::hasTransparency() {
     return TextureManager::isTransparent(this->texture);
 }
 
-void Object::optimize() {
-    isStatic = true;
-    
+void Object::optimize() {    
     if (displayList != 0) return;
 
     displayList = glGenLists(1);
+    
     //! Record mode objects arent displayed
     glNewList(displayList, GL_COMPILE); 
 
@@ -89,7 +91,7 @@ void Object::draw() {
     if (hidden)
         return;
 
-    if (isStatic && displayList == 0) {
+    if (staticObject && displayList == 0) {
         optimize();
     }
 
@@ -107,7 +109,7 @@ void Object::draw() {
         glScaled(transform.scale.x, transform.scale.y, transform.scale.z);
     }
 
-    if (displayList != 0) {
+    if (staticObject) {
         glCallList(displayList);
     } else {
         MaterialManager::bind(material);
@@ -171,12 +173,14 @@ Object* Object::setScale(Vec3<GLfloat> scale) {
 
 Object* Object::setScale(GLfloat x, GLfloat y, GLfloat z) {
     this->transform.scale = Vec3<GLfloat>(x, y, z);
+    if (staticObject && (displayList != 0)) invalidateDisplayList();
     return this;
 }
 
 Object* Object::setRotation(GLfloat angle, Vec3<GLfloat> axis) {
     this->transform.angle = angle;
     this->transform.rotateAxis = axis;
+    if (staticObject && (displayList != 0)) invalidateDisplayList();
     return this;
 }
 
@@ -194,6 +198,7 @@ Object* Object::setTexture(TextureID id, bool recurse) {
 
     for (Object* o : children)
         o->setTexture(id, recurse);
+    if (staticObject && (displayList != 0)) invalidateDisplayList();
     return this;
 }
 
@@ -204,6 +209,7 @@ Object* Object::setColor(Color3f color, bool recurse) {
 
     for (Object* o : children)
         o->setColor(color, recurse);
+    if (staticObject && (displayList != 0)) invalidateDisplayList();
     return this;
 }
 
@@ -214,6 +220,7 @@ Object* Object::setMaterial(MaterialID id, bool recurse) {
 
     for (Object* o : children)
         o->setMaterial(id, recurse);
+    if (staticObject && (displayList != 0)) invalidateDisplayList();
     return this;
 }
 
@@ -223,6 +230,7 @@ bool Object::isHidden() {
 
 Object* Object::setHidden(bool hidden) {
     this->hidden = hidden;
+    if (staticObject && (displayList != 0)) invalidateDisplayList();
     return this;
 }
 
@@ -241,6 +249,21 @@ Vec3<GLfloat> Object::getPosition() const{
 
 Object* Object::setPosition(Vec3<GLfloat> position) {
     this->transform.position = position;
+    if (staticObject && (displayList != 0)) invalidateDisplayList();
+    return this;
+}
+
+bool Object::isStatic() {
+    return staticObject;
+}
+
+Object* Object::setStatic(bool staticObject) {
+    this->staticObject = staticObject;
+    if ((staticObject == false) && (displayList != 0)) {
+        glDeleteLists(displayList, 1);
+        displayList = 0;
+    }
+
     return this;
 }
 

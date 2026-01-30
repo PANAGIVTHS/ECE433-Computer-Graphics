@@ -23,7 +23,7 @@ protected:
 
     Vec3<GLfloat> velocity;
 
-    bool isStatic = false;
+    bool staticObject = false;
     Transform transform;
     GLuint displayList = 0;
     bool gravity, hidden = false;
@@ -31,6 +31,7 @@ protected:
     TextureID texture;
     MaterialID material;
     
+    void optimize();
     void applyParentTransforms();
     virtual void drawInternal() {};
     std::string toString(int depth);
@@ -45,15 +46,16 @@ public:
 
     void draw();
     virtual void update();
-    void optimize();
     void invalidateDisplayList();
     virtual Object *addChildren(Object *object);
     Object *removeChildren(Object *o);
 
     bool hasTransparency();
     bool isHidden();
-    Object* setHidden(bool hidden);
     bool hasGravity();
+    bool isStatic();
+    Object* setStatic(bool staticObject);
+    Object* setHidden(bool hidden);
     Object* setGravity(bool gravity);
     Object* setTexture(TextureID id, bool recurse);
     Object* setMaterial(MaterialID id, bool recurse);

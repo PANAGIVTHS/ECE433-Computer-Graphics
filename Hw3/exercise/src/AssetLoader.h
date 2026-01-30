@@ -177,7 +177,7 @@ public:
     static Object *addAsset(std::string path, Vec3<GLfloat> pos) {
         Object* obj = AssetLoader::load(path, pos);
         if (obj) {
-            obj->optimize();
+            obj->setStatic(true);
             levelAssets.push_back(obj);
         }
 

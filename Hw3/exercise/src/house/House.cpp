@@ -14,24 +14,24 @@
 void House::setup() {
     Porch *porch = new Porch(Vec3<GLfloat>(0, 0, 0), House::scale);
     addChildren(porch);
-    porch->optimize();
+    porch->setStatic(true);
 
     FamilyRoom *familyRoom = new FamilyRoom(Vec3<GLfloat>(Porch::secondLayerSpacing + Porch::frontLength + Porch::ceilingSpacing - House::ridgeThickness, 0, Porch::ceilingSpacing + Porch::secondLayerSpacing + Porch::leftLength - House::exteriorWallThickness), House::scale);
     Vec3<GLfloat> familyRoomPosition = familyRoom->getPosition() + Vec3<GLfloat>(0, 0, -FamilyRoom::length);
     familyRoom->setPosition(familyRoomPosition);
     addChildren(familyRoom);
-    familyRoom->optimize();
+    familyRoom->setStatic(true);
 
     DiningRoom *diningRoom = new DiningRoom(familyRoom->getPosition() + Vec3<GLfloat>(FamilyRoom::totalWidth, 0, 0), House::scale);
     Vec3<GLfloat> diningRoomPosition = diningRoom->getPosition() + Vec3<GLfloat>(0, 0, -(DiningRoom::totalLength - FamilyRoom::totalLength));
     diningRoom->setPosition(diningRoomPosition);
     addChildren(diningRoom);
-    diningRoom->optimize();
+    diningRoom->setStatic(true);
 
     Garage *garage = new Garage(diningRoom->getPosition() + Vec3<GLfloat>(DiningRoom::totalWidth - House::ridgeThickness, 0, -House::garageInset), scale);
     Model *car = new Model("../assets/Car.obj", Vec3(Garage::totalWidth / 2.5f, floorHeight + 0.2f, Garage::totalLength / 2.0f), false, {1.0f, 1.0f, 1.0f}, TextureID::CAR, MaterialID::MATTE);
     car->setRotation(180, Vec3<GLfloat>(0.0f, 1.0f, 0.0f));
-    car->optimize();
+    car->setStatic(true);
     garage->addChildren(car);
     garageCeiling = garage->getCeiling();
     addChildren(garage);
@@ -39,16 +39,16 @@ void House::setup() {
     Bathroom *bathroom = new Bathroom(familyRoom->getPosition(), House::scale);
     bathroom->setPosition(bathroom->getPosition() + Vec3<GLfloat>(0.0f, 0.0f, -Bathroom::totalLength));
     addChildren(bathroom);
-    bathroom->optimize();
+    bathroom->setStatic(true);
 
     Bedroom2 *bedroom2 = new Bedroom2(bathroom->getPosition(), House::scale);
     bedroom2->setPosition(bedroom2->getPosition() + Vec3<GLfloat>(0.0f, 0.0f, -Bedroom2::totalLength));
     addChildren(bedroom2);
-    bedroom2->optimize();
+    bedroom2->setStatic(true);
 
     Bedroom1 *bedroom1 = new Bedroom1(bedroom2->getPosition() + Vec3<GLfloat>(Bedroom2::totalWidth, 0.0f, 0.0f), House::scale);
     addChildren(bedroom1);
-    bedroom1->optimize();
+    bedroom1->setStatic(true);
 
     Hallway *hallway = new Hallway(diningRoomPosition, scale);
     Vec3<GLfloat> hallwayPosition = hallway->getPosition() + Vec3<GLfloat>(-Hallway::totalWidth, 0, -House::interiorWallThickness);
@@ -59,7 +59,7 @@ void House::setup() {
     tv->setRotation(180, Vec3<GLfloat>(0.0f, 1.0f, 0.0f));
     tv->setScale(0.17, 0.17, 0.17);
     addChildren(tv);
-    tv->optimize();
+    tv->setStatic(true);
 
     // PATHWAY
     GLfloat pathWidth = Garage::doorWidth;
@@ -79,7 +79,7 @@ void House::setup() {
     pathway->setTextureConfig(TextureConfig(TextureMode::REPEAT_FIT));
     pathway->setSubdivisions(10);
     addChildren(pathway);
-    pathway->optimize();
+    pathway->setStatic(true);
 
     GLfloat branchLength = Garage::doorWidth * 2.5;
     GLfloat branchWidth = Garage::doorWidth;
@@ -89,7 +89,7 @@ void House::setup() {
     pathway1->setTextureConfig(TextureConfig(TextureMode::REPEAT_FIT));
     pathway1->setSubdivisions(10);
     addChildren(pathway1);
-    pathway1->optimize();
+    pathway1->setStatic(true);
 
     // ROOF
     roof = new Object(Vec3<GLfloat>(bedroom2->getPosition().x, 0.0f, bedroom2->getPosition().z), House::scale);
@@ -122,7 +122,7 @@ void House::setup() {
         House::lightColor
     ));
 
-    roof->addChildren(AssetLoader::addAsset("../assets/roof.txt", Vec3<GLfloat>(-bedroom2->getPosition().x, 0.0f, -bedroom2->getPosition().z)));
+    roof->addChildren(AssetLoader::load("../assets/roof.txt", Vec3<GLfloat>(-bedroom2->getPosition().x, 0.0f, -bedroom2->getPosition().z)));
 
     addChildren(roof);
 
