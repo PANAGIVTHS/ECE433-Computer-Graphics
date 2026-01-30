@@ -1,11 +1,9 @@
 #include "MaterialManager.h"
 
 void MaterialManager::init() {
-    //TODO add Matte material to list in this idk the values
-    //TODO important implement NONE material as default ambient diffuse...
     materials[MaterialID::NONE] = {
         {0.0f, 0.0f, 0.0f, 1.0f},
-        {0.8f, 0.8f, 0.0f, 1.0f},
+        {0.0f, 0.0f, 0.0f, 1.0f},
         {0.0f, 0.0f, 0.0f, 1.0f},
         {0.0f, 0.0f, 0.0f, 1.0f},
         0.0f

@@ -19,6 +19,7 @@ BEGIN
         CUBOID 0.0 0.0 0.0 2.8 0.15 4.4
         TEXTURE SPRUCE_PLANKS
         TEX_CONFIG REPEAT_FIT
+        MATERIAL MATTE
     END
 
     # ==========================
@@ -32,6 +33,7 @@ BEGIN
         CUBOID 0.0 0.0 0.0 2.8 0.15 4.4
         TEXTURE SPRUCE_PLANKS
         TEX_CONFIG REPEAT_FIT
+        MATERIAL MATTE
     END
 
     # ==========================
