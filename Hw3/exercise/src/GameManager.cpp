@@ -109,7 +109,7 @@ void GameManager::onWindowUpdate(GLint width, GLint height, bool newContext) {
     if (WindowManager::getMode()) {
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        gluPerspective(fov, (GLdouble) width / height, near, far);
+        gluPerspective(fov, (GLdouble) width / height, nearPlane, farPlane);
         glMatrixMode(GL_MODELVIEW);
         glViewport(0, 0, width, height);
     }

@@ -32,8 +32,8 @@ public:
     static constexpr GLfloat jumpSpeed = 4.0f; // m/s
     static constexpr GLfloat maxPitch = 89.5;
     static constexpr GLdouble fov = 80.0f;
-    static constexpr GLdouble near = 0.1;
-    static constexpr GLdouble far = 2000;
+    static constexpr GLdouble nearPlane = 0.1;
+    static constexpr GLdouble farPlane = 2000;
     inline static const Vec3<GLfloat> initialCameraPos = Vec3(13.323354f, 1.700000f, 17.628853f);
     inline static const Color3f skyColor = {0.4f, 0.6f, 0.9f};
     inline static GLdouble dt;
