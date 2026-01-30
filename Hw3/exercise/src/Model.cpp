@@ -15,6 +15,7 @@ struct VertexIndex {
 Model::Model(std::string filename, Vec3<float> pos, bool gravity, Color3f color, TextureID texture, MaterialID material)
     : Object(pos, gravity, color, texture, material) {
     this->modelPath = filename;
+    this->setStatic(true);
 }
 
 void Model::drawInternal() {
