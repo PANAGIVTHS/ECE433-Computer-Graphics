@@ -1,0 +1,103 @@
+# --- MODERN INDUSTRIAL HANGING LIGHT ---
+# Position: (0, 0, 0) - Anchored at the ceiling.
+# Height: Drops approx 1.2 meters from the ceiling.
+# Style: Matte Iron cage with exposed bulb.
+
+OBJECT 6 3.77 1.5
+GRAVITY false
+SCALE 0.8 0.8 0.8
+ROTATION 0 0 0 0
+BEGIN
+    # ==========================
+    # CEILING MOUNT (Rose)
+    # ==========================
+    # The plate that covers the junction box
+    CUBOID 0.0 -0.02 0.0 0.14 0.04 0.14
+    TEXTURE IRON
+    TEX_CONFIG REPEAT_FIT
+
+    # ==========================
+    # SUSPENSION CORD
+    # ==========================
+    # Thin black cable dropping down
+    CUBOID 0.0 -0.5 0.0 0.015 1.0 0.015
+    TEXTURE BLACK_WOOL
+    TEX_CONFIG REPEAT_FIT
+
+    # ==========================
+    # LAMP ASSEMBLY
+    # ==========================
+    # Main body of the light, positioned at bottom of cord
+    OBJECT 0.0 -1.0 0.0
+    ROTATION 0 0 0 0
+    BEGIN
+        # -- Socket Housing --
+        # Holds the bulb and connects to frame
+        CUBOID 0.0 0.15 0.0 0.1 0.15 0.1
+        TEXTURE IRON
+        TEX_CONFIG REPEAT_FIT
+
+        # -- The Light Bulb --
+        # Using BONE_SIDE for the glowing/white element
+        CUBOID 0.0 -0.05 0.0 0.08 0.18 0.08
+        TEXTURE BONE_SIDE
+        TEX_CONFIG REPEAT_FIT
+
+        # -- CAGE FRAME --
+        # A geometric open frame structure
+        
+        # Top Frame Border
+        CUBOID 0.0 0.1 0.0 0.35 0.02 0.35
+        TEXTURE IRON
+        TEX_CONFIG REPEAT_FIT
+
+        # Bottom Frame Border
+        CUBOID 0.0 -0.3 0.0 0.35 0.02 0.35
+        TEXTURE IRON
+        TEX_CONFIG REPEAT_FIT
+
+        # Corner Supports (Vertical)
+        # Front-Left
+        CUBOID -0.165 -0.1 0.165 0.02 0.4 0.02
+        TEXTURE IRON
+        TEX_CONFIG REPEAT_FIT
+        
+        # Front-Right
+        CUBOID 0.165 -0.1 0.165 0.02 0.4 0.02
+        TEXTURE IRON
+        TEX_CONFIG REPEAT_FIT
+
+        # Back-Left
+        CUBOID -0.165 -0.1 -0.165 0.02 0.4 0.02
+        TEXTURE IRON
+        TEX_CONFIG REPEAT_FIT
+
+        # Back-Right
+        CUBOID 0.165 -0.1 -0.165 0.02 0.4 0.02
+        TEXTURE IRON
+        TEX_CONFIG REPEAT_FIT
+
+        # -- GLASS PANELS (Optional/Detail) --
+        # Thin glass inserts on the sides for realism
+        
+        # Front Glass
+        CUBOID 0.0 -0.1 0.165 0.32 0.38 0.005
+        TEXTURE WINDOW
+        TEX_CONFIG REPEAT_FIT
+        
+        # Back Glass
+        CUBOID 0.0 -0.1 -0.165 0.32 0.38 0.005
+        TEXTURE WINDOW
+        TEX_CONFIG REPEAT_FIT
+        
+        # Left Glass
+        CUBOID -0.165 -0.1 0.0 0.005 0.38 0.32
+        TEXTURE WINDOW
+        TEX_CONFIG REPEAT_FIT
+        
+        # Right Glass
+        CUBOID 0.165 -0.1 0.0 0.005 0.38 0.32
+        TEXTURE WINDOW
+        TEX_CONFIG REPEAT_FIT
+    END
+END
