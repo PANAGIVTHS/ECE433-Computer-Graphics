@@ -122,11 +122,13 @@ void InputManager::keyboardDown(unsigned char key, int x, int y) {
             camera->setGravity(!camera->hasGravity());
             camera->getVelocity().y = 0;
             break;
-        case 'q': 
-        case 'Q': 
+        case 'e': 
+        case 'E': 
             camera->toggleFlashlight();
             break;
         case 27: // Escape
+        case 'Q':
+        case 'q':
             GameManager::cleanUp();
             exit(0);
         default:

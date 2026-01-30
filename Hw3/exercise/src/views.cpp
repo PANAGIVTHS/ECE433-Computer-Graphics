@@ -177,6 +177,8 @@ void displayScene(Vec3<GLfloat> camPos) {
 void keyboardDown(unsigned char key, int x, int y) {
     switch (key) {
         case 27:
+        case 'q':
+        case 'Q':
             GameManager::cleanUp();
             exit(0);
         case 'p': 
