@@ -59,8 +59,8 @@ void display() {
     // ---------------------------------------------------------
     // Botton left floor plan
     // ---------------------------------------------------------
-    house->getRoof()->setHidden(true); 
     house->getGarageCeiling()->setHidden(true);
+    house->getRoof()->setHidden(true);
 
     setupOrtho(0, 0, halfW, halfH, 8.0f, true);
     displayScene(Vec3(10.0f, 50.0f, -2.5f));

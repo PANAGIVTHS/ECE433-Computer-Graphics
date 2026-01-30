@@ -33,7 +33,6 @@ void House::setup() {
     car->setRotation(180, Vec3<GLfloat>(0.0f, 1.0f, 0.0f));
     car->optimize();
     garage->addChildren(car);
-    garage->optimize();
     garageCeiling = garage->getCeiling();
     addChildren(garage);
 
@@ -123,7 +122,7 @@ void House::setup() {
         House::lightColor
     ));
 
-    this->addChildren(AssetLoader::addAsset("../assets/roof.txt", Vec3<GLfloat>(0.0f, 0.0f, 0.0f)));
+    roof->addChildren(AssetLoader::addAsset("../assets/roof.txt", Vec3<GLfloat>(-bedroom2->getPosition().x, 0.0f, -bedroom2->getPosition().z)));
 
     addChildren(roof);
 
