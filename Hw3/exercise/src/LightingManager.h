@@ -50,7 +50,7 @@ public:
     static void setOwner(int id, Object *owner);
     static void setConfig(int id, const LightConfig config);
     static LightConfig& getConfig(int id);
-    void toggleLight(int id, bool enable);
+    static void toggleLight(int id, bool enable);
 };
 
 #endif

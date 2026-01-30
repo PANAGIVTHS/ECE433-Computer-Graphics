@@ -136,6 +136,7 @@ Object *Object::addChildren(Object *o) {
     if (!o) return this;
 
     ObjectHandler::removeObject(o);
+    o->setHidden(this->isHidden());
     o->setGravity(false);
     o->setVelocity(Vec3(0.0f, 0.0f, 0.0f));
     o->parent = this;
@@ -231,6 +232,10 @@ bool Object::isHidden() {
 Object* Object::setHidden(bool hidden) {
     this->hidden = hidden;
     if (staticObject && (displayList != 0)) invalidateDisplayList();
+
+    for (Object *o : children)
+        o->setHidden(hidden);
+
     return this;
 }
 

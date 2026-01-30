@@ -18,9 +18,16 @@ void LightingManager::init() {
 }
 
 void LightingManager::updateAllLights() {
-    if (!WindowManager::getMode()) return;
-
-    for (auto &[id, reg] : registry) {
+    for (auto& [id, reg] : registry) {
+        if (reg.owner) {
+            if (reg.owner->isHidden()) {
+                glDisable(GL_LIGHT0 + id);
+                continue;
+            } else {
+                glEnable(GL_LIGHT0 + id);
+            }
+        }
+        
         updateLight(id);
     }
 }
