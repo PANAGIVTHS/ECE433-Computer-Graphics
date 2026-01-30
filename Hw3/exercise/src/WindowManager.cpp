@@ -59,7 +59,7 @@ void WindowManager::init() {
     }
     
     //fps related
-    #if defined(__linux__) && defined(VSYNC)
+    #if defined(__linux__) && !defined(VSYNC)
         Display* dpy = glXGetCurrentDisplay();
         GLXDrawable drawable = glXGetCurrentDrawable();
 

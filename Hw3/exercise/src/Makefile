@@ -38,7 +38,7 @@ ifeq ($(USE_MOUSE), 1)
     CFLAGS += -DMOUSE_ROTATION
 endif
 
-VSYNC ?= 0
+VSYNC ?= 1
 ifeq ($(VSYNC), 1)
     CFLAGS += -DVSYNC
 endif
