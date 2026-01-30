@@ -1,6 +1,10 @@
 #ifndef MODEL_H
 #define MODEL_H
-
+#ifdef __APPLE_CC__
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
 #include "Object.h"
 #include <vector>
 #include <string>

@@ -2,7 +2,11 @@
 #define SRC_LANTERN_H
 #include "../Object.h"
 #include "../LightingManager.h"
-
+#ifdef __APPLE_CC__
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
 class Lantern : public Object {
     GLint lightID;
     LightConfig config;

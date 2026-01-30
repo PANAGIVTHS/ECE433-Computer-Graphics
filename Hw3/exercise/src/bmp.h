@@ -1,6 +1,10 @@
 #ifndef _BMP_H
-
 #define _BMP_H
+#ifdef __APPLE_CC__
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
 
 typedef struct BITMAPFILEHEADER_struct{
 	

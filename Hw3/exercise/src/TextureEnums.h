@@ -1,6 +1,10 @@
 #ifndef TEXTURE_ENUMS_H
 #define TEXTURE_ENUMS_H
-
+#ifdef __APPLE_CC__
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
 #define TEXTURE_LIST(X) \
     X(GRASS)            \
     X(LEAVES)           \

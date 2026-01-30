@@ -1,6 +1,10 @@
 #ifndef ASSET_LOADER_H
 #define ASSET_LOADER_H
-
+#ifdef __APPLE_CC__
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
 #include <iostream>
 #include <fstream>
 #include <sstream>

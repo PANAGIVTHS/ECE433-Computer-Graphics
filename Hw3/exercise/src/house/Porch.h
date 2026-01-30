@@ -3,7 +3,11 @@
 #include "BuildingBlocks.h"
 #include "House.h"
 #include "../Object.h"
-
+#ifdef __APPLE_CC__
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
 class Porch : public Block {
 public:
     static inline GLfloat frontWidth = 6.8182f;

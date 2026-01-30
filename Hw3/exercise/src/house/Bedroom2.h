@@ -2,7 +2,11 @@
 #define SRC_BEDROOM2_H
 #include "BuildingBlocks.h"
 #include "House.h"
-
+#ifdef __APPLE_CC__
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
 class Bedroom2 : public Block {
 public:
     static inline GLfloat width = 3.0432f;

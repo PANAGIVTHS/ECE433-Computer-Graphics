@@ -4,7 +4,11 @@
 #include "DiningRoom.h"
 #include "FamilyRoom.h"
 #include "House.h"
-
+#ifdef __APPLE_CC__
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
 class Hallway : public Block {
 public:
     static inline GLfloat width = 1.0f;

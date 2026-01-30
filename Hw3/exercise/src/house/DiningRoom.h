@@ -2,7 +2,11 @@
 #define SRC_DININGROOM_H
 #include "BuildingBlocks.h"
 #include "House.h"
-
+#ifdef __APPLE_CC__
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
 class DiningRoom : public Block {
 public:
     static inline GLfloat width = 2.7908f;

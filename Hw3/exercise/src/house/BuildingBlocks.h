@@ -1,7 +1,11 @@
 #ifndef SRC_BUILDINGBLOCKS_H
 #define SRC_BUILDINGBLOCKS_H
 #include "../Object.h"
-
+#ifdef __APPLE_CC__
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
 class Block : public Object {
 protected:
     GLfloat scale;

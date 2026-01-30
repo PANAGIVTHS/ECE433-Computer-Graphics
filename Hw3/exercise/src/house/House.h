@@ -1,7 +1,11 @@
 #ifndef SRC_HOUSE_H
 #define SRC_HOUSE_H
 #include "../Object.h"
-
+#ifdef __APPLE_CC__
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
 class House : public Object {
     static std::vector<GLfloat *> getScalableVars() {
         return {
