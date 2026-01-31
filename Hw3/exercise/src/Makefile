@@ -57,7 +57,7 @@ else
 endif
 
 # --- Configuration & Flags ---
-TARGET_DIR = ../target/$(TARGET_OS)
+TARGET_DIR = ..$(SEP)target$(SEP)$(TARGET_OS)
 
 ifeq ($(TARGET_OS), win)
     # Cross-compilation from Linux/Mac
@@ -66,7 +66,7 @@ ifeq ($(TARGET_OS), win)
     endif
 
     EXT = .exe
-    LIB_DIR = ..\lib\$(TARGET_OS)
+    LIB_DIR = ..$(SEP)lib$(SEP)$(TARGET_OS)
     
     # Note: Using relative paths with forward slashes usually works for MinGW GCC
     INCFLAGS = -I$(LIB_DIR)/freeglut/include -I$(LIB_DIR)/glew/include
@@ -77,7 +77,7 @@ ifeq ($(TARGET_OS), win)
               -static -static-libgcc -static-libstdc++ \
               -Wl,--subsystem,windows -lstdc++
 
-    DLL_FILES = $(LIB_DIR)\freeglut\bin\x64\freeglut.dll $(LIB_DIR)\glew\bin\Release\x64\glew32.dll
+    DLL_FILES = $(LIB_DIR)$(SEP)freeglut$(SEP)bin$(SEP)x64$(SEP)freeglut.dll $(LIB_DIR)$(SEP)glew$(SEP)bin$(SEP)Release$(SEP)x64$(SEP)glew32.dll
 else
     EXT = 
     ifeq ($(TARGET_OS), mac)
@@ -168,6 +168,9 @@ else
 	$(CP) $(TARGET1) temp_pkg/
 	$(CP) $(TARGET2) temp_pkg/
 	$(COPY_ASSETS)
+ifeq ($(TARGET_OS),win)
+	$(CP) $(DLL_FILES) temp_pkg/
+endif
 	cd temp_pkg && $(ZIP) ../$(TARGET_DIR)/$(ZIP_NAME) .
 	$(RM_RF) temp_pkg
 endif
@@ -177,6 +180,7 @@ clean:
 ifeq ($(HOST_OS),win)
 	-$(RM) *.o house\*.o
 	-$(RM) "$(subst /,\,$(TARGET1))" "$(subst /,\,$(TARGET2))"
+    -$(RM_RF) $(TARGET_DIR)
 else
-	$(RM) $(OBJS1) $(OBJS2) $(TARGET1) $(TARGET2)
+	$(RM_RF) $(OBJS1) $(OBJS2) $(TARGET1) $(TARGET2) $(TARGET_DIR)
 endif
