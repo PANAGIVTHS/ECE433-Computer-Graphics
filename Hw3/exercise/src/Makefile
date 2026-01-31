@@ -107,8 +107,13 @@ else
                         -Wl,-rpath,'$$ORIGIN' \
                         -lGLEW -lglut -lGLU -lGL -lX11 -lm -lstdc++
                   
-        LIBS = $(LIB_DIR)/glew/lib/libGLEW.so* \
-                $(LIB_DIR)/freeglut/lib/libglut.so*
+        LIBS = $(LIB_DIR)/freeglut/lib/libglut.so* \
+                $(LIB_DIR)/glew/lib/libGLEW.so* \
+                $(LIB_DIR)/glew/lib/libGL.so* \
+                $(LIB_DIR)/glew/lib/libGLU.so* \
+                $(LIB_DIR)/glew/lib/libOpenGL.so* \
+                $(LIB_DIR)/glew/lib/libGLdispatch.so* \
+                $(LIB_DIR)/glew/lib/libGLX.so*
     endif
 endif
 
