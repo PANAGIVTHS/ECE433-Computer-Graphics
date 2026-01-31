@@ -69,13 +69,21 @@ public:
     Vec3<GLfloat>& getVelocity();
     Object* setVelocity(Vec3<GLfloat> velocity);
     std::vector<Object *>& getChildren();
+    Object* getParent() { return parent; } // Helper for RayTracer
     std::string toString();
+
+    // RayTracer Accessors
+    Vec3<GLfloat> getScale() const { return transform.scale; }
+    GLfloat getRotationAngle() const { return transform.angle; }
+    Vec3<GLfloat> getRotationAxis() const { return transform.rotateAxis; }
+    Color3f getColor() const { return color; }
 };
 
 class ObjectHandler {
 protected:
-    static std::vector<Object *> objects;
-    static std::vector<Object *> transObjects;
+    static std::vector<Object *> objects;      // Only Roots
+    static std::vector<Object *> transObjects; // Transparent
+    static std::vector<Object *> allObjects;   // Flattened list of EVERYTHING
 public:
     static void addObject(Object *o);
     static void addTransparent(Object *o);
@@ -83,6 +91,11 @@ public:
     static void removeTransparent(Object *o);
     static std::vector<Object *> &getObjects();
     static std::vector<Object *> &getTransObjects();
+    
+    // --- NEW: Flattened Accessor ---
+    static std::vector<Object *> &getAllObjects();
+    // -------------------------------
+
     static void invalidateDisplayListAll();
     static void clear();
 };

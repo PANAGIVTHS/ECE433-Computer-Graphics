@@ -13,7 +13,7 @@
 #include <algorithm>
 #include <vector>
 #include "Spline.h"
-
+#include "RayTracer.h"
 void init(int argc, char *argv[]);
 void display();
 void idle();
@@ -59,35 +59,41 @@ void init(int argc, char *argv[]) {
 }
 
 void display() {
+    if (RayTracer::isEnabled()) {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        RayTracer::render(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
+        WindowManager::drawFPS(GameManager::getFPS());
+        glutSwapBuffers();
+        return; // <--- Don't run the rest
+    }
+
+    // 2. Normal Rendering (Only runs if RayTracer is OFF)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
     GameManager::getCamera()->set();
     LightingManager::updateAllLights();
     
+    // Draw Test Cube normally so you can find it
+    if (GameManager::getTestCube()) {
+        GameManager::getTestCube()->draw();
+    }
+
     for (Object *o : ObjectHandler::getObjects()) {
-        if (!o->hasTransparency()) {
-            o->draw();
-        }
+        if (!o->hasTransparency()) o->draw();
     }
 
     std::vector<Object*>& trans = ObjectHandler::getTransObjects();
     Vec3<float> camPos = GameManager::getCamera()->getPosition();
-    
-    //! Sort transparent objects (Farthest -> Nearest)
     std::sort(trans.begin(), trans.end(), [camPos](Object* a, Object* b) {
         return (a->getWorldPosition() - camPos).magSq() > (b->getWorldPosition() - camPos).magSq();
     });
 
     glDepthMask(GL_FALSE);
-    for (Object *o : trans) {
-        o->draw();
-    }
+    for (Object *o : trans) o->draw();
     glDepthMask(GL_TRUE);
 
-    //fps related
     WindowManager::drawFPS(GameManager::getFPS());
-
     glutSwapBuffers();
 }
 

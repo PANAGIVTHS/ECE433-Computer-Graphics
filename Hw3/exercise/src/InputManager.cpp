@@ -1,7 +1,7 @@
 #include "InputManager.h"
 #include "GameManager.h"
 #include "WindowManager.h"
-
+#include "RayTracer.h"
 void InputManager::init() {
         glutKeyboardFunc(keyboardDown);
         glutKeyboardUpFunc(keyboardUp);
@@ -92,7 +92,8 @@ void InputManager::keyboardDown(unsigned char key, int x, int y) {
             break;
         case 'r':
         case 'R':
-            GameManager::reloadAssets();
+            RayTracer::toggle();
+            
             break;
         case 32: // Space
             pressedKeys[UP] = true;

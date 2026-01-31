@@ -9,6 +9,10 @@
 Object::Object(Vec3<GLfloat> pos, bool gravity, Color3f color, TextureID texture, MaterialID material, std::initializer_list<Object*> children) : transform(pos), gravity(gravity), color(color), texture(texture), material(material) {
     ObjectHandler::addObject(this);
     ObjectHandler::addTransparent(this);
+    
+    // --- NEW: Add to flattened list ---
+    ObjectHandler::getAllObjects().push_back(this);
+    // ---------------------------------
 
     for (Object* child : children) {
         this->Object::addChildren(child);
@@ -26,6 +30,12 @@ Object::~Object() {
 
     ObjectHandler::removeObject(this);
     ObjectHandler::removeTransparent(this);
+
+    // --- NEW: Remove from flattened list ---
+    auto& all = ObjectHandler::getAllObjects();
+    auto it = std::find(all.begin(), all.end(), this);
+    if(it != all.end()) all.erase(it);
+    // --------------------------------------
 
     for (Object *o : children) {
         o->parent = nullptr;
@@ -54,7 +64,6 @@ void Object::optimize() {
 
     displayList = glGenLists(1);
     
-    //! Record mode objects arent displayed
     glNewList(displayList, GL_COMPILE); 
 
     MaterialManager::bind(material);
@@ -77,7 +86,6 @@ void Object::applyParentTransforms() {
 
     glTranslated(parent->transform.position.x, parent->transform.position.y, parent->transform.position.z);
     
-    //! Ifs are for performance in case it does the matrix mult when all is 0
     if (parent->transform.angle != 0.0f) {
         glRotated(parent->transform.angle, parent->transform.rotateAxis.x, parent->transform.rotateAxis.y, parent->transform.rotateAxis.z);
     }
@@ -163,7 +171,6 @@ Vec3<GLfloat> Object::getWorldPosition() {
     if (parent == nullptr) {
         return transform.position;
     }
-    //! Recursive Step: Parent's World Position + My Local Position
     return parent->getWorldPosition() + transform.position;
 }
 
@@ -301,24 +308,20 @@ std::string Object::toString(int depth) {
 
     ss << indent << "Object {\n";
     
-    // Transform / Position
     ss << indent << "  Position: (" << transform.position.x << ", " << transform.position.y << ", " << transform.position.z << ")\n";
     ss << indent << "  Scale: (" << transform.scale.x << ", " << transform.scale.y << ", " << transform.scale.z << ")\n";
     ss << indent << "  Rotation: " << transform.angle << " deg around (" 
        << transform.rotateAxis.x << ", " << transform.rotateAxis.y << ", " << transform.rotateAxis.z << ")\n";
     
-    // State properties
     ss << indent << "  Velocity: (" << velocity.x << ", " << velocity.y << ", " << velocity.z << ")\n";
     ss << indent << "  Gravity: " << (gravity ? "enabled" : "disabled") << "\n";
     ss << indent << "  Hidden: " << (hidden ? "true" : "false") << "\n";
     ss << indent << "  TextureID: " << static_cast<int>(texture) << "\n";
 
-    // Children recursion
     if (!children.empty()) {
         ss << indent << "  Children [" << children.size() << "]:\n";
         for (Object* child : children) {
             if (child) {
-                // Recursive call increasing the depth
                 ss << child->toString(depth + 2);
             }
         }
@@ -332,6 +335,9 @@ std::string Object::toString(int depth) {
 
 std::vector<Object *> ObjectHandler::objects;
 std::vector<Object *> ObjectHandler::transObjects;
+// --- NEW: Definition ---
+std::vector<Object *> ObjectHandler::allObjects;
+// -----------------------
 
 void ObjectHandler::addObject(Object *o) {
     ObjectHandler::objects.push_back(o);
@@ -370,6 +376,12 @@ std::vector<Object *> &ObjectHandler::getObjects() {
     return objects;
 }
 
+// --- NEW: Implementation ---
+std::vector<Object *> &ObjectHandler::getAllObjects() {
+    return allObjects;
+}
+// ---------------------------
+
 void ObjectHandler::invalidateDisplayListAll() {
     for (Object *o : objects) {
         o->invalidateDisplayList();
@@ -383,9 +395,8 @@ void ObjectHandler::clear() {
 
     objects.clear();
     transObjects.clear();
+    // allObjects will be cleared by the destructors of the objects
 }
-
-// Object subclasses implementation
 
 // Cuboid
 void Cuboid::drawInternal() {
@@ -412,7 +423,6 @@ void Cuboid::drawInternal() {
         uSide  = length; vSide  = height;
         uTop   = width;  vTop   = length;
     } else if (texConfig.mode == TextureMode::REPEAT_CUSTOM) {
-        // Access values from the struct
         uFront = uSide = uTop = texConfig.uMax;
         vFront = vSide = vTop = texConfig.vMax;
     }
@@ -456,7 +466,6 @@ void Cube::drawInternal() {
     glDisable(GL_TEXTURE_GEN_T);
 }
 
-// Sphere
 void Sphere::drawInternal() {
     glColor3f(color.red, color.green, color.blue);
     glEnable(GL_TEXTURE_GEN_S);

@@ -11,12 +11,10 @@
 
 #include "house/House.h"
 
-//fps related
-
+// --- FPS Implementation ---
 void GameManager::updateFPS() {
     frameCount++;
     int currentTime = glutGet(GLUT_ELAPSED_TIME);
-    
     if (currentTime - lastFpsTime > 1000) {
         fps = frameCount * 1000.0f / (currentTime - lastFpsTime);
         lastFpsTime = currentTime;
@@ -24,11 +22,11 @@ void GameManager::updateFPS() {
     }
 }
 
-float GameManager::getFPS() {
-    return fps;
-}
+float GameManager::getFPS() { return fps; }
 
+// --- Asset Loading ---
 void GameManager::loadLevelAssets() {
+    // Load all your house assets
     house->addChildren(AssetLoader::addAsset(getAssetPath("sofa.txt"), Vec3<GLfloat>(9.85f, 0.2f, 2.0f)));
     house->addChildren(AssetLoader::addAsset(getAssetPath("sofa.txt"), Vec3<GLfloat>(8.8f, 0.0f, -11.7f)));
     house->addChildren(AssetLoader::addAsset(getAssetPath("stove.txt"), Vec3<GLfloat>(0.0f, 0.0f, 0.0f)));
@@ -52,7 +50,7 @@ void GameManager::loadLevelAssets() {
     house->addChildren(AssetLoader::addAsset(getAssetPath("chair.txt"), Vec3<GLfloat>(4.5, 0.3, 2.33))->setRotation(180, Vec3<GLfloat>(0, 1, 0)));
     house->addChildren(AssetLoader::addAsset(getAssetPath("chair.txt"), Vec3<GLfloat>(4.5, 0.3, -0.467)));
     house->addChildren(AssetLoader::addAsset(getAssetPath("chair.txt"), Vec3<GLfloat>(5.8, 0.0, -12.3))->setRotation(45, Vec3<GLfloat>(0, 1, 0)));
-    house->addChildren(AssetLoader::addAsset(getAssetPath("chair.txt"), Vec3<GLfloat>(5.8, 0.0, -11))->setRotation(154, Vec3<GLfloat>(0, 1, 0)));
+    AssetLoader::addAsset(getAssetPath("chair.txt"), Vec3<GLfloat>(5.8, 0.0, -11))->setRotation(154, Vec3<GLfloat>(0, 1, 0));
     house->addChildren(AssetLoader::addAsset(getAssetPath("bed2.txt"), Vec3<GLfloat>(0.0f, 0.0f, 0.0f)));
     house->addChildren(AssetLoader::addAsset(getAssetPath("wardrobe.txt"), Vec3<GLfloat>(9.67, 0.3, -4.67))->setRotation(180, Vec3<GLfloat>(0, 1, 0))->setScale(Vec3<GLfloat>(0.767, 0.767, 0.767)));
     house->addChildren(AssetLoader::addAsset(getAssetPath("kitchensink.txt"), Vec3<GLfloat>(0.0f, 0.0f, 0.0f)));
@@ -63,21 +61,28 @@ void GameManager::loadLevelAssets() {
     house->addChildren(AssetLoader::addAsset(getAssetPath("poster1.txt"), Vec3<GLfloat>(0.0f, 0.0f, 0.0f)));
     house->addChildren(AssetLoader::addAsset(getAssetPath("poster2.txt"), Vec3<GLfloat>(0.0f, 0.0f, 0.0f)));
     house->addChildren(AssetLoader::addAsset(getAssetPath("teda.txt"), Vec3<GLfloat>(0.0f, 0.0f, 0.0f)));
-    AssetLoader::addAsset(getAssetPath("forest.txt"), Vec3<GLfloat>(7.0f, 0.2f, 7.0f));
     house->addChildren(AssetLoader::addAsset(getAssetPath("poster3.txt"), Vec3<GLfloat>(0.0f, 0.0f, 0.0f)));
+    AssetLoader::addAsset(getAssetPath("forest.txt"), Vec3<GLfloat>(7.0f, 0.2f, 7.0f));
 }
 
+// --- Initialization ---
 void GameManager::init() {
     oldTime = glutGet(GLUT_ELAPSED_TIME);
     
     camera = new Camera(initialCameraPos);
     
+    // Create Environment (Sun/Moon will be spawned here)
     environment = new Environment(skyColor);
     environment->spawn(); 
     environment->init();
 
+    // Create House
     house = new House(Vec3<GLfloat>(0.0f, 0.0f, 0.0f));
     loadLevelAssets(); 
+
+    // Create Test Cube (Red)
+    testCube = new Cube(Vec3<float>(0.0f, 5.0f, 0.0f), Vec3<float>(2.0f, 2.0f, 2.0f));
+    testCube->setColor({1.0f, 0.0f, 0.0f}, false); 
 }
 
 void GameManager::reloadAssets() {
@@ -89,7 +94,6 @@ void GameManager::updateDeltaTime() {
     GLint newTime = glutGet(GLUT_ELAPSED_TIME);
     GLint diffMs = newTime - oldTime;
     oldTime = newTime;
-
     dt = (GLdouble) diffMs / 1000.0f;
 }
 
@@ -105,7 +109,6 @@ void GameManager::runGameLoop() {
 }
 
 void GameManager::onWindowUpdate(GLint width, GLint height, bool newContext) {
-    //! Set projection and viewport
     if (WindowManager::getMode()) {
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
@@ -116,15 +119,11 @@ void GameManager::onWindowUpdate(GLint width, GLint height, bool newContext) {
 
     glEnable(GL_DEPTH_TEST);
 
-    //! Initialize anything that has a per window context
     if (newContext) {
-        //! Delete old unreachable textures
         TextureManager::clear();
-
         LightingManager::init();
         ObjectHandler::invalidateDisplayListAll();
         TextureManager::init();
-
         if(environment) environment->init();
     }
 }
@@ -133,32 +132,22 @@ void GameManager::cleanUp() {
     delete camera;
     delete environment;
     ObjectHandler::clear();
+    testCube = nullptr; // Reset pointer (memory freed by ObjectHandler)
+    sun = nullptr;      // Reset pointer
 }
 
-Camera *GameManager::getCamera() {
-    return camera;
-}
+// --- Getters & Setters ---
 
-Environment *GameManager::getEnvironment() {
-    return environment;
-}
+Camera *GameManager::getCamera() { return camera; }
+Environment *GameManager::getEnvironment() { return environment; }
+House *GameManager::getHouse() { return house; }
+void GameManager::setRootPath(const std::string rootPath) { GameManager::rootPath = rootPath; }
+std::string GameManager::getRootPath() { return std::string(rootPath) + "/"; }
+std::string GameManager::getAssetPath(std::string asset) { return getRootPath() + "assets/" + asset; }
+std::string GameManager::getTexturePath(std::string texture) { return getRootPath() + "textures/" + texture; }
 
-House *GameManager::getHouse() {
-    return house;
-}
-
-void GameManager::setRootPath(const std::string rootPath) {
-    GameManager::rootPath = rootPath;
-}
-
-std::string GameManager::getRootPath() {
-    return std::string(rootPath) + "/";
-}
-
-std::string GameManager::getAssetPath(std::string asset) {
-    return getRootPath() + "assets/" + asset;
-}
-
-std::string GameManager::getTexturePath(std::string texture) {
-    return getRootPath() + "textures/" + texture;
-}
+// --- MISSING FUNCTIONS FIXED HERE ---
+Cube *GameManager::getTestCube() { return testCube; }
+void GameManager::setSun(Object* s) { sun = s; }
+Object* GameManager::getSun() { return sun; }
+// ------------------------------------

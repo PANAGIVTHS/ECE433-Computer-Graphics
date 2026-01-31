@@ -8,7 +8,7 @@
 
 class WindowManager {
 private:
-    static constexpr GLint initialWidth = 1200, initialHeight = 1200;
+    static constexpr GLint initialWidth = 1000, initialHeight = 600;
     static constexpr GLint initialX = 10, initialY = 10;
     inline static GLint width = initialWidth;
     inline static GLint height = initialHeight;
