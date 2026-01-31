@@ -86,12 +86,12 @@ else
         LDFLAGS = -framework OpenGL -framework GLUT -framework Cocoa
     else
         # Linux
-        CFLAGS = -g
+        CFLAGS = -g -O3 -fopenmp
         INCFLAGS = -I/usr/X11R6/include -I/sw/include \
                    -I/usr/sww/include -I/usr/sww/pkg/Mesa/include
         LDFLAGS = -L/usr/X11R6/lib -L/sw/lib -L/usr/sww/lib \
                   -L/usr/sww/bin -L/usr/sww/pkg/Mesa/lib \
-                  -lGLEW -lglut -lGLU -lGL -lX11 -lm -lstdc++
+                  -lGLEW -lglut -lGLU -lGL -lX11 -lm -lstdc++ -fopenmp
     endif
 endif
 
@@ -106,7 +106,7 @@ HOUSE_SRCS = house/Garage.cpp house/House.cpp house/Lantern.cpp house/Porch.cpp 
 
 COMMON_SRCS = Object.cpp Camera.cpp Environment.cpp GameManager.cpp WindowManager.cpp \
             InputManager.cpp Celestial.cpp TextureManager.cpp bmp.cpp \
-            LightingManager.cpp MaterialManager.cpp Model.cpp Spline.cpp \
+            LightingManager.cpp MaterialManager.cpp Model.cpp Spline.cpp RayTracer.cpp \
             $(HOUSE_SRCS)
             
 COMMON_OBJS = $(COMMON_SRCS:.cpp=.o)

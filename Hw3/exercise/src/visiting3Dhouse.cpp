@@ -13,7 +13,7 @@
 #include <algorithm>
 #include <vector>
 #include "Spline.h"
-
+#include "RayTracer.h"
 void init(int argc, char *argv[]);
 void display();
 void idle();
@@ -59,35 +59,41 @@ void init(int argc, char *argv[]) {
 }
 
 void display() {
+    // 1. ALWAYS Clear & Setup (Normal Rendering)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
     GameManager::getCamera()->set();
     LightingManager::updateAllLights();
     
-    for (Object *o : ObjectHandler::getObjects()) {
-        if (!o->hasTransparency()) {
-            o->draw();
-        }
+    // 2. Draw Your Scene Normally (Textures, Models, etc.)
+    if (GameManager::getTestCube()) {
+        GameManager::getTestCube()->draw();
     }
 
+    for (Object *o : ObjectHandler::getObjects()) {
+        if (!o->hasTransparency()) o->draw();
+    }
+
+    // Draw Transparent Objects (Sorted)
     std::vector<Object*>& trans = ObjectHandler::getTransObjects();
     Vec3<float> camPos = GameManager::getCamera()->getPosition();
-    
-    //! Sort transparent objects (Farthest -> Nearest)
     std::sort(trans.begin(), trans.end(), [camPos](Object* a, Object* b) {
         return (a->getWorldPosition() - camPos).magSq() > (b->getWorldPosition() - camPos).magSq();
     });
 
     glDepthMask(GL_FALSE);
-    for (Object *o : trans) {
-        o->draw();
-    }
+    for (Object *o : trans) o->draw();
     glDepthMask(GL_TRUE);
 
-    //fps related
-    WindowManager::drawFPS(GameManager::getFPS());
+    // 3. APPLY RAY TRACING (Lightmap Overlay)
+    // This draws the shadow/light mask ON TOP of the finished scene using multiplication
+    if (RayTracer::isEnabled()) {
+        RayTracer::render(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
+    }
 
+    // 4. Draw UI & Swap
+    WindowManager::drawFPS(GameManager::getFPS());
     glutSwapBuffers();
 }
 
