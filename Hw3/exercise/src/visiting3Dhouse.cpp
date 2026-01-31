@@ -49,6 +49,8 @@ int main(int argc, char *argv[]) {
 
 void init(int argc, char *argv[]) {
     glutInit(&argc, argv);
+    const std::string rootPath = (argc == 2) ? argv[1] : "./";
+    GameManager::setRootPath(rootPath);
     WindowManager::init(display, idle);
     LightingManager::init();
     MaterialManager::init();

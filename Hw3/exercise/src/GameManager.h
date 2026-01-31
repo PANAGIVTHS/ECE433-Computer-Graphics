@@ -16,6 +16,7 @@ private:
     inline static Environment *environment = nullptr;
     inline static House *house = nullptr;
     inline static GLint oldTime;
+    inline static std::string rootPath;
 
     //fps related
     inline static int frameCount = 0;
@@ -51,6 +52,11 @@ public:
     static Camera *getCamera();
     static Environment *getEnvironment();
     static House* getHouse();
+
+    static void setRootPath(const std::string rootPath);
+    static std::string getRootPath();
+    static std::string getAssetPath(std::string asset);
+    static std::string getTexturePath(std::string texture);
 };
 
 #endif

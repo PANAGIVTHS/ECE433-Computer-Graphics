@@ -2,6 +2,7 @@
 #include <iostream>
 #include "utilities.h"
 #include "bmp.h"
+#include "GameManager.h"
 
 std::map<TextureID, GLuint> TextureManager::textures;
 std::set<TextureID> TextureManager::transparentTextures;
@@ -94,33 +95,33 @@ void TextureManager::init() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // Load textures
-    init(TextureID::IRON, "../textures/iron022.bmp");
-    init(TextureID::GRASS, "../textures/grass_block_top.bmp");
-    init(TextureID::WOOD, "../textures/oak_log.bmp");
-    init(TextureID::WINDOW, "../textures/glass.bmp", "../textures/glass_mask.bmp");
-    init(TextureID::OBSIDIAN, "../textures/obsidian.bmp");
-    init(TextureID::PORTAL, "../textures/nether_portal.bmp", "../textures/nether_portal_mask.bmp");
-    init(TextureID::LEAVES, "../textures/azalea_top.bmp");
-    init(TextureID::MYCELIUM, "../textures/mycelium_top.bmp");
-    init(TextureID::STONE, "../textures/cobblestone.bmp");
-    init(TextureID::GRAY_WOOL, "../textures/gray_wool.bmp");
-    init(TextureID::BONE_SIDE, "../textures/bone_block_side.bmp");
-    init(TextureID::BLACK_WOOL, "../textures/black_wool.bmp");
-    init(TextureID::BLUE_WOOL, "../textures/blue_wool.bmp");
-    init(TextureID::BROWN_WOOL, "../textures/brown_wool.bmp");
-    init(TextureID::GREEN_WOOL, "../textures/green_wool.bmp");
-    init(TextureID::MAGENTA_WOOL, "../textures/magenta_wool.bmp");
-    init(TextureID::ORANGE_WOOL, "../textures/orange_wool.bmp");
-    init(TextureID::RED_WOOL, "../textures/red_wool.bmp");
-    init(TextureID::WHITE_WOOL, "../textures/white_wool.bmp");
-    init(TextureID::YELLOW_WOOL, "../textures/yellow_wool.bmp");
-    init(TextureID::SPRUCE_PLANKS, "../textures/spruce_planks.bmp");
-    init(TextureID::BROWN_CONCRETE, "../textures/brown_concrete.bmp");
-    init(TextureID::POSTER_1, "../textures/your_next_line_is.bmp");
-    init(TextureID::POSTER_2, "../textures/creeper_painting.bmp");
-    init(TextureID::CAR, "../textures/car.bmp", GL_LINEAR);
-    init(TextureID::TV, "../textures/tv.bmp", GL_LINEAR);
-    init(TextureID::GOAT, "../textures/goat.bmp");
+    init(TextureID::IRON, GameManager::getTexturePath("iron022.bmp"));
+    init(TextureID::GRASS, GameManager::getTexturePath("grass_block_top.bmp"));
+    init(TextureID::WOOD, GameManager::getTexturePath("oak_log.bmp"));
+    init(TextureID::WINDOW, GameManager::getTexturePath("glass.bmp"), GameManager::getTexturePath("glass_mask.bmp"));
+    init(TextureID::OBSIDIAN, GameManager::getTexturePath("obsidian.bmp"));
+    init(TextureID::PORTAL, GameManager::getTexturePath("nether_portal.bmp"), GameManager::getTexturePath("nether_portal_mask.bmp"));
+    init(TextureID::LEAVES, GameManager::getTexturePath("azalea_top.bmp"));
+    init(TextureID::MYCELIUM, GameManager::getTexturePath("mycelium_top.bmp"));
+    init(TextureID::STONE, GameManager::getTexturePath("cobblestone.bmp"));
+    init(TextureID::GRAY_WOOL, GameManager::getTexturePath("gray_wool.bmp"));
+    init(TextureID::BONE_SIDE, GameManager::getTexturePath("bone_block_side.bmp"));
+    init(TextureID::BLACK_WOOL, GameManager::getTexturePath("black_wool.bmp"));
+    init(TextureID::BLUE_WOOL, GameManager::getTexturePath("blue_wool.bmp"));
+    init(TextureID::BROWN_WOOL, GameManager::getTexturePath("brown_wool.bmp"));
+    init(TextureID::GREEN_WOOL, GameManager::getTexturePath("green_wool.bmp"));
+    init(TextureID::MAGENTA_WOOL, GameManager::getTexturePath("magenta_wool.bmp"));
+    init(TextureID::ORANGE_WOOL, GameManager::getTexturePath("orange_wool.bmp"));
+    init(TextureID::RED_WOOL, GameManager::getTexturePath("red_wool.bmp"));
+    init(TextureID::WHITE_WOOL, GameManager::getTexturePath("white_wool.bmp"));
+    init(TextureID::YELLOW_WOOL, GameManager::getTexturePath("yellow_wool.bmp"));
+    init(TextureID::SPRUCE_PLANKS, GameManager::getTexturePath("spruce_planks.bmp"));
+    init(TextureID::BROWN_CONCRETE, GameManager::getTexturePath("brown_concrete.bmp"));
+    init(TextureID::POSTER_1, GameManager::getTexturePath("your_next_line_is.bmp"));
+    init(TextureID::POSTER_2, GameManager::getTexturePath("creeper_painting.bmp"));
+    init(TextureID::CAR, GameManager::getTexturePath("car.bmp"), GL_LINEAR);
+    init(TextureID::TV, GameManager::getTexturePath("tv.bmp"), GL_LINEAR);
+    init(TextureID::GOAT, GameManager::getTexturePath("goat.bmp"));
 
 }
 

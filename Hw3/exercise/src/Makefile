@@ -1,24 +1,55 @@
+OS ?= detect
 CC = gcc
-ifeq ($(shell sw_vers 2>/dev/null | grep mac | awk '{ print $$2}'),macOS)
-CFLAGS = -g -Wno-deprecated-declarations
-INCFLAGS = -I/usr/X11/include
-LDFLAGS = -framework OpenGL -framework GLUT -framework Cocoa 
-#CFLAGS = -g -DGL_GLEXT_PROTOTYPES -DGL_DO_NOT_WARN_IF_MULTI_GL_VERSION_HEADERS_INCLUDED -DOSX -Wno-deprecated-register -Wno-deprecated-declarations -Wno-shift-op-parentheses -Wno-parentheses-equality
-#INCFLAGS = -I/usr/X11/include
-#LDFLAGS = -framework GLUT -framework OpenGL \
-#		-L"/System/Library/Frameworks/OpenGL.framework/Libraries" \
-#		-lGL -lGLU -lm -lstdc++ 
+
+TIMESTAMP := $(shell date +%Y%m%d-%H%M%S)
+
+# --- Windows Configuration (Cross-Compile) ---
+ifeq ($(OS), win)
+    CC = x86_64-w64-mingw32-g++
+    EXT = .exe
+    
+    LIB_DIR = ../lib/$(OS)/
+
+    INCFLAGS = -I$(LIB_DIR)/freeglut/include -I$(LIB_DIR)/glew/include
+    
+    LIB_FREEGLUT = $(LIB_DIR)/freeglut/lib/x64
+    LIB_GLEW     = $(LIB_DIR)/glew/lib/Release/x64
+    
+    CFLAGS = -static -static-libgcc -static-libstdc++
+    
+    LDFLAGS = -L$(LIB_FREEGLUT) -L$(LIB_GLEW) \
+              -lfreeglut -lglew32 -lopengl32 -lglu32 \
+              -Wl,--subsystem,windows
+
+    DLL_FILES = $(LIB_DIR)/freeglut/bin/x64/freeglut.dll $(LIB_DIR)/glew/bin/Release/x64/glew32.dll
 else
-CFLAGS = -g #-DGL_GLEXT_PROTOTYPES 
-INCFLAGS = -I/usr/X11R6/include -I/sw/include \
-		-I/usr/sww/include -I/usr/sww/pkg/Mesa/include
-LDFLAGS = -L/usr/X11R6/lib -L/sw/lib -L/usr/sww/lib \
-		-L/usr/sww/bin -L/usr/sww/pkg/Mesa/lib -lGLEW -lglut -lGLU -lGL -lX11 -lm -lstdc++
+    EXT = 
+    # Detect macOS
+    ifeq ($(shell sw_vers 2>/dev/null | grep mac | awk '{ print $$2}'),macOS)
+		OS = mac
+        CFLAGS = -g -Wno-deprecated-declarations
+        INCFLAGS = -I/usr/X11/include
+        LDFLAGS = -framework OpenGL -framework GLUT -framework Cocoa
+    
+    # Detect Linux
+    else
+		OS = linux
+        CFLAGS = -g
+        INCFLAGS = -I/usr/X11R6/include -I/sw/include \
+                   -I/usr/sww/include -I/usr/sww/pkg/Mesa/include
+        LDFLAGS = -L/usr/X11R6/lib -L/sw/lib -L/usr/sww/lib \
+                  -L/usr/sww/bin -L/usr/sww/pkg/Mesa/lib \
+                  -lGLEW -lglut -lGLU -lGL -lX11 -lm -lstdc++
+    endif
 endif
+
 RM = /bin/rm -f
 
-TARGET1 = visiting3Dhouse
-TARGET2 = views
+# Add extension to targets
+TARGET_DIR = ../target/$(OS)
+TARGET1 = $(TARGET_DIR)/visiting3Dhouse$(EXT)
+TARGET2 = $(TARGET_DIR)/views$(EXT)
+ZIP_NAME = $(OS)-build-$(TIMESTAMP).zip
 
 HOUSE_SRCS = house/Garage.cpp house/House.cpp house/Lantern.cpp house/Porch.cpp \
             house/BuildingBlocks.cpp house/Bathroom.cpp house/Bedroom1.cpp \
@@ -53,9 +84,11 @@ endif
 all: $(TARGET1) $(TARGET2)
 
 $(TARGET1): $(OBJS1)
+	@mkdir -p $(TARGET_DIR)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 $(TARGET2): $(OBJS2)
+	@mkdir -p $(TARGET_DIR)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 %.o: %.cpp %.h
@@ -67,6 +100,27 @@ visiting3Dhouse.o: visiting3Dhouse.cpp
 views.o: views.cpp
 	$(CC) $(CFLAGS) $(INCFLAGS) -c $< -o $@
 
+package: all
+	@echo "Packaging for $(OS)..."
+	@mkdir -p temp_pkg
+	@# Copy Executables
+	cp $(TARGET1) temp_pkg/
+	cp $(TARGET2) temp_pkg/
+	@# Copy Assets (Textures/Models)
+	@if [ -d "../assets" ]; then cp -r ../assets temp_pkg/; fi
+	@if [ -d "../textures" ]; then cp -r ../textures temp_pkg/; fi
+	@# If Windows, Copy DLLs
+ifeq ($(OS), win)
+	@echo "Copying DLLs..."
+	cp $(DLL_FILES) temp_pkg/
+endif
+	@# Zip it up
+	cd temp_pkg && zip -r ../$(TARGET_DIR)/$(ZIP_NAME) .
+	@# Clean up temp folder
+	rm -rf temp_pkg
+	@echo "Created package: $(TARGET_DIR)/$(ZIP_NAME)"
+
 clean:
 	rm -f $(ALL) $(OBJS1) $(OBJS2) $(COMMON_OBJS) $(TARGET1) $(TARGET2)
+	rm -rf $(TARGET_DIR)
  

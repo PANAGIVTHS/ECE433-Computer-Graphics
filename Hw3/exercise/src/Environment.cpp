@@ -5,6 +5,7 @@
 #include "Celestial.h"
 #include "Spline.h"
 #include "WindowManager.h"
+#include "GameManager.h"
 
 
 Environment::Environment(Color3f skyColor) {
@@ -16,7 +17,7 @@ void Environment::init() {
 }
 
 void Environment::spawn() {
-    Object *portal = AssetLoader::load("../assets/nether_portal.txt");
+    Object *portal = AssetLoader::load(GameManager::getAssetPath("nether_portal.txt"));
     portal->setStatic(true);
     LightConfig config;
     config.position = {2.0f, 1.5f, 0.5f};

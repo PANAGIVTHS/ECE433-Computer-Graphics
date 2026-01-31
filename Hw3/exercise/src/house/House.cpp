@@ -11,6 +11,7 @@
 #include "../Model.h"
 #include "../AssetLoader.h"
 #include "../LightingManager.h"
+#include "../GameManager.h"
 #include "../Spline.h"
 
 void House::setup() {
@@ -31,7 +32,7 @@ void House::setup() {
     diningRoom->setStatic(true);
 
     Garage *garage = new Garage(diningRoom->getPosition() + Vec3<GLfloat>(DiningRoom::totalWidth - House::ridgeThickness, 0, -House::garageInset), scale);
-    Model *car = new Model("../assets/Car.obj", Vec3(Garage::totalWidth / 2.5f, floorHeight + 0.2f, Garage::totalLength / 2.0f), false, {1.0f, 1.0f, 1.0f}, TextureID::CAR, MaterialID::MATTE);
+    Model *car = new Model(GameManager::getAssetPath("Car.obj"), Vec3(Garage::totalWidth / 2.5f, floorHeight + 0.2f, Garage::totalLength / 2.0f), false, {1.0f, 1.0f, 1.0f}, TextureID::CAR, MaterialID::MATTE);
     car->setRotation(180, Vec3<GLfloat>(0.0f, 1.0f, 0.0f));
     car->setStatic(true);
     garage->addChildren(car);
@@ -57,13 +58,13 @@ void House::setup() {
     hallway->setPosition(hallwayPosition);
     addChildren(hallway);
 
-    Model *tv = new Model("../assets/tv.obj", Vec3(8.4f, 0.8f, -5.5f), false, {1.0f, 1.0f, 1.0f}, TextureID::TV, MaterialID::MATTE);
+    Model *tv = new Model(GameManager::getAssetPath("tv.obj"), Vec3(8.4f, 0.8f, -5.5f), false, {1.0f, 1.0f, 1.0f}, TextureID::TV, MaterialID::MATTE);
     tv->setRotation(180, Vec3<GLfloat>(0.0f, 1.0f, 0.0f));
     tv->setScale(0.17, 0.17, 0.17);
     addChildren(tv);
     tv->setStatic(true);
 
-    Object *ceilingLight = AssetLoader::load("../assets/ceilingLight.txt", Vec3<GLfloat>(0.0f, 0.0f, 0.0f));
+    Object *ceilingLight = AssetLoader::load(GameManager::getAssetPath("ceilingLight.txt"), Vec3<GLfloat>(0.0f, 0.0f, 0.0f));
     LightConfig config;
     config.position = {0.0f, -1.05f, 0.0f};
     config.color = {1.0f, 1.0f, 1.0f};
@@ -73,7 +74,7 @@ void House::setup() {
     addChildren(ceilingLight);
 
 
-    Object *bathroomMirror = AssetLoader::load("../assets/bathroommirror.txt", Vec3<GLfloat>(0.0f, 0.0f, 0.0f));
+    Object *bathroomMirror = AssetLoader::load(GameManager::getAssetPath("bathroommirror.txt"), Vec3<GLfloat>(0.0f, 0.0f, 0.0f));
     LightConfig mirrorConfig;
     mirrorConfig.position = {0.0f, 0.55f, 0.08f};
     mirrorConfig.color = {1.0f, 1.0f, 1.0f};
@@ -143,11 +144,11 @@ void House::setup() {
         House::lightColor
     ));
 
-    roof->addChildren(AssetLoader::load("../assets/roof.txt", Vec3<GLfloat>(-bedroom2->getPosition().x, 0.0f, -bedroom2->getPosition().z)));
+    roof->addChildren(AssetLoader::load(GameManager::getAssetPath("roof.txt"), Vec3<GLfloat>(-bedroom2->getPosition().x, 0.0f, -bedroom2->getPosition().z)));
 
     addChildren(roof);
 
-    Object* faucet = AssetLoader::load("../assets/tap.txt", Vec3<float>(0.0f, 0.3f, 0.0f)); 
+    Object* faucet = AssetLoader::load(GameManager::getAssetPath("tap.txt"), Vec3<float>(0.0f, 0.3f, 0.0f)); 
 
     std::vector<Vec3<float>> pathPoints;
     pathPoints.push_back(Vec3<float>(0.0f, 1.025f, 0.35f)); 
