@@ -1,14 +1,35 @@
-OS ?= detect
+HOST_OS ?= detect
+TARGET_OS ?= detect
 CC = gcc
 
 TIMESTAMP := $(shell date +%Y%m%d-%H%M%S)
 
+# Detect macOS
+ifeq ($(shell sw_vers 2>/dev/null | grep mac | awk '{ print $$2}'),macOS)
+    HOST_OS = mac
+    RM = rm
+# Detect Windows
+else ifeq ($(OS), Windows_NT)
+    HOST_OS = win
+    RM = del /Q
+# Detect Linux
+else 
+    HOST_OS = linux
+    RM = rm
+endif
+
+ifeq ($(TARGET_OS), detect)
+    TARGET_OS = $(HOST_OS)
+endif
+
 # --- Windows Configuration (Cross-Compile) ---
-ifeq ($(OS), win)
-    CC = x86_64-w64-mingw32-g++
+ifeq ($(TARGET_OS), win)
+    ifneq ($(filter linux mac,$(HOST_OS)),)
+        CC = x86_64-w64-mingw32-g++
+    endif
     EXT = .exe
     
-    LIB_DIR = ../lib/$(OS)/
+    LIB_DIR = ../lib/$(TARGET_OS)/
 
     INCFLAGS = -I$(LIB_DIR)/freeglut/include -I$(LIB_DIR)/glew/include
     
@@ -26,14 +47,12 @@ else
     EXT = 
     # Detect macOS
     ifeq ($(shell sw_vers 2>/dev/null | grep mac | awk '{ print $$2}'),macOS)
-		OS = mac
         CFLAGS = -g -Wno-deprecated-declarations
         INCFLAGS = -I/usr/X11/include
         LDFLAGS = -framework OpenGL -framework GLUT -framework Cocoa
     
     # Detect Linux
     else
-		OS = linux
         CFLAGS = -g
         INCFLAGS = -I/usr/X11R6/include -I/sw/include \
                    -I/usr/sww/include -I/usr/sww/pkg/Mesa/include
@@ -43,13 +62,11 @@ else
     endif
 endif
 
-RM = /bin/rm -f
-
 # Add extension to targets
-TARGET_DIR = ../target/$(OS)
+TARGET_DIR = ../target/$(TARGET_OS)
 TARGET1 = $(TARGET_DIR)/visiting3Dhouse$(EXT)
 TARGET2 = $(TARGET_DIR)/views$(EXT)
-ZIP_NAME = $(OS)-build-$(TIMESTAMP).zip
+ZIP_NAME = $(TARGET_OS)-build-$(TIMESTAMP).zip
 
 HOUSE_SRCS = house/Garage.cpp house/House.cpp house/Lantern.cpp house/Porch.cpp \
             house/BuildingBlocks.cpp house/Bathroom.cpp house/Bedroom1.cpp \
@@ -101,7 +118,7 @@ views.o: views.cpp
 	$(CC) $(CFLAGS) $(INCFLAGS) -c $< -o $@
 
 package: all
-	@echo "Packaging for $(OS)..."
+	@echo "Packaging for $(TARGET_OS)..."
 	@mkdir -p temp_pkg
 	@# Copy Executables
 	cp $(TARGET1) temp_pkg/
@@ -110,7 +127,7 @@ package: all
 	@if [ -d "../assets" ]; then cp -r ../assets temp_pkg/; fi
 	@if [ -d "../textures" ]; then cp -r ../textures temp_pkg/; fi
 	@# If Windows, Copy DLLs
-ifeq ($(OS), win)
+ifeq ($(TARGET_OS), win)
 	@echo "Copying DLLs..."
 	cp $(DLL_FILES) temp_pkg/
 endif
