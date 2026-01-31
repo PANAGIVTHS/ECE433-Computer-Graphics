@@ -79,6 +79,16 @@ void WindowManager::init() {
         }
     #endif
 
+    #if defined(_WIN32) && !defined(VSYNC)
+        typedef BOOL (APIENTRY *PFNWGLSWAPINTERVALEXTPROC)(int);
+        
+        PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC)wglGetProcAddress("wglSwapIntervalEXT");
+
+        if (wglSwapIntervalEXT) {
+            wglSwapIntervalEXT(0);
+        }
+    #endif
+
     if (mode) {
         glutIgnoreKeyRepeat(1);
         glutSetCursor(GLUT_CURSOR_NONE);

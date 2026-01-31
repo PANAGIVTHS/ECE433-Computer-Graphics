@@ -66,7 +66,7 @@ ifeq ($(TARGET_OS), win)
     endif
 
     EXT = .exe
-    LIB_DIR = ../lib/$(TARGET_OS)
+    LIB_DIR = ..\lib\$(TARGET_OS)
     
     # Note: Using relative paths with forward slashes usually works for MinGW GCC
     INCFLAGS = -I$(LIB_DIR)/freeglut/include -I$(LIB_DIR)/glew/include
@@ -77,7 +77,7 @@ ifeq ($(TARGET_OS), win)
               -static -static-libgcc -static-libstdc++ \
               -Wl,--subsystem,windows -lstdc++
 
-    DLL_FILES = $(LIB_DIR)/freeglut/bin/x64/freeglut.dll $(LIB_DIR)/glew/bin/Release/x64/glew32.dll
+    DLL_FILES = $(LIB_DIR)\freeglut\bin\x64\freeglut.dll $(LIB_DIR)\glew\bin\Release\x64\glew32.dll
 else
     EXT = 
     ifeq ($(TARGET_OS), mac)
