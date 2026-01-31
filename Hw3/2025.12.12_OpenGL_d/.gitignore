@@ -1,9 +1,0 @@
-*.o
-Sphere_red
-litsolids
-moon
-Sphere_Lighting
-Sphere_Lighting_two_lights
-culling
-texture_mapping
-movingCamera
