@@ -75,7 +75,7 @@ ifeq ($(TARGET_OS), win)
     LDFLAGS = -L$(LIB_DIR)/freeglut/lib/x64 -L$(LIB_DIR)/glew/lib/Release/x64 \
               -lfreeglut -lglew32 -lopengl32 -lglu32 \
               -static -static-libgcc -static-libstdc++ \
-              -Wl,--subsystem,windows
+              -Wl,--subsystem,windows -lstdc++
 
     DLL_FILES = $(LIB_DIR)/freeglut/bin/x64/freeglut.dll $(LIB_DIR)/glew/bin/Release/x64/glew32.dll
 else
@@ -159,7 +159,7 @@ ifeq ($(HOST_OS),win)
 	$(MKDIR_P) temp_pkg
 	$(CP) "$(TARGET_DIR)$(SEP)*.exe" temp_pkg$(SEP)
 	$(COPY_ASSETS)
-	$(CP) $(DLL_FILES) temp_pkg$(SEP)
+	$(foreach file,$(DLL_FILES),$(CP) $(file) temp_pkg$(SEP) &) echo Done copying DLLs.
 	$(ZIP) "temp_pkg\*" "$(TARGET_DIR)\$(ZIP_NAME)"
 	$(RM_RF) temp_pkg
 else
