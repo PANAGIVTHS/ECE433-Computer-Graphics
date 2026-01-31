@@ -4,8 +4,9 @@
 #include <algorithm>
 #include <omp.h>
 #include <iostream>
+#include <unordered_set>
 #include "Celestial.h" 
-#include "LightingManager.h" // Added
+#include "LightingManager.h"
 
 #ifdef __APPLE_CC__
 #include <GLUT/glut.h>
@@ -100,15 +101,19 @@ struct AABB {
 struct FastObj {
     Mat4 invWorld;      
     Mat4 worldRot;      
-    Vec3<float> color;
     AABB bounds;        
     Vec3<float> centroid; 
+    Object* original; // Pointer to check if static status changed
 };
 
 struct FastLight {
     Vec3<float> pos;
     Vec3<float> color;
     float constant, linear, quadratic;
+    bool isSpot;
+    Vec3<float> direction;
+    float cutOffCos;       
+    float spotExp;
 };
 
 struct BVHNode {
@@ -117,32 +122,38 @@ struct BVHNode {
     int objStart = 0, objCount = 0;
 };
 
-// Global Rendering Data
-std::vector<FastObj> primitives;
-std::vector<int> primitiveIndices;
-std::vector<BVHNode> bvhNodes;
-std::vector<FastLight> sceneLights; // Flattened lights
-static std::vector<Object*> renderQueue; 
+// --- DATA STORAGE ---
+// We now separate Static (Walls) from Dynamic (Doors/Player)
+std::vector<FastObj> staticPrims;
+std::vector<int> staticIndices;
+std::vector<BVHNode> staticNodes;
+bool staticBuilt = false; // Flag to build only once
+
+std::vector<FastObj> dynamicPrims;
+std::vector<int> dynamicIndices;
+std::vector<BVHNode> dynamicNodes;
+
+std::vector<FastLight> sceneLights;
 
 // ==========================================
-//           BVH BUILDER
+//           BVH BUILDER (Generic)
 // ==========================================
 
-void updateNodeBounds(int nodeIdx) {
-    BVHNode& node = bvhNodes[nodeIdx];
+void updateNodeBounds(std::vector<BVHNode>& nodes, const std::vector<FastObj>& prims, const std::vector<int>& indices, int nodeIdx) {
+    BVHNode& node = nodes[nodeIdx];
     node.box = AABB();
     for (int i = 0; i < node.objCount; ++i) {
-        int objIdx = primitiveIndices[node.objStart + i];
-        const AABB& objBox = primitives[objIdx].bounds;
+        int objIdx = indices[node.objStart + i];
+        const AABB& objBox = prims[objIdx].bounds;
         node.box.expand(objBox.min);
         node.box.expand(objBox.max);
     }
 }
 
-void splitBVH(int nodeIdx) {
-    if (bvhNodes[nodeIdx].objCount <= 2) return; 
+void splitBVH(std::vector<BVHNode>& nodes, const std::vector<FastObj>& prims, std::vector<int>& indices, int nodeIdx) {
+    if (nodes[nodeIdx].objCount <= 2) return; 
 
-    const BVHNode& node = bvhNodes[nodeIdx];
+    const BVHNode& node = nodes[nodeIdx];
     Vec3<float> extent = node.box.max - node.box.min;
     int axis = 0;
     if (extent.y > extent.x) axis = 1;
@@ -153,50 +164,50 @@ void splitBVH(int nodeIdx) {
     int i = node.objStart;
     int j = node.objStart + node.objCount - 1;
     while (i <= j) {
-        float pos = (axis == 0) ? primitives[primitiveIndices[i]].centroid.x :
-                    (axis == 1) ? primitives[primitiveIndices[i]].centroid.y :
-                                  primitives[primitiveIndices[i]].centroid.z;
+        float pos = (axis == 0) ? prims[indices[i]].centroid.x :
+                    (axis == 1) ? prims[indices[i]].centroid.y :
+                                  prims[indices[i]].centroid.z;
         if (pos < splitPos) i++;
         else {
-            std::swap(primitiveIndices[i], primitiveIndices[j]);
+            std::swap(indices[i], indices[j]);
             j--;
         }
     }
 
     int leftCount = i - node.objStart;
-    int currentObjCount = bvhNodes[nodeIdx].objCount;
-    
+    int currentObjCount = nodes[nodeIdx].objCount;
     if (leftCount == 0 || leftCount == currentObjCount) return; 
 
     int rightCount = currentObjCount - leftCount;
-    int currentStart = bvhNodes[nodeIdx].objStart;
+    int currentStart = nodes[nodeIdx].objStart;
 
-    int leftChildIdx = bvhNodes.size();
-    bvhNodes.push_back(BVHNode());
-    int rightChildIdx = bvhNodes.size();
-    bvhNodes.push_back(BVHNode());
+    int leftChildIdx = nodes.size();
+    nodes.push_back(BVHNode());
+    int rightChildIdx = nodes.size();
+    nodes.push_back(BVHNode());
 
-    bvhNodes[nodeIdx].leftIndex = leftChildIdx;
-    bvhNodes[nodeIdx].rightIndex = rightChildIdx;
-    bvhNodes[nodeIdx].objCount = 0; 
+    nodes[nodeIdx].leftIndex = leftChildIdx;
+    nodes[nodeIdx].rightIndex = rightChildIdx;
+    nodes[nodeIdx].objCount = 0; 
 
-    bvhNodes[leftChildIdx].objStart = currentStart;
-    bvhNodes[leftChildIdx].objCount = leftCount;
-    
-    bvhNodes[rightChildIdx].objStart = i; 
-    bvhNodes[rightChildIdx].objCount = rightCount; 
+    nodes[leftChildIdx].objStart = currentStart;
+    nodes[leftChildIdx].objCount = leftCount;
+    nodes[rightChildIdx].objStart = i; 
+    nodes[rightChildIdx].objCount = rightCount; 
 
-    updateNodeBounds(leftChildIdx);
-    updateNodeBounds(rightChildIdx);
-    splitBVH(leftChildIdx);
-    splitBVH(rightChildIdx);
+    updateNodeBounds(nodes, prims, indices, leftChildIdx);
+    updateNodeBounds(nodes, prims, indices, rightChildIdx);
+    splitBVH(nodes, prims, indices, leftChildIdx);
+    splitBVH(nodes, prims, indices, rightChildIdx);
 }
 
 // ==========================================
 //           INTERSECTION LOGIC
 // ==========================================
 
-bool intersectUnitBox(const Vec3<float>& origin, const Vec3<float>& dir, float& tOut, Vec3<float>& nOut) {
+// Optimization: Inline and reduce divisions
+inline bool intersectUnitBox(const Vec3<float>& origin, const Vec3<float>& dir, float& tOut) {
+    // Standard slab method without normal calculation (faster)
     float tMin = -1e9, tMax = 1e9;
     Vec3<float> minB(-0.5f, -0.5f, -0.5f), maxB(0.5f, 0.5f, 0.5f);
     float invDx = 1.0f/dir.x, invDy = 1.0f/dir.y, invDz = 1.0f/dir.z;
@@ -210,39 +221,49 @@ bool intersectUnitBox(const Vec3<float>& origin, const Vec3<float>& dir, float& 
 
     if (tMin <= tMax && tMax >= 0) {
         tOut = (tMin > 0) ? tMin : tMax;
-        Vec3<float> p = origin + dir * tOut;
-        float eps = 1e-3f;
-        if (std::abs(p.x - minB.x) < eps) nOut = {-1, 0, 0};
-        else if (std::abs(p.x - maxB.x) < eps) nOut = {1, 0, 0};
-        else if (std::abs(p.y - minB.y) < eps) nOut = {0, -1, 0};
-        else if (std::abs(p.y - maxB.y) < eps) nOut = {0, 1, 0};
-        else if (std::abs(p.z - minB.z) < eps) nOut = {0, 0, -1};
-        else nOut = {0, 0, 1};
         return true;
     }
     return false;
 }
 
-void traceBVH(const Vec3<float>& rayOrg, const Vec3<float>& rayDir, float& closestT, int& hitIndex, Vec3<float>& hitNormal, bool shadowMode) {
-    int stack[128]; int stackPtr = 0; stack[stackPtr++] = 0; 
+// Separate function to calculate normal ONLY when needed
+Vec3<float> getBoxNormal(const Vec3<float>& p) {
+    Vec3<float> minB(-0.5f, -0.5f, -0.5f), maxB(0.5f, 0.5f, 0.5f);
+    float eps = 1e-3f;
+    if (std::abs(p.x - minB.x) < eps) return {-1, 0, 0};
+    if (std::abs(p.x - maxB.x) < eps) return {1, 0, 0};
+    if (std::abs(p.y - minB.y) < eps) return {0, -1, 0};
+    if (std::abs(p.y - maxB.y) < eps) return {0, 1, 0};
+    if (std::abs(p.z - minB.z) < eps) return {0, 0, -1};
+    return {0, 0, 1};
+}
+
+void traceTree(const std::vector<BVHNode>& nodes, const std::vector<FastObj>& prims, const std::vector<int>& indices, 
+               const Vec3<float>& rayOrg, const Vec3<float>& rayDir, float& closestT, int& hitIndex, bool& hitStatic, bool isStaticTree, bool shadowMode) {
+    if(nodes.empty()) return;
+
+    int stack[64]; int stackPtr = 0; stack[stackPtr++] = 0; 
     Vec3<float> invDir = {1.0f/rayDir.x, 1.0f/rayDir.y, 1.0f/rayDir.z};
 
     while (stackPtr > 0) {
         int nodeIdx = stack[--stackPtr];
-        const BVHNode& node = bvhNodes[nodeIdx];
+        const BVHNode& node = nodes[nodeIdx];
         if (node.box.intersect(rayOrg, invDir) >= closestT) continue;
 
         if (node.leftIndex == -1) { 
             for (int i = 0; i < node.objCount; ++i) {
-                int objIdx = primitiveIndices[node.objStart + i];
-                const FastObj& obj = primitives[objIdx];
+                int objIdx = indices[node.objStart + i];
+                const FastObj& obj = prims[objIdx];
                 Vec3<float> lOrg = obj.invWorld.transformPoint(rayOrg);
                 Vec3<float> lDir = obj.invWorld.transformDir(rayDir);
-                float t = 0; Vec3<float> n;
-                if (intersectUnitBox(lOrg, lDir, t, n)) {
+                float t = 0;
+                // Optimization: Don't calc normal here
+                if (intersectUnitBox(lOrg, lDir, t)) {
                     if (t < closestT && t > 0.001f) {
                         if (shadowMode) { closestT = t; return; }
-                        closestT = t; hitIndex = objIdx; hitNormal = n;
+                        closestT = t; 
+                        hitIndex = objIdx; 
+                        hitStatic = isStaticTree;
                     }
                 }
             }
@@ -260,7 +281,7 @@ void traceBVH(const Vec3<float>& rayOrg, const Vec3<float>& rayDir, float& close
 void RayTracer::render(int screenWidth, int screenHeight) {
     if (!enabled) return;
 
-    int scale = 14; // 1/20th Resolution
+    int scale = 5; 
     int w = screenWidth / scale;
     int h = screenHeight / scale;
     if (w <= 0 || h <= 0) return;
@@ -275,27 +296,25 @@ void RayTracer::render(int screenWidth, int screenHeight) {
     glGetIntegerv(GL_VIEWPORT, viewport);
     glPopMatrix(); 
 
-    // --- 1. COLLECT LIGHTS (Flattened) ---
+    // --- 1. COLLECT LIGHTS & BLOCKERS ---
     sceneLights.clear();
-    // A. Sun (Explicit)
+    std::unordered_set<Object*> lightOwners; 
+
     if (GameManager::getSun()) {
         FastLight sun;
         sun.pos = GameManager::getSun()->getWorldPosition();
-        sun.color = {1.0f, 1.0f, 1.0f}; // Sun color
+        sun.color = {1.0f, 1.0f, 1.0f}; 
         sun.constant = 1.0f; sun.linear = 0.0f; sun.quadratic = 0.0f;
+        sun.isSpot = false;
         sceneLights.push_back(sun);
     }
-    // B. LightingManager Lights
     const auto& regLights = LightingManager::getLights();
     for (const auto& pair : regLights) {
         const RegisteredLight& reg = pair.second;
         if (reg.owner && reg.owner->isHidden()) continue;
+        if (reg.owner) lightOwners.insert(reg.owner); 
 
         FastLight L;
-        if (reg.owner) L.pos = reg.config.position + reg.owner->getWorldPosition();
-        else L.pos = reg.config.position;
-
-        // Use diffuse color (or color if diffuse is unset)
         float r = (reg.config.diffuse.x < 0) ? reg.config.color.x : reg.config.diffuse.x;
         float g = (reg.config.diffuse.y < 0) ? reg.config.color.y : reg.config.diffuse.y;
         float b = (reg.config.diffuse.z < 0) ? reg.config.color.z : reg.config.diffuse.z;
@@ -303,37 +322,49 @@ void RayTracer::render(int screenWidth, int screenHeight) {
         L.constant = reg.config.constant;
         L.linear = reg.config.linear;
         L.quadratic = reg.config.quadratic;
+        L.isSpot = (reg.config.spotCutoff < 179.0f);
+        L.spotExp = reg.config.spotExponent;
+        L.cutOffCos = cos(reg.config.spotCutoff * M_PI / 180.0f);
+        
+        if (reg.owner) {
+            L.pos = reg.config.position + reg.owner->getWorldPosition();
+            Mat4 rotMat = Mat4::identity();
+            Object* curr = reg.owner;
+            std::vector<Object*> chain;
+            while(curr) { chain.push_back(curr); curr = curr->getParent(); }
+            for(int k=chain.size()-1; k>=0; k--) {
+                Object* o = chain[k];
+                rotMat = makeRotate(o->getRotationAngle(), o->getRotationAxis()) * rotMat;
+            }
+            L.direction = rotMat.transformDir(reg.config.spotDirection);
+        } else {
+            L.pos = reg.config.position;
+            L.direction = reg.config.spotDirection; 
+        }
+        float dMag = sqrt(L.direction.x*L.direction.x + L.direction.y*L.direction.y + L.direction.z*L.direction.z);
+        if(dMag > 0) L.direction = L.direction * (1.0f/dMag);
         sceneLights.push_back(L);
     }
 
-    // --- 2. PREPARE OBJECTS ---
-    renderQueue.clear();
+    // --- 2. BUILD SCENE (STATIC vs DYNAMIC) ---
+    // Clear dynamic every frame
+    dynamicPrims.clear();
+    dynamicIndices.clear();
+    dynamicNodes.clear();
+
     const auto& allObjects = ObjectHandler::getAllObjects();
-    renderQueue.reserve(allObjects.size());
-    for (Object* obj : allObjects) {
-        if (!obj || obj->isHidden() || dynamic_cast<Celestial*>(obj)) continue;
-        if (dynamic_cast<Cuboid*>(obj) || dynamic_cast<Cube*>(obj)) renderQueue.push_back(obj);
-    }
     
-    if(primitives.size() != renderQueue.size()) primitives.resize(renderQueue.size());
-    if(primitiveIndices.size() != renderQueue.size()) primitiveIndices.resize(renderQueue.size());
-
-    Vec3<float> corners[8] = {{-0.5,-0.5,-0.5},{0.5,-0.5,-0.5},{-0.5,0.5,-0.5},{0.5,0.5,-0.5},{-0.5,-0.5,0.5},{0.5,-0.5,0.5},{-0.5,0.5,0.5},{0.5,0.5,0.5}};
-
-    #pragma omp parallel for schedule(static)
-    for(int i = 0; i < (int)renderQueue.size(); i++) {
-        Object* obj = renderQueue[i];
+    // Helper to process an object into a FastObj
+    auto processObj = [&](Object* obj) -> FastObj {
         Mat4 combinedInv = Mat4::identity();
         Mat4 combinedFwd = Mat4::identity();
         Mat4 combinedRot = Mat4::identity();
-
         Object* curr = obj;
         while(curr) {
              Mat4 invS = makeInvScale(curr->getScale());
              Mat4 invR = makeRotate(-curr->getRotationAngle(), curr->getRotationAxis()); 
              Mat4 invT = makeInvTranslate(curr->getPosition());
              combinedInv = combinedInv * (invS * (invR * invT)); 
-
              Mat4 fwdS = makeScale(curr->getScale());
              Mat4 fwdR = makeRotate(curr->getRotationAngle(), curr->getRotationAxis());
              Mat4 fwdT = makeTranslate(curr->getPosition());
@@ -341,28 +372,63 @@ void RayTracer::render(int screenWidth, int screenHeight) {
              combinedRot = makeRotate(curr->getRotationAngle(), curr->getRotationAxis()) * combinedRot;
              curr = curr->getParent();
         }
-
-        FastObj& fObj = primitives[i];
+        FastObj fObj;
         fObj.invWorld = combinedInv;
         fObj.worldRot = combinedRot;
-        Color3f c = obj->getColor();
-        fObj.color = {c.red, c.green, c.blue};
-        
+        fObj.original = obj;
         fObj.bounds = AABB();
+        Vec3<float> corners[8] = {{-0.5,-0.5,-0.5},{0.5,-0.5,-0.5},{-0.5,0.5,-0.5},{0.5,0.5,-0.5},{-0.5,-0.5,0.5},{0.5,-0.5,0.5},{-0.5,0.5,0.5},{0.5,0.5,0.5}};
         for(int k=0; k<8; k++) fObj.bounds.expand(combinedFwd.transformPoint(corners[k]));
         fObj.centroid = fObj.bounds.center();
-        primitiveIndices[i] = i;
+        return fObj;
+    };
+
+    // If static tree not built, build it now
+    if (!staticBuilt) {
+        staticPrims.clear();
+        staticIndices.clear();
+        staticNodes.clear();
+        for (Object* obj : allObjects) {
+            if (!obj || obj->isHidden() || dynamic_cast<Celestial*>(obj)) continue;
+            // Skip light owners
+            bool isLight = false; Object* p=obj; while(p){if(lightOwners.count(p)){isLight=true;break;}p=p->getParent();}
+            if(isLight) continue;
+
+            if ((dynamic_cast<Cuboid*>(obj) || dynamic_cast<Cube*>(obj)) && obj->isStatic()) {
+                staticPrims.push_back(processObj(obj));
+                staticIndices.push_back(staticPrims.size()-1);
+            }
+        }
+        if (!staticPrims.empty()) {
+            staticNodes.reserve(staticPrims.size()*2);
+            staticNodes.push_back(BVHNode());
+            staticNodes[0].objCount = staticPrims.size();
+            updateNodeBounds(staticNodes, staticPrims, staticIndices, 0);
+            splitBVH(staticNodes, staticPrims, staticIndices, 0);
+        }
+        staticBuilt = true; 
     }
 
-    if (renderQueue.empty()) return;
+    // Build Dynamic Tree (Every Frame)
+    for (Object* obj : allObjects) {
+        if (!obj || obj->isHidden() || dynamic_cast<Celestial*>(obj)) continue;
+        bool isLight = false; Object* p=obj; while(p){if(lightOwners.count(p)){isLight=true;break;}p=p->getParent();}
+        if(isLight) continue;
 
-    bvhNodes.clear(); bvhNodes.reserve(renderQueue.size() * 2);
-    bvhNodes.push_back(BVHNode()); 
-    bvhNodes[0].objStart = 0; bvhNodes[0].objCount = renderQueue.size();
-    updateNodeBounds(0);
-    splitBVH(0);
+        if ((dynamic_cast<Cuboid*>(obj) || dynamic_cast<Cube*>(obj)) && !obj->isStatic()) {
+            dynamicPrims.push_back(processObj(obj));
+            dynamicIndices.push_back(dynamicPrims.size()-1);
+        }
+    }
+    if (!dynamicPrims.empty()) {
+        dynamicNodes.reserve(dynamicPrims.size()*2);
+        dynamicNodes.push_back(BVHNode());
+        dynamicNodes[0].objCount = dynamicPrims.size();
+        updateNodeBounds(dynamicNodes, dynamicPrims, dynamicIndices, 0);
+        splitBVH(dynamicNodes, dynamicPrims, dynamicIndices, 0);
+    }
 
-    // --- 3. RENDER PIXELS ---
+    // --- 3. RENDER MASK ---
     #pragma omp parallel for schedule(dynamic)
     for (int y = 0; y < h; ++y) {
         for (int x = 0; x < w; ++x) {
@@ -375,62 +441,81 @@ void RayTracer::render(int screenWidth, int screenHeight) {
             float mag = sqrt(dir.x*dir.x + dir.y*dir.y + dir.z*dir.z);
             dir = dir * (1.0f/mag);
 
-            float closestT = 1e9f; int hitIndex = -1; Vec3<float> hitNormal;
-            traceBVH(org, dir, closestT, hitIndex, hitNormal, false);
+            float closestT = 1e9f; int hitIndex = -1; bool hitStatic = false;
+            
+            // Check Both Trees
+            traceTree(staticNodes, staticPrims, staticIndices, org, dir, closestT, hitIndex, hitStatic, true, false);
+            traceTree(dynamicNodes, dynamicPrims, dynamicIndices, org, dir, closestT, hitIndex, hitStatic, false, false);
 
-            Vec3<float> finalColor(0.0f, 0.0f, 0.0f); // Start black, add ambient later
+            Vec3<float> maskValue(1.0f, 1.0f, 1.0f); // Default White (Sky)
             
             if (hitIndex != -1) {
-                const FastObj& hitObj = primitives[hitIndex];
-                Vec3<float> worldNormal = hitObj.worldRot.transformDir(hitNormal);
+                // Fetch Hit Object Data
+                const FastObj& hitObj = hitStatic ? staticPrims[hitIndex] : dynamicPrims[hitIndex];
+                
+                // Calculate Normal (Deferred)
+                Vec3<float> lOrg = hitObj.invWorld.transformPoint(org);
+                Vec3<float> lDir = hitObj.invWorld.transformDir(dir);
+                float tLocal = 0; intersectUnitBox(lOrg, lDir, tLocal); // Re-calc tlocal
+                Vec3<float> localNormal = getBoxNormal(lOrg + lDir * tLocal);
+                Vec3<float> worldNormal = hitObj.worldRot.transformDir(localNormal);
+                
                 float nm = sqrt(worldNormal.x*worldNormal.x + worldNormal.y*worldNormal.y + worldNormal.z*worldNormal.z);
                 if (nm > 0) worldNormal = worldNormal * (1.0f/nm);
+                
                 Vec3<float> hitPoint = org + dir * closestT;
 
-                // Base Ambient
-                finalColor = hitObj.color * 0.3f; 
+                maskValue = {0.3f, 0.3f, 0.3f}; // Ambient
 
-                // Loop Lights
                 for (const auto& L : sceneLights) {
-                    Vec3<float> lightVec = L.pos - hitPoint;
+                    Vec3<float> safePos = L.pos;
+                    if(L.isSpot) safePos = safePos + L.direction * 1.5f; 
+
+                    Vec3<float> lightVec = safePos - hitPoint;
                     float dist2 = lightVec.x*lightVec.x + lightVec.y*lightVec.y + lightVec.z*lightVec.z;
                     float dist = sqrt(dist2);
                     Vec3<float> lightDir = lightVec * (1.0f/dist);
 
+                    float spotEffect = 1.0f;
+                    if (L.isSpot) {
+                        float theta = L.direction.dot(lightDir * -1.0f); 
+                        if (theta > L.cutOffCos) spotEffect = pow(theta, L.spotExp); 
+                        else spotEffect = 0.0f; 
+                    }
+                    if (spotEffect <= 0.001f) continue;
+
                     float NdotL = worldNormal.dot(lightDir);
                     if (NdotL > 0.0f) {
-                        float shadowT = dist; int sIdx = -1; Vec3<float> sNorm;
-                        // Offset to prevent acne
-                        traceBVH(hitPoint + lightDir * 0.1f, lightDir, shadowT, sIdx, sNorm, true);
+                        float shadowT = dist; int sIdx = -1; bool sStatic=false;
+                        // Shadow Check Both Trees
+                        traceTree(staticNodes, staticPrims, staticIndices, hitPoint + lightDir * 0.1f, lightDir, shadowT, sIdx, sStatic, true, true);
+                        if(shadowT >= dist - 0.2f) { // If didn't hit static closer than light
+                             traceTree(dynamicNodes, dynamicPrims, dynamicIndices, hitPoint + lightDir * 0.1f, lightDir, shadowT, sIdx, sStatic, false, true);
+                        }
                         
-                        if (shadowT >= dist - 0.2f) { // Visible
+                        if (shadowT >= dist - 0.2f) { 
                             float atten = 1.0f / (L.constant + L.linear*dist + L.quadratic*dist2);
-                            float diff = NdotL * atten;
-                            
-                            // Accumulate
-                            finalColor.x += hitObj.color.x * L.color.x * diff;
-                            finalColor.y += hitObj.color.y * L.color.y * diff;
-                            finalColor.z += hitObj.color.z * L.color.z * diff;
+                            float intensity = NdotL * atten * spotEffect * 5.0f; 
+                            maskValue.x += L.color.x * intensity;
+                            maskValue.y += L.color.y * intensity;
+                            maskValue.z += L.color.z * intensity;
                         }
                     }
                 }
-                // Clamp
-                if (finalColor.x > 1.0f) finalColor.x = 1.0f;
-                if (finalColor.y > 1.0f) finalColor.y = 1.0f;
-                if (finalColor.z > 1.0f) finalColor.z = 1.0f;
-
-            } else {
-                finalColor = {0.4f, 0.6f, 0.9f}; // Sky
+                if (maskValue.x > 1.0f) maskValue.x = 1.0f;
+                if (maskValue.y > 1.0f) maskValue.y = 1.0f;
+                if (maskValue.z > 1.0f) maskValue.z = 1.0f;
             }
 
             int idx = (y * w + x) * 3;
-            pixelBuffer[idx]   = (unsigned char)(finalColor.x*255);
-            pixelBuffer[idx+1] = (unsigned char)(finalColor.y*255);
-            pixelBuffer[idx+2] = (unsigned char)(finalColor.z*255);
+            pixelBuffer[idx]   = (unsigned char)(maskValue.x*255);
+            pixelBuffer[idx+1] = (unsigned char)(maskValue.y*255);
+            pixelBuffer[idx+2] = (unsigned char)(maskValue.z*255);
         }
     }
 
     glDisable(GL_LIGHTING); glDisable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND); glBlendFunc(GL_DST_COLOR, GL_ZERO);
     glMatrixMode(GL_PROJECTION); glPushMatrix(); glLoadIdentity();
     glMatrixMode(GL_MODELVIEW); glPushMatrix(); glLoadIdentity();
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -439,4 +524,5 @@ void RayTracer::render(int screenWidth, int screenHeight) {
     glDrawPixels(w, h, GL_RGB, GL_UNSIGNED_BYTE, pixelBuffer.data());
     glPopMatrix(); glMatrixMode(GL_PROJECTION); glPopMatrix();
     glMatrixMode(GL_MODELVIEW); glEnable(GL_DEPTH_TEST); glEnable(GL_LIGHTING);
+    glDisable(GL_BLEND);
 }

@@ -59,22 +59,14 @@ void init(int argc, char *argv[]) {
 }
 
 void display() {
-    if (RayTracer::isEnabled()) {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        RayTracer::render(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
-        WindowManager::drawFPS(GameManager::getFPS());
-        glutSwapBuffers();
-        return; // <--- Don't run the rest
-    }
-
-    // 2. Normal Rendering (Only runs if RayTracer is OFF)
+    // 1. ALWAYS Clear & Setup (Normal Rendering)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
     GameManager::getCamera()->set();
     LightingManager::updateAllLights();
     
-    // Draw Test Cube normally so you can find it
+    // 2. Draw Your Scene Normally (Textures, Models, etc.)
     if (GameManager::getTestCube()) {
         GameManager::getTestCube()->draw();
     }
@@ -83,6 +75,7 @@ void display() {
         if (!o->hasTransparency()) o->draw();
     }
 
+    // Draw Transparent Objects (Sorted)
     std::vector<Object*>& trans = ObjectHandler::getTransObjects();
     Vec3<float> camPos = GameManager::getCamera()->getPosition();
     std::sort(trans.begin(), trans.end(), [camPos](Object* a, Object* b) {
@@ -93,6 +86,13 @@ void display() {
     for (Object *o : trans) o->draw();
     glDepthMask(GL_TRUE);
 
+    // 3. APPLY RAY TRACING (Lightmap Overlay)
+    // This draws the shadow/light mask ON TOP of the finished scene using multiplication
+    if (RayTracer::isEnabled()) {
+        RayTracer::render(glutGet(GLUT_WINDOW_WIDTH), glutGet(GLUT_WINDOW_HEIGHT));
+    }
+
+    // 4. Draw UI & Swap
     WindowManager::drawFPS(GameManager::getFPS());
     glutSwapBuffers();
 }
