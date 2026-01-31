@@ -1,6 +1,7 @@
 # --- Global Settings ---
 HOST_OS ?= detect
 TARGET_OS ?= detect
+INCLUDE_LIBS ?= 1
 # Default to g++ for C++ projects to avoid linking issues
 CC = gcc
 
@@ -18,6 +19,10 @@ endif
 
 ifeq ($(TARGET_OS), detect)
     TARGET_OS = $(HOST_OS)
+else ifeq ($(HOST_OS), win)
+    TARGET_OS = win
+else ifeq ($(HOST_OS), mac)
+    TARGET_OS = mac
 endif
 
 # --- Platform Specific Commands ---
@@ -77,7 +82,7 @@ ifeq ($(TARGET_OS), win)
               -static -static-libgcc -static-libstdc++ \
               -Wl,--subsystem,windows -lstdc++
 
-    DLL_FILES = $(LIB_DIR)$(SEP)freeglut$(SEP)bin$(SEP)x64$(SEP)freeglut.dll $(LIB_DIR)$(SEP)glew$(SEP)bin$(SEP)Release$(SEP)x64$(SEP)glew32.dll
+    LIBS = $(LIB_DIR)$(SEP)freeglut$(SEP)bin$(SEP)x64$(SEP)freeglut.dll $(LIB_DIR)$(SEP)glew$(SEP)bin$(SEP)Release$(SEP)x64$(SEP)glew32.dll
 else
     EXT = 
     ifeq ($(TARGET_OS), mac)
@@ -86,12 +91,24 @@ else
         LDFLAGS = -framework OpenGL -framework GLUT -framework Cocoa
     else
         # Linux
-        CFLAGS = -g
-        INCFLAGS = -I/usr/X11R6/include -I/sw/include \
-                   -I/usr/sww/include -I/usr/sww/pkg/Mesa/include
-        LDFLAGS = -L/usr/X11R6/lib -L/sw/lib -L/usr/sww/lib \
-                  -L/usr/sww/bin -L/usr/sww/pkg/Mesa/lib \
-                  -lGLEW -lglut -lGLU -lGL -lX11 -lm -lstdc++
+        LIB_DIR = ..$(SEP)lib$(SEP)linux
+
+        # Libs for local opengl library
+#         INCFLAGS = -I/usr/X11R6/include -I/sw/include \
+#                    -I/usr/sww/include -I/usr/sww/pkg/Mesa/include
+
+#         LDFLAGS = -L/usr/X11R6/lib -L/sw/lib -L/usr/sww/lib \
+#                   -L/usr/sww/bin -L/usr/sww/pkg/Mesa/lib \
+#                   -lGLEW -lglut -lGLU -lGL -lX11 -lm -lstdc++
+        INCFLAGS = -I$(LIB_DIR)/glew/include \
+                   -I$(LIB_DIR)/freeglut/include
+        LDFLAGS = -L$(LIB_DIR)/glew/lib \
+                        -L$(LIB_DIR)/freeglut/lib \
+                        -Wl,-rpath,'$$ORIGIN' \
+                        -lGLEW -lglut -lGLU -lGL -lX11 -lm -lstdc++
+                  
+        LIBS = $(LIB_DIR)/glew/lib/libGLEW.so* \
+                $(LIB_DIR)/freeglut/lib/libglut.so*
     endif
 endif
 
@@ -159,7 +176,9 @@ ifeq ($(HOST_OS),win)
 	$(MKDIR_P) temp_pkg
 	$(CP) "$(TARGET_DIR)$(SEP)*.exe" temp_pkg$(SEP)
 	$(COPY_ASSETS)
-	$(foreach file,$(DLL_FILES),$(CP) $(file) temp_pkg$(SEP) &) echo Done copying DLLs.
+ifeq ($(INCLUDE_LIBS), 1)
+	$(foreach file,$(LIBS),$(CP) $(file) temp_pkg$(SEP);)
+endif
 	$(ZIP) "temp_pkg\*" "$(TARGET_DIR)\$(ZIP_NAME)"
 	$(RM_RF) temp_pkg
 else
@@ -168,8 +187,8 @@ else
 	$(CP) $(TARGET1) temp_pkg/
 	$(CP) $(TARGET2) temp_pkg/
 	$(COPY_ASSETS)
-ifeq ($(TARGET_OS),win)
-	$(CP) $(DLL_FILES) temp_pkg/
+ifeq ($(INCLUDE_LIBS), 1)
+	$(foreach file,$(LIBS),$(CP) $(file) temp_pkg$(SEP);)
 endif
 	cd temp_pkg && $(ZIP) ../$(TARGET_DIR)/$(ZIP_NAME) .
 	$(RM_RF) temp_pkg
