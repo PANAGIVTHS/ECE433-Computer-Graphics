@@ -17,16 +17,16 @@ void Environment::init() {
 
 void Environment::spawn() {
     // 1. Nether Portal
-    // Object *portal = AssetLoader::load(GameManager::getAssetPath("nether_portal.txt"));
-    // portal->setStatic(true);
+    Object *portal = AssetLoader::load(GameManager::getAssetPath("nether_portal.txt"));
+    portal->setStatic(true);
     
-    // LightConfig config;
-    // config.position = {2.0f, 1.5f, 0.5f};
-    // config.color = {0.765625f, 0.0703125f, 0.85546875f};
-    // config.constant = 1.0f;
-    // config.linear = 0.5f;
-    // config.quadratic = 0.3f;
-    // LightingManager::registerLight(config, portal);
+    LightConfig config;
+    config.position = {2.0f, 1.5f, 0.5f};
+    config.color = {0.765625f, 0.0703125f, 0.85546875f};
+    config.constant = 1.0f;
+    config.linear = 0.5f;
+    config.quadratic = 0.3f;
+    LightingManager::registerLight(config, portal);
 
     // 2. Sun & Moon (Celestial Bodies)
     // --- FIX: Capture Sun and register it to GameManager ---
@@ -40,7 +40,7 @@ void Environment::spawn() {
     (new Cuboid(0, -0.05, 0, 100, 0.1, 100, false, 
         {.red = 1.0f, .green = 1.0f, .blue = 1.0f}, 
         TextureID::GRASS, MaterialID::MATTE, 
-        TextureConfig(TextureMode::REPEAT_FIT, 100, 100), 3)
+        TextureConfig(TextureMode::REPEAT_FIT, 100, 100), 500)
     )->setStatic(true);
 
     // 4. Generate the Ring of Mountains

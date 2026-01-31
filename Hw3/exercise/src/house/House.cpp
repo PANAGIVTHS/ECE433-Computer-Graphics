@@ -15,132 +15,132 @@
 #include "../Spline.h"
 
 void House::setup() {
-    // Porch *porch = new Porch(Vec3<GLfloat>(0, 0, 0), House::scale);
-    // addChildren(porch);
-    // porch->setStatic(true);
+    Porch *porch = new Porch(Vec3<GLfloat>(0, 0, 0), House::scale);
+    addChildren(porch);
+    porch->setStatic(true);
 
-    // FamilyRoom *familyRoom = new FamilyRoom(Vec3<GLfloat>(Porch::secondLayerSpacing + Porch::frontLength + Porch::ceilingSpacing - House::ridgeThickness, 0, Porch::ceilingSpacing + Porch::secondLayerSpacing + Porch::leftLength - House::exteriorWallThickness), House::scale);
-    // Vec3<GLfloat> familyRoomPosition = familyRoom->getPosition() + Vec3<GLfloat>(0, 0, -FamilyRoom::length);
-    // familyRoom->setPosition(familyRoomPosition);
-    // addChildren(familyRoom);
-    // familyRoom->setStatic(true);
+    FamilyRoom *familyRoom = new FamilyRoom(Vec3<GLfloat>(Porch::secondLayerSpacing + Porch::frontLength + Porch::ceilingSpacing - House::ridgeThickness, 0, Porch::ceilingSpacing + Porch::secondLayerSpacing + Porch::leftLength - House::exteriorWallThickness), House::scale);
+    Vec3<GLfloat> familyRoomPosition = familyRoom->getPosition() + Vec3<GLfloat>(0, 0, -FamilyRoom::length);
+    familyRoom->setPosition(familyRoomPosition);
+    addChildren(familyRoom);
+    familyRoom->setStatic(true);
 
-    // DiningRoom *diningRoom = new DiningRoom(familyRoom->getPosition() + Vec3<GLfloat>(FamilyRoom::totalWidth, 0, 0), House::scale);
-    // Vec3<GLfloat> diningRoomPosition = diningRoom->getPosition() + Vec3<GLfloat>(0, 0, -(DiningRoom::totalLength - FamilyRoom::totalLength));
-    // diningRoom->setPosition(diningRoomPosition);
-    // addChildren(diningRoom);
-    // diningRoom->setStatic(true);
+    DiningRoom *diningRoom = new DiningRoom(familyRoom->getPosition() + Vec3<GLfloat>(FamilyRoom::totalWidth, 0, 0), House::scale);
+    Vec3<GLfloat> diningRoomPosition = diningRoom->getPosition() + Vec3<GLfloat>(0, 0, -(DiningRoom::totalLength - FamilyRoom::totalLength));
+    diningRoom->setPosition(diningRoomPosition);
+    addChildren(diningRoom);
+    diningRoom->setStatic(true);
 
-    // Garage *garage = new Garage(diningRoom->getPosition() + Vec3<GLfloat>(DiningRoom::totalWidth - House::ridgeThickness, 0, -House::garageInset), scale);
-    // Model *car = new Model(GameManager::getAssetPath("Car.obj"), Vec3(Garage::totalWidth / 2.5f, floorHeight + 0.2f, Garage::totalLength / 2.0f), false, {1.0f, 1.0f, 1.0f}, TextureID::CAR, MaterialID::MATTE);
-    // car->setRotation(180, Vec3<GLfloat>(0.0f, 1.0f, 0.0f));
-    // car->setStatic(true);
-    // garage->addChildren(car);
-    // garageCeiling = garage->getCeiling();
-    // addChildren(garage);
+    Garage *garage = new Garage(diningRoom->getPosition() + Vec3<GLfloat>(DiningRoom::totalWidth - House::ridgeThickness, 0, -House::garageInset), scale);
+    Model *car = new Model(GameManager::getAssetPath("Car.obj"), Vec3(Garage::totalWidth / 2.5f, floorHeight + 0.2f, Garage::totalLength / 2.0f), false, {1.0f, 1.0f, 1.0f}, TextureID::CAR, MaterialID::MATTE);
+    car->setRotation(180, Vec3<GLfloat>(0.0f, 1.0f, 0.0f));
+    car->setStatic(true);
+    garage->addChildren(car);
+    garageCeiling = garage->getCeiling();
+    addChildren(garage);
 
-    // Bathroom *bathroom = new Bathroom(familyRoom->getPosition(), House::scale);
-    // bathroom->setPosition(bathroom->getPosition() + Vec3<GLfloat>(0.0f, 0.0f, -Bathroom::totalLength));
-    // addChildren(bathroom);
-    // bathroom->setStatic(true);
+    Bathroom *bathroom = new Bathroom(familyRoom->getPosition(), House::scale);
+    bathroom->setPosition(bathroom->getPosition() + Vec3<GLfloat>(0.0f, 0.0f, -Bathroom::totalLength));
+    addChildren(bathroom);
+    bathroom->setStatic(true);
 
-    // Bedroom2 *bedroom2 = new Bedroom2(bathroom->getPosition(), House::scale);
-    // bedroom2->setPosition(bedroom2->getPosition() + Vec3<GLfloat>(0.0f, 0.0f, -Bedroom2::totalLength));
-    // addChildren(bedroom2);
-    // bedroom2->setStatic(true);
+    Bedroom2 *bedroom2 = new Bedroom2(bathroom->getPosition(), House::scale);
+    bedroom2->setPosition(bedroom2->getPosition() + Vec3<GLfloat>(0.0f, 0.0f, -Bedroom2::totalLength));
+    addChildren(bedroom2);
+    bedroom2->setStatic(true);
 
-    // Bedroom1 *bedroom1 = new Bedroom1(bedroom2->getPosition() + Vec3<GLfloat>(Bedroom2::totalWidth, 0.0f, 0.0f), House::scale);
-    // addChildren(bedroom1);
-    // bedroom1->setStatic(true);
+    Bedroom1 *bedroom1 = new Bedroom1(bedroom2->getPosition() + Vec3<GLfloat>(Bedroom2::totalWidth, 0.0f, 0.0f), House::scale);
+    addChildren(bedroom1);
+    bedroom1->setStatic(true);
 
-    // Hallway *hallway = new Hallway(diningRoomPosition, scale);
-    // Vec3<GLfloat> hallwayPosition = hallway->getPosition() + Vec3<GLfloat>(-Hallway::totalWidth, 0, -House::interiorWallThickness);
-    // hallway->setPosition(hallwayPosition);
-    // addChildren(hallway);
+    Hallway *hallway = new Hallway(diningRoomPosition, scale);
+    Vec3<GLfloat> hallwayPosition = hallway->getPosition() + Vec3<GLfloat>(-Hallway::totalWidth, 0, -House::interiorWallThickness);
+    hallway->setPosition(hallwayPosition);
+    addChildren(hallway);
 
-    // Object *ceilingLight = AssetLoader::load(GameManager::getAssetPath("ceilingLight.txt"), Vec3<GLfloat>(0.0f, 0.0f, 0.0f));
-    // LightConfig config;
-    // config.position = {0.0f, -1.05f, 0.0f};
-    // config.color = {1.0f, 1.0f, 1.0f};
-    // config.linear = 0.5f;
-    // config.quadratic = 0.3f;
-    // LightingManager::registerLight(config, ceilingLight);
-    // addChildren(ceilingLight);
+    Object *ceilingLight = AssetLoader::load(GameManager::getAssetPath("ceilingLight.txt"), Vec3<GLfloat>(0.0f, 0.0f, 0.0f));
+    LightConfig config;
+    config.position = {0.0f, -1.05f, 0.0f};
+    config.color = {1.0f, 1.0f, 1.0f};
+    config.linear = 0.5f;
+    config.quadratic = 0.3f;
+    LightingManager::registerLight(config, ceilingLight);
+    addChildren(ceilingLight);
 
 
-    // Object *bathroomMirror = AssetLoader::load(GameManager::getAssetPath("bathroommirror.txt"), Vec3<GLfloat>(0.0f, 0.0f, 0.0f));
-    // LightConfig mirrorConfig;
-    // mirrorConfig.position = {0.0f, 0.55f, 0.08f};
-    // mirrorConfig.color = {1.0f, 1.0f, 1.0f};
-    // mirrorConfig.linear = 0.7f;
-    // mirrorConfig.quadratic = 0.4f;
-    // LightingManager::registerLight(mirrorConfig, bathroomMirror);
-    // addChildren(bathroomMirror);
+    Object *bathroomMirror = AssetLoader::load(GameManager::getAssetPath("bathroommirror.txt"), Vec3<GLfloat>(0.0f, 0.0f, 0.0f));
+    LightConfig mirrorConfig;
+    mirrorConfig.position = {0.0f, 0.55f, 0.08f};
+    mirrorConfig.color = {1.0f, 1.0f, 1.0f};
+    mirrorConfig.linear = 0.7f;
+    mirrorConfig.quadratic = 0.4f;
+    LightingManager::registerLight(mirrorConfig, bathroomMirror);
+    addChildren(bathroomMirror);
 
-    // // PATHWAY
-    // GLfloat pathWidth = Garage::doorWidth;
-    // GLfloat pathLength = 16;
-    // GLfloat pathHeight = 0.02f;
+    // PATHWAY
+    GLfloat pathWidth = Garage::doorWidth;
+    GLfloat pathLength = 16;
+    GLfloat pathHeight = 0.02f;
 
-    // GLfloat doorOffsetX = Garage::sidePanelWidth;
-    // GLfloat garageFrontZ = Garage::ceilingOffset + Garage::length - 2 * House::exteriorWallThickness;
-    // Vec3<GLfloat> pathPos = garage->getPosition() + Vec3(
-    //     doorOffsetX,
-    //     0.0f,
-    //     garageFrontZ
-    // );
+    GLfloat doorOffsetX = Garage::sidePanelWidth;
+    GLfloat garageFrontZ = Garage::ceilingOffset + Garage::length - 2 * House::exteriorWallThickness;
+    Vec3<GLfloat> pathPos = garage->getPosition() + Vec3(
+        doorOffsetX,
+        0.0f,
+        garageFrontZ
+    );
 
-    // AnchoredCuboid *pathway = new AnchoredCuboid(pathPos, Vec3(pathWidth, pathHeight, pathLength), false);
-    // pathway->setTexture(TextureID::STONE, false);
-    // pathway->setTextureConfig(TextureConfig(TextureMode::REPEAT_FIT));
-    // pathway->setSubdivisions(10);
-    // addChildren(pathway);
-    // pathway->setStatic(true);
+    AnchoredCuboid *pathway = new AnchoredCuboid(pathPos, Vec3(pathWidth, pathHeight, pathLength), false);
+    pathway->setTexture(TextureID::STONE, false);
+    pathway->setTextureConfig(TextureConfig(TextureMode::REPEAT_FIT));
+    pathway->setSubdivisions(10);
+    addChildren(pathway);
+    pathway->setStatic(true);
 
-    // GLfloat branchLength = Garage::doorWidth * 2.5;
-    // GLfloat branchWidth = Garage::doorWidth;
-    // GLfloat branchZOffset = DiningRoom::totalLength - House::exteriorWallThickness - House::ridgeThickness - (Garage::length - House::garageInset) + Porch::frontLength;
-    // AnchoredCuboid *pathway1 = new AnchoredCuboid(pathPos + Vec3<GLfloat>(-branchLength, 0.0f, branchZOffset), Vec3(branchLength, pathHeight, branchWidth), false);
-    // pathway1->setTexture(TextureID::STONE, false);
-    // pathway1->setTextureConfig(TextureConfig(TextureMode::REPEAT_FIT));
-    // pathway1->setSubdivisions(10);
-    // addChildren(pathway1);
-    // pathway1->setStatic(true);
+    GLfloat branchLength = Garage::doorWidth * 2.5;
+    GLfloat branchWidth = Garage::doorWidth;
+    GLfloat branchZOffset = DiningRoom::totalLength - House::exteriorWallThickness - House::ridgeThickness - (Garage::length - House::garageInset) + Porch::frontLength;
+    AnchoredCuboid *pathway1 = new AnchoredCuboid(pathPos + Vec3<GLfloat>(-branchLength, 0.0f, branchZOffset), Vec3(branchLength, pathHeight, branchWidth), false);
+    pathway1->setTexture(TextureID::STONE, false);
+    pathway1->setTextureConfig(TextureConfig(TextureMode::REPEAT_FIT));
+    pathway1->setSubdivisions(10);
+    addChildren(pathway1);
+    pathway1->setStatic(true);
 
-    // // ROOF
-    // roof = new Object(Vec3<GLfloat>(bedroom2->getPosition().x, 0.0f, bedroom2->getPosition().z), House::scale);
+    // ROOF
+    roof = new Object(Vec3<GLfloat>(bedroom2->getPosition().x, 0.0f, bedroom2->getPosition().z), House::scale);
 
-    // GLfloat ceilingWidth = FamilyRoom::totalWidth + DiningRoom::totalWidth - 2 * (exteriorWallThickness + ridgeThickness);
-    // GLfloat ceilingHeight = 0.2f;
-    // GLfloat ceilingLength = DiningRoom::totalLength + Bedroom1::totalLength - 2 * (exteriorWallThickness + ridgeThickness);
+    GLfloat ceilingWidth = FamilyRoom::totalWidth + DiningRoom::totalWidth - 2 * (exteriorWallThickness + ridgeThickness);
+    GLfloat ceilingHeight = 0.2f;
+    GLfloat ceilingLength = DiningRoom::totalLength + Bedroom1::totalLength - 2 * (exteriorWallThickness + ridgeThickness);
 
-    // roof->addChildren(new AnchoredCube(Vec3((exteriorWallThickness + ridgeThickness), House::height + House::floorHeight, (exteriorWallThickness + ridgeThickness)),
-    // Vec3(ceilingWidth, ceilingHeight,  ceilingLength),
-    //     gravity,
-    //     House::darkColor
-    // ));
+    roof->addChildren(new AnchoredCube(Vec3((exteriorWallThickness + ridgeThickness), House::height + House::floorHeight, (exteriorWallThickness + ridgeThickness)),
+    Vec3(ceilingWidth, ceilingHeight,  ceilingLength),
+        gravity,
+        House::darkColor
+    ));
 
-    // roof->addChildren(new TriangularRidgedWall(Vec3(ridgeThickness, House::height + House::floorHeight, Bedroom1::totalLength + DiningRoom::totalLength - exteriorWallThickness - ridgeThickness),
-    //     Vec3(FamilyRoom::totalWidth + DiningRoom::totalWidth - 2 * ridgeThickness, roofHeight, exteriorWallThickness),
-    //     Vec3(0.0f, 0.0f, 1.0f),
-    //     House::ridgeSpacing + 0.032,
-    //     House::ridgeThickness,
-    //     gravity,
-    //     House::lightColor
-    // ));
+    roof->addChildren(new TriangularRidgedWall(Vec3(ridgeThickness, House::height + House::floorHeight, Bedroom1::totalLength + DiningRoom::totalLength - exteriorWallThickness - ridgeThickness),
+        Vec3(FamilyRoom::totalWidth + DiningRoom::totalWidth - 2 * ridgeThickness, roofHeight, exteriorWallThickness),
+        Vec3(0.0f, 0.0f, 1.0f),
+        House::ridgeSpacing + 0.032,
+        House::ridgeThickness,
+        gravity,
+        House::lightColor
+    ));
 
-    // roof->addChildren(new TriangularRidgedWall(Vec3(ridgeThickness, House::height + House::floorHeight, ridgeThickness),
-    //     Vec3(FamilyRoom::totalWidth + DiningRoom::totalWidth - 2 * ridgeThickness, roofHeight, exteriorWallThickness),
-    //     Vec3(0.0f, 0.0f, -1.0f),
-    //     House::ridgeSpacing + 0.032,
-    //     House::ridgeThickness,
-    //     gravity,
-    //     House::lightColor
-    // ));
+    roof->addChildren(new TriangularRidgedWall(Vec3(ridgeThickness, House::height + House::floorHeight, ridgeThickness),
+        Vec3(FamilyRoom::totalWidth + DiningRoom::totalWidth - 2 * ridgeThickness, roofHeight, exteriorWallThickness),
+        Vec3(0.0f, 0.0f, -1.0f),
+        House::ridgeSpacing + 0.032,
+        House::ridgeThickness,
+        gravity,
+        House::lightColor
+    ));
 
-    // roof->addChildren(AssetLoader::load(GameManager::getAssetPath("roof.txt"), Vec3<GLfloat>(-bedroom2->getPosition().x, 0.0f, -bedroom2->getPosition().z)));
+    roof->addChildren(AssetLoader::load(GameManager::getAssetPath("roof.txt"), Vec3<GLfloat>(-bedroom2->getPosition().x, 0.0f, -bedroom2->getPosition().z)));
 
-    // addChildren(roof);
+    addChildren(roof);
 
     // Object* faucet = AssetLoader::load(GameManager::getAssetPath("tap.txt"), Vec3<float>(0.0f, 0.3f, 0.0f)); 
 

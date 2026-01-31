@@ -5,6 +5,7 @@
 #include <omp.h>
 #include <iostream>
 #include "Celestial.h" 
+#include "LightingManager.h" // Added
 
 #ifdef __APPLE_CC__
 #include <GLUT/glut.h>
@@ -80,34 +81,20 @@ Mat4 makeRotate(float angle, Vec3<float> axis) {
 struct AABB {
     Vec3<float> min = {1e9, 1e9, 1e9};
     Vec3<float> max = {-1e9, -1e9, -1e9};
-
     void expand(const Vec3<float>& p) {
         if(p.x < min.x) min.x = p.x; if(p.y < min.y) min.y = p.y; if(p.z < min.z) min.z = p.z;
         if(p.x > max.x) max.x = p.x; if(p.y > max.y) max.y = p.y; if(p.z > max.z) max.z = p.z;
     }
-    
     float intersect(const Vec3<float>& origin, const Vec3<float>& invDir) const {
-        float t1 = (min.x - origin.x) * invDir.x;
-        float t2 = (max.x - origin.x) * invDir.x;
-        float tMin = std::max(std::min(t1, t2), -1e9f);
-        float tMax = std::min(std::max(t1, t2), 1e9f);
-
-        t1 = (min.y - origin.y) * invDir.y;
-        t2 = (max.y - origin.y) * invDir.y;
-        tMin = std::max(tMin, std::min(t1, t2));
-        tMax = std::min(tMax, std::max(t1, t2));
-
-        t1 = (min.z - origin.z) * invDir.z;
-        t2 = (max.z - origin.z) * invDir.z;
-        tMin = std::max(tMin, std::min(t1, t2));
-        tMax = std::min(tMax, std::max(t1, t2));
-
+        float t1 = (min.x - origin.x) * invDir.x, t2 = (max.x - origin.x) * invDir.x;
+        float tMin = std::max(std::min(t1, t2), -1e9f), tMax = std::min(std::max(t1, t2), 1e9f);
+        t1 = (min.y - origin.y) * invDir.y; t2 = (max.y - origin.y) * invDir.y;
+        tMin = std::max(tMin, std::min(t1, t2)); tMax = std::min(tMax, std::max(t1, t2));
+        t1 = (min.z - origin.z) * invDir.z; t2 = (max.z - origin.z) * invDir.z;
+        tMin = std::max(tMin, std::min(t1, t2)); tMax = std::min(tMax, std::max(t1, t2));
         return (tMax >= tMin && tMax > 0) ? tMin : 1e30f;
     }
-    
-    Vec3<float> center() const {
-        return Vec3<float>((min.x+max.x)*0.5f, (min.y+max.y)*0.5f, (min.z+max.z)*0.5f);
-    }
+    Vec3<float> center() const { return Vec3<float>((min.x+max.x)*0.5f, (min.y+max.y)*0.5f, (min.z+max.z)*0.5f); }
 };
 
 struct FastObj {
@@ -118,18 +105,23 @@ struct FastObj {
     Vec3<float> centroid; 
 };
 
+struct FastLight {
+    Vec3<float> pos;
+    Vec3<float> color;
+    float constant, linear, quadratic;
+};
+
 struct BVHNode {
     AABB box;
-    int leftIndex = -1; 
-    int rightIndex = -1;
-    int objStart = 0;
-    int objCount = 0;
+    int leftIndex = -1, rightIndex = -1;
+    int objStart = 0, objCount = 0;
 };
 
 // Global Rendering Data
 std::vector<FastObj> primitives;
 std::vector<int> primitiveIndices;
 std::vector<BVHNode> bvhNodes;
+std::vector<FastLight> sceneLights; // Flattened lights
 static std::vector<Object*> renderQueue; 
 
 // ==========================================
@@ -148,8 +140,6 @@ void updateNodeBounds(int nodeIdx) {
 }
 
 void splitBVH(int nodeIdx) {
-    // Note: We use index access bvhNodes[nodeIdx] everywhere to avoid 
-    // invalid references when the vector resizes.
     if (bvhNodes[nodeIdx].objCount <= 2) return; 
 
     const BVHNode& node = bvhNodes[nodeIdx];
@@ -176,7 +166,6 @@ void splitBVH(int nodeIdx) {
     int leftCount = i - node.objStart;
     int currentObjCount = bvhNodes[nodeIdx].objCount;
     
-    // If split failed (all on one side), mark as leaf
     if (leftCount == 0 || leftCount == currentObjCount) return; 
 
     int rightCount = currentObjCount - leftCount;
@@ -187,10 +176,9 @@ void splitBVH(int nodeIdx) {
     int rightChildIdx = bvhNodes.size();
     bvhNodes.push_back(BVHNode());
 
-    // Re-access parent by index
     bvhNodes[nodeIdx].leftIndex = leftChildIdx;
     bvhNodes[nodeIdx].rightIndex = rightChildIdx;
-    bvhNodes[nodeIdx].objCount = 0; // Internal node
+    bvhNodes[nodeIdx].objCount = 0; 
 
     bvhNodes[leftChildIdx].objStart = currentStart;
     bvhNodes[leftChildIdx].objCount = leftCount;
@@ -213,20 +201,12 @@ bool intersectUnitBox(const Vec3<float>& origin, const Vec3<float>& dir, float& 
     Vec3<float> minB(-0.5f, -0.5f, -0.5f), maxB(0.5f, 0.5f, 0.5f);
     float invDx = 1.0f/dir.x, invDy = 1.0f/dir.y, invDz = 1.0f/dir.z;
 
-    float t1 = (minB.x - origin.x) * invDx;
-    float t2 = (maxB.x - origin.x) * invDx;
-    tMin = std::max(tMin, std::min(t1, t2));
-    tMax = std::min(tMax, std::max(t1, t2));
-
-    t1 = (minB.y - origin.y) * invDy;
-    t2 = (maxB.y - origin.y) * invDy;
-    tMin = std::max(tMin, std::min(t1, t2));
-    tMax = std::min(tMax, std::max(t1, t2));
-
-    t1 = (minB.z - origin.z) * invDz;
-    t2 = (maxB.z - origin.z) * invDz;
-    tMin = std::max(tMin, std::min(t1, t2));
-    tMax = std::min(tMax, std::max(t1, t2));
+    float t1 = (minB.x - origin.x) * invDx, t2 = (maxB.x - origin.x) * invDx;
+    tMin = std::max(tMin, std::min(t1, t2)); tMax = std::min(tMax, std::max(t1, t2));
+    t1 = (minB.y - origin.y) * invDy; t2 = (maxB.y - origin.y) * invDy;
+    tMin = std::max(tMin, std::min(t1, t2)); tMax = std::min(tMax, std::max(t1, t2));
+    t1 = (minB.z - origin.z) * invDz; t2 = (maxB.z - origin.z) * invDz;
+    tMin = std::max(tMin, std::min(t1, t2)); tMax = std::min(tMax, std::max(t1, t2));
 
     if (tMin <= tMax && tMax >= 0) {
         tOut = (tMin > 0) ? tMin : tMax;
@@ -244,42 +224,29 @@ bool intersectUnitBox(const Vec3<float>& origin, const Vec3<float>& dir, float& 
 }
 
 void traceBVH(const Vec3<float>& rayOrg, const Vec3<float>& rayDir, float& closestT, int& hitIndex, Vec3<float>& hitNormal, bool shadowMode) {
-    int stack[128]; 
-    int stackPtr = 0;
-    stack[stackPtr++] = 0; 
-
+    int stack[128]; int stackPtr = 0; stack[stackPtr++] = 0; 
     Vec3<float> invDir = {1.0f/rayDir.x, 1.0f/rayDir.y, 1.0f/rayDir.z};
 
     while (stackPtr > 0) {
         int nodeIdx = stack[--stackPtr];
         const BVHNode& node = bvhNodes[nodeIdx];
-
-        float boxDist = node.box.intersect(rayOrg, invDir);
-        if (boxDist >= closestT) continue;
+        if (node.box.intersect(rayOrg, invDir) >= closestT) continue;
 
         if (node.leftIndex == -1) { 
-            // LEAF
             for (int i = 0; i < node.objCount; ++i) {
                 int objIdx = primitiveIndices[node.objStart + i];
                 const FastObj& obj = primitives[objIdx];
-                
                 Vec3<float> lOrg = obj.invWorld.transformPoint(rayOrg);
                 Vec3<float> lDir = obj.invWorld.transformDir(rayDir);
                 float t = 0; Vec3<float> n;
-                
                 if (intersectUnitBox(lOrg, lDir, t, n)) {
                     if (t < closestT && t > 0.001f) {
-                        if (shadowMode) {
-                            closestT = t; return;
-                        }
-                        closestT = t;
-                        hitIndex = objIdx;
-                        hitNormal = n;
+                        if (shadowMode) { closestT = t; return; }
+                        closestT = t; hitIndex = objIdx; hitNormal = n;
                     }
                 }
             }
         } else {
-            // INTERNAL
             stack[stackPtr++] = node.leftIndex;
             stack[stackPtr++] = node.rightIndex;
         }
@@ -293,8 +260,7 @@ void traceBVH(const Vec3<float>& rayOrg, const Vec3<float>& rayDir, float& close
 void RayTracer::render(int screenWidth, int screenHeight) {
     if (!enabled) return;
 
-    // --- OPTIMIZATION: High Scale for speed ---
-    int scale = 7; 
+    int scale = 14; // 1/20th Resolution
     int w = screenWidth / scale;
     int h = screenHeight / scale;
     if (w <= 0 || h <= 0) return;
@@ -309,31 +275,54 @@ void RayTracer::render(int screenWidth, int screenHeight) {
     glGetIntegerv(GL_VIEWPORT, viewport);
     glPopMatrix(); 
 
-    Vec3<float> sunPos(300.0f, 600.0f, 400.0f); 
-    if (GameManager::getSun()) sunPos = GameManager::getSun()->getWorldPosition();
+    // --- 1. COLLECT LIGHTS (Flattened) ---
+    sceneLights.clear();
+    // A. Sun (Explicit)
+    if (GameManager::getSun()) {
+        FastLight sun;
+        sun.pos = GameManager::getSun()->getWorldPosition();
+        sun.color = {1.0f, 1.0f, 1.0f}; // Sun color
+        sun.constant = 1.0f; sun.linear = 0.0f; sun.quadratic = 0.0f;
+        sceneLights.push_back(sun);
+    }
+    // B. LightingManager Lights
+    const auto& regLights = LightingManager::getLights();
+    for (const auto& pair : regLights) {
+        const RegisteredLight& reg = pair.second;
+        if (reg.owner && reg.owner->isHidden()) continue;
 
-    // 1. FILTER
+        FastLight L;
+        if (reg.owner) L.pos = reg.config.position + reg.owner->getWorldPosition();
+        else L.pos = reg.config.position;
+
+        // Use diffuse color (or color if diffuse is unset)
+        float r = (reg.config.diffuse.x < 0) ? reg.config.color.x : reg.config.diffuse.x;
+        float g = (reg.config.diffuse.y < 0) ? reg.config.color.y : reg.config.diffuse.y;
+        float b = (reg.config.diffuse.z < 0) ? reg.config.color.z : reg.config.diffuse.z;
+        L.color = {r, g, b};
+        L.constant = reg.config.constant;
+        L.linear = reg.config.linear;
+        L.quadratic = reg.config.quadratic;
+        sceneLights.push_back(L);
+    }
+
+    // --- 2. PREPARE OBJECTS ---
     renderQueue.clear();
     const auto& allObjects = ObjectHandler::getAllObjects();
     renderQueue.reserve(allObjects.size());
-
     for (Object* obj : allObjects) {
         if (!obj || obj->isHidden() || dynamic_cast<Celestial*>(obj)) continue;
-        if (dynamic_cast<Cuboid*>(obj) || dynamic_cast<Cube*>(obj)) {
-            renderQueue.push_back(obj);
-        }
+        if (dynamic_cast<Cuboid*>(obj) || dynamic_cast<Cube*>(obj)) renderQueue.push_back(obj);
     }
     
     if(primitives.size() != renderQueue.size()) primitives.resize(renderQueue.size());
     if(primitiveIndices.size() != renderQueue.size()) primitiveIndices.resize(renderQueue.size());
 
-    // 2. MATRICES (Parallel)
     Vec3<float> corners[8] = {{-0.5,-0.5,-0.5},{0.5,-0.5,-0.5},{-0.5,0.5,-0.5},{0.5,0.5,-0.5},{-0.5,-0.5,0.5},{0.5,-0.5,0.5},{-0.5,0.5,0.5},{0.5,0.5,0.5}};
 
     #pragma omp parallel for schedule(static)
     for(int i = 0; i < (int)renderQueue.size(); i++) {
         Object* obj = renderQueue[i];
-        
         Mat4 combinedInv = Mat4::identity();
         Mat4 combinedFwd = Mat4::identity();
         Mat4 combinedRot = Mat4::identity();
@@ -349,9 +338,7 @@ void RayTracer::render(int screenWidth, int screenHeight) {
              Mat4 fwdR = makeRotate(curr->getRotationAngle(), curr->getRotationAxis());
              Mat4 fwdT = makeTranslate(curr->getPosition());
              combinedFwd = (fwdT * (fwdR * fwdS)) * combinedFwd; 
-             
              combinedRot = makeRotate(curr->getRotationAngle(), curr->getRotationAxis()) * combinedRot;
-             
              curr = curr->getParent();
         }
 
@@ -364,22 +351,18 @@ void RayTracer::render(int screenWidth, int screenHeight) {
         fObj.bounds = AABB();
         for(int k=0; k<8; k++) fObj.bounds.expand(combinedFwd.transformPoint(corners[k]));
         fObj.centroid = fObj.bounds.center();
-        
         primitiveIndices[i] = i;
     }
 
     if (renderQueue.empty()) return;
 
-    // 3. BUILD BVH
-    bvhNodes.clear();
-    bvhNodes.reserve(renderQueue.size() * 2);
+    bvhNodes.clear(); bvhNodes.reserve(renderQueue.size() * 2);
     bvhNodes.push_back(BVHNode()); 
-    bvhNodes[0].objStart = 0;
-    bvhNodes[0].objCount = renderQueue.size();
+    bvhNodes[0].objStart = 0; bvhNodes[0].objCount = renderQueue.size();
     updateNodeBounds(0);
     splitBVH(0);
 
-    // 4. TRACE (Parallel)
+    // --- 3. RENDER PIXELS ---
     #pragma omp parallel for schedule(dynamic)
     for (int y = 0; y < h; ++y) {
         for (int x = 0; x < w; ++x) {
@@ -392,55 +375,61 @@ void RayTracer::render(int screenWidth, int screenHeight) {
             float mag = sqrt(dir.x*dir.x + dir.y*dir.y + dir.z*dir.z);
             dir = dir * (1.0f/mag);
 
-            float closestT = 1e9f;
-            int hitIndex = -1;
-            Vec3<float> hitNormal;
-
+            float closestT = 1e9f; int hitIndex = -1; Vec3<float> hitNormal;
             traceBVH(org, dir, closestT, hitIndex, hitNormal, false);
 
-            Vec3<float> finalColor(0.4f, 0.6f, 0.9f); 
-
+            Vec3<float> finalColor(0.0f, 0.0f, 0.0f); // Start black, add ambient later
+            
             if (hitIndex != -1) {
                 const FastObj& hitObj = primitives[hitIndex];
-                
                 Vec3<float> worldNormal = hitObj.worldRot.transformDir(hitNormal);
                 float nm = sqrt(worldNormal.x*worldNormal.x + worldNormal.y*worldNormal.y + worldNormal.z*worldNormal.z);
                 if (nm > 0) worldNormal = worldNormal * (1.0f/nm);
-
                 Vec3<float> hitPoint = org + dir * closestT;
-                Vec3<float> lightDir = sunPos - hitPoint;
-                float distToSun = sqrt(lightDir.x*lightDir.x + lightDir.y*lightDir.y + lightDir.z*lightDir.z);
-                lightDir = lightDir * (1.0f/distToSun);
 
-                // --- OPTIMIZATION: Only trace shadow if facing sun ---
-                float NdotL = worldNormal.dot(lightDir);
-                if (NdotL > 0.0f) {
-                    float shadowT = distToSun;
-                    int sIdx = -1; 
-                    Vec3<float> sNorm;
-                    traceBVH(hitPoint + lightDir * 0.1f, lightDir, shadowT, sIdx, sNorm, true);
-                    
-                    if (shadowT >= distToSun) {
-                        float diff = NdotL * 0.7f;
-                        finalColor = hitObj.color * std::min(0.3f + diff, 1.0f);
-                    } else {
-                        // In shadow
-                        finalColor = hitObj.color * 0.3f;
+                // Base Ambient
+                finalColor = hitObj.color * 0.3f; 
+
+                // Loop Lights
+                for (const auto& L : sceneLights) {
+                    Vec3<float> lightVec = L.pos - hitPoint;
+                    float dist2 = lightVec.x*lightVec.x + lightVec.y*lightVec.y + lightVec.z*lightVec.z;
+                    float dist = sqrt(dist2);
+                    Vec3<float> lightDir = lightVec * (1.0f/dist);
+
+                    float NdotL = worldNormal.dot(lightDir);
+                    if (NdotL > 0.0f) {
+                        float shadowT = dist; int sIdx = -1; Vec3<float> sNorm;
+                        // Offset to prevent acne
+                        traceBVH(hitPoint + lightDir * 0.1f, lightDir, shadowT, sIdx, sNorm, true);
+                        
+                        if (shadowT >= dist - 0.2f) { // Visible
+                            float atten = 1.0f / (L.constant + L.linear*dist + L.quadratic*dist2);
+                            float diff = NdotL * atten;
+                            
+                            // Accumulate
+                            finalColor.x += hitObj.color.x * L.color.x * diff;
+                            finalColor.y += hitObj.color.y * L.color.y * diff;
+                            finalColor.z += hitObj.color.z * L.color.z * diff;
+                        }
                     }
-                } else {
-                    // Facing away from sun
-                    finalColor = hitObj.color * 0.3f;
                 }
+                // Clamp
+                if (finalColor.x > 1.0f) finalColor.x = 1.0f;
+                if (finalColor.y > 1.0f) finalColor.y = 1.0f;
+                if (finalColor.z > 1.0f) finalColor.z = 1.0f;
+
+            } else {
+                finalColor = {0.4f, 0.6f, 0.9f}; // Sky
             }
 
             int idx = (y * w + x) * 3;
-            pixelBuffer[idx]   = (unsigned char)(std::min(finalColor.x, 1.0f)*255);
-            pixelBuffer[idx+1] = (unsigned char)(std::min(finalColor.y, 1.0f)*255);
-            pixelBuffer[idx+2] = (unsigned char)(std::min(finalColor.z, 1.0f)*255);
+            pixelBuffer[idx]   = (unsigned char)(finalColor.x*255);
+            pixelBuffer[idx+1] = (unsigned char)(finalColor.y*255);
+            pixelBuffer[idx+2] = (unsigned char)(finalColor.z*255);
         }
     }
 
-    // Draw
     glDisable(GL_LIGHTING); glDisable(GL_DEPTH_TEST);
     glMatrixMode(GL_PROJECTION); glPushMatrix(); glLoadIdentity();
     glMatrixMode(GL_MODELVIEW); glPushMatrix(); glLoadIdentity();

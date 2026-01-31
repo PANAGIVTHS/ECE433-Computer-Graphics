@@ -51,6 +51,10 @@ public:
     static void setConfig(int id, const LightConfig config);
     static LightConfig& getConfig(int id);
     static void toggleLight(int id, bool enable);
+
+    // --- NEW: Expose Registry for RayTracer ---
+    static const std::map<int, RegisteredLight>& getLights() { return registry; }
+    // ------------------------------------------
 };
 
 #endif
