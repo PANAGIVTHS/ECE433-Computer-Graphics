@@ -1,2 +1,49 @@
+# Editors / OS noise
 .idea/
 .vscode/
+.DS_Store
+Thumbs.db
+
+# C/C++ build outputs
+*.o
+*.out
+*.exe
+*.dll
+*.so
+*.dylib
+
+# OpenGL homework executables
+exercise4
+exercise5
+exercise11
+exercise12
+my_FirstOpenGL
+my_triangles
+my_white
+
+# Final-project generated output
+homework-3-3d-house/final-3d-house/target/*
+!homework-3-3d-house/final-3d-house/target/.gitignore
+homework-3-3d-house/final-3d-house/src/*.o
+homework-3-3d-house/final-3d-house/src/house/*.o
+homework-3-3d-house/final-3d-house/src/temp_pkg/
+
+# Archive/package artifacts
+*.zip
+*.tar
+*.tar.gz
+*.tar.bz2
+*.7z
+
+# LaTeX intermediates if reports are rebuilt locally
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
