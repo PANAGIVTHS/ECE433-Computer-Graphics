@@ -1,11 +1,12 @@
-# ECE433 Computer Graphics
+# ECE433 — Computer Graphics
 
-![Language](https://img.shields.io/badge/language-C%2B%2B-blue)
-![Graphics](https://img.shields.io/badge/graphics-OpenGL%20%2F%20GLUT-green)
-![Course](https://img.shields.io/badge/course-ECE433-purple)
-![University](https://img.shields.io/badge/University%20of%20Thessaly-ECE-lightgrey)
+![C++](https://img.shields.io/badge/C%2B%2B-OpenGL-blue)
+![OpenGL / GLUT](https://img.shields.io/badge/OpenGL%20%2F%20GLUT-graphics-green)
+![Rasterization](https://img.shields.io/badge/Rasterization-algorithms-orange)
+![3D Graphics](https://img.shields.io/badge/3D-graphics-purple)
+![Coursework](https://img.shields.io/badge/UTH-ECE433-teal)
 
-Coursework for **ECE433 — Computer Graphics with OpenGL** at the **University of Thessaly**. The repository covers raster graphics, antialiasing, scanline polygon filling, clipping, 2D/3D transformations, lighting, texturing, culling, and a substantially extended final 3D scene project.
+Coursework repository for **ECE433 — Computer Graphics** at the **University of Thessaly**. The repository covers raster graphics, antialiasing, scanline polygon filling, clipping, OpenGL/GLUT, 2D/3D transformations, lighting, texturing, culling, and a substantially extended final 3D scene project.
 
 The main portfolio piece is **Homework 3 / Project 3: Visiting a 3D House**: a first-person OpenGL scene that grew beyond the assignment into a small modular rendering/game framework with hierarchical objects, hot-reloadable assets, dynamic lighting, textured models, transparent windows, a day/night cycle, NURBS terrain features, and multiple camera/view modes.
 
@@ -51,7 +52,7 @@ The assignment asked for a 3D house or 3D space with transformations, modeling, 
 - **Procedural/NURBS geometry:** a reusable `SplineObject` / `NurbsCurve` / `NurbsSurface` layer wraps GLU NURBS. It is used for the mountainous horizon and curved objects such as the garden hose.
 - **Two executable views:** `visiting3Dhouse` provides the navigable first-person experience, while `views` presents orthographic/perspective floor-plan, roof, exterior, and rotating interior views.
 
-## Repository contents
+## Course contents
 
 | Path | Description |
 | --- | --- |
