@@ -54,6 +54,8 @@ The assignment asked for a 3D house or 3D space with transformations, modeling, 
 
 ## Course contents
 
+Handouts and recovered reports are collected under [`docs/handouts/`](docs/handouts/) and [`docs/reports/`](docs/reports/). Homework 1 and Homework 3 use subfolders because they include multiple handout/supporting PDFs.
+
 | Path | Description |
 | --- | --- |
 | [`homework-1-rasterization-antialiasing/`](homework-1-rasterization-antialiasing/) | Rasterization exercises: line drawing, antialiasing, circles, filled circles, OpenGL examples, pseudocode, the project handout, and antialiasing notes. |
@@ -78,8 +80,9 @@ Implemented/reported work includes:
 
 Useful paths:
 
-- [`homework-1-rasterization-antialiasing/handout-project-1.pdf`](homework-1-rasterization-antialiasing/handout-project-1.pdf)
-- [`homework-1-rasterization-antialiasing/antialiasing-notes.pdf`](homework-1-rasterization-antialiasing/antialiasing-notes.pdf)
+- [`docs/handouts/homework-1-rasterization-antialiasing/project-handout.pdf`](docs/handouts/homework-1-rasterization-antialiasing/project-handout.pdf)
+- [`docs/reports/homework-1-rasterization-antialiasing-report.pdf`](docs/reports/homework-1-rasterization-antialiasing-report.pdf)
+- [`docs/handouts/homework-1-rasterization-antialiasing/antialiasing-notes.pdf`](docs/handouts/homework-1-rasterization-antialiasing/antialiasing-notes.pdf)
 - [`homework-1-rasterization-antialiasing/exercise-4-antialiased-lines/`](homework-1-rasterization-antialiasing/exercise-4-antialiased-lines/)
 - [`homework-1-rasterization-antialiasing/exercise-5-circle-drawing/`](homework-1-rasterization-antialiasing/exercise-5-circle-drawing/)
 
@@ -98,8 +101,8 @@ Implemented/reported work includes:
 
 Useful paths:
 
-- [`homework-2-polygon-fill-clipping/handout-project-2.pdf`](homework-2-polygon-fill-clipping/handout-project-2.pdf)
-- [`homework-2-polygon-fill-clipping/report-project-2.pdf`](homework-2-polygon-fill-clipping/report-project-2.pdf)
+- [`docs/handouts/homework-2-polygon-fill-clipping.pdf`](docs/handouts/homework-2-polygon-fill-clipping.pdf)
+- [`docs/reports/homework-2-polygon-fill-clipping-report.pdf`](docs/reports/homework-2-polygon-fill-clipping-report.pdf)
 - [`homework-2-polygon-fill-clipping/exercise-11-gradient-polygon-fill/`](homework-2-polygon-fill-clipping/exercise-11-gradient-polygon-fill/)
 - [`homework-2-polygon-fill-clipping/exercise-12-interactive-polygon-clipping/`](homework-2-polygon-fill-clipping/exercise-12-interactive-polygon-clipping/)
 
@@ -109,8 +112,8 @@ Homework 3 is the final project and the deepest implementation in the repository
 
 Useful paths:
 
-- [`homework-3-3d-house/handout-project-3.pdf`](homework-3-3d-house/handout-project-3.pdf)
-- [`homework-3-3d-house/final-3d-house/report-project-3.pdf`](homework-3-3d-house/final-3d-house/report-project-3.pdf)
+- [`docs/handouts/homework-3-3d-house/project-handout.pdf`](docs/handouts/homework-3-3d-house/project-handout.pdf)
+- [`docs/reports/homework-3-3d-house-report.pdf`](docs/reports/homework-3-3d-house-report.pdf)
 - [`homework-3-3d-house/final-3d-house/src/`](homework-3-3d-house/final-3d-house/src/)
 - [`homework-3-3d-house/final-3d-house/assets/`](homework-3-3d-house/final-3d-house/assets/)
 - [`homework-3-3d-house/final-3d-house/textures/`](homework-3-3d-house/final-3d-house/textures/)
